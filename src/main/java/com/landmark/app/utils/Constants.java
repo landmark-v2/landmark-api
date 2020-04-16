@@ -20,5 +20,6 @@ public class Constants {
 
     /** API **/
     public static final String TOUR_HISTORY_API = "/tour-history";
+    public static final String SEARCH_API       = "/search";
 
 }

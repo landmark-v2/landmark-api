@@ -13,6 +13,20 @@ public interface TourReviewService {
      * 4. 사용자의 여행후기 리스트 조회 - response Page<전체>
      */
 
+    /**
+     * 여행 후기 최신순 10개 조회
+     * @return RecentReview(areaName, sigunguName, firstImage)
+     */
     List<TourReviewDTO.RecentReview> getRecentHistories(int userId);
+
+    /**
+     * 사용자의 지역별 후기 개수
+     */
+    int countByAreaCode(int areaCode, int userId);
+
+    /**
+     * 여행 후기 등록
+     */
+    TourReviewDTO registerReview(TourReviewDTO tourReviewDTO);
 
 }

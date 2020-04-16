@@ -50,4 +50,8 @@ public class StaticHelper {
         return URLEncoder.encode(keyword);
     }
 
+    public static String getInfoValue(Object info, String defaultValue) {
+        return info != null ? info.toString() : defaultValue;
+    }
+
 }

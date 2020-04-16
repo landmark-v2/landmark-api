@@ -2,6 +2,7 @@ package com.landmark.app.service.impl;
 
 import com.landmark.app.model.dto.TourReviewDTO;
 import com.landmark.app.model.repository.TourReviewRepository;
+import com.landmark.app.service.SearchService;
 import com.landmark.app.service.TourReviewService;
 import com.landmark.app.utils.Constants;
 import com.landmark.app.utils.LoggerUtils;
@@ -17,10 +18,12 @@ import java.util.Map;
 public class TourReviewServiceImpl extends LoggerUtils implements TourReviewService {
 
     private TourReviewRepository tourReviewRepository;
+    private SearchService searchService;
 
     @Autowired
-    public TourReviewServiceImpl(TourReviewRepository tourReviewRepository) {
+    public TourReviewServiceImpl(TourReviewRepository tourReviewRepository, SearchService searchService) {
         this.tourReviewRepository = tourReviewRepository;
+        this.searchService = searchService;
     }
 
     @Override
@@ -36,7 +39,6 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
 
                 String areaName = Constants.areaCodeMap.get(tourReviewDTO.getAreaCode());
                 String sigunguName = Constants.sigunguCodeMap.get(sigunguPkMap);
-//                String firstImage = tourReviewDTO.getFirstImage() != null ? tourReviewDTO.getFirstImage() : "";
 
                 recentReviews.add(getRecentReview(areaName, sigunguName, tourReviewDTO.getFirstImage()));
             }
@@ -53,5 +55,28 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
         recentReview.setSigunguName(sigunguName);
         recentReview.setFirstImage(firstImage);
         return recentReview;
+    }
+
+    @Override
+    public int countByAreaCode(int areaCode, int userId) {
+        try {
+            return tourReviewRepository.countAllByAreaCodeAndUserId(areaCode, userId);
+        } catch (Exception e) {
+            logger.error("countByAreaCode : " + e.getMessage());
+            return 0;
+        }
+    }
+
+    @Override
+    public TourReviewDTO registerReview(TourReviewDTO tourReviewDTO) {
+        TourReviewDTO savedTourReview = new TourReviewDTO();
+
+        try {
+
+        } catch (Exception e) {
+
+        }
+
+        return savedTourReview;
     }
 }

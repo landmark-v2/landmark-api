@@ -1,9 +1,13 @@
 package com.landmark.app.model.domain;
 
+import com.landmark.app.model.dto.TourInfoDTO;
+import com.landmark.app.utils.MapperUtils;
 import lombok.Data;
+import org.modelmapper.TypeToken;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 관광지 운영자의 "관광지 정보 등록"
@@ -56,5 +60,13 @@ public class TourInfo {
     private String firstImage;              // 이미지 파일 경로
 
     private String homepage;                // url
+
+    public static TourInfo of(TourInfoDTO tourInfoDTO) {
+        return MapperUtils.convert(tourInfoDTO, TourInfo.class);
+    }
+
+    public static List<TourInfo> of(List<TourInfoDTO> tourInfoDTOS) {
+        return MapperUtils.convert(tourInfoDTOS, new TypeToken<List<TourInfo>>(){}.getType());
+    }
 
 }
