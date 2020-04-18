@@ -2,21 +2,23 @@ package com.landmark.app.model.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
 @Data
 @Table(name = "USER")
+@ToString(exclude = "role")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String username;
+    private String userName;
 
-    private String password;
+    private String passWord;
 
     private String name;
 

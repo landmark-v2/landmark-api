@@ -37,8 +37,6 @@ public class SearchServiceImpl extends LoggerUtils implements SearchService {
 
         int page = searchKeywordDTO.getPage() != 0 ? searchKeywordDTO.getPage() : 1;
         int size = searchKeywordDTO.getSize() != 0 ? searchKeywordDTO.getSize() : 10;
-//        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "createdTime"));
-        Pageable pageable = PageRequest.of(page, size);
 
         try {
             // 1. tourAPI 키워드로 조회
@@ -47,12 +45,13 @@ public class SearchServiceImpl extends LoggerUtils implements SearchService {
             tourInfoDTOS.addAll(searchKeywordConvertToTourInfoDTOS(searchKeywordResponse.getSearchKeyword()));
 
             // 2. TOUR_INFO 디비에서 조회
-            tourInfoDTOS.addAll(tourInfoService.findAllByKeyword(searchKeywordDTO.getKeyword()));
+//            tourInfoDTOS.addAll(tourInfoService.findAllByKeyword(searchKeywordDTO.getKeyword()));
         } catch (Exception e) {
             logger.error("searchKeyword : " + e.getMessage());
         }
 
         // 3. page 설정, Page<TourInfoDTO> 형식으로 리턴
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdTime"));
         return new PageImpl<>(tourInfoDTOS, pageable, tourInfoDTOS.size());
     }
 

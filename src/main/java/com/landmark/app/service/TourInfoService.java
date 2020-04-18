@@ -6,6 +6,10 @@ import java.util.List;
 
 public interface TourInfoService {
 
-    List<TourInfoDTO> findAllByKeyword(String keyword);
+    List<Integer> findAllIdByTitle(String title);
+
+    List<Integer> findAllIdByUserId(int userId);
+
+    List<TourInfoDTO.RegisteredTourInfoDTO> getRegisteredTourInfoDTO(int userId);
 
 }

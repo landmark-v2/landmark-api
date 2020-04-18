@@ -2,9 +2,13 @@ package com.landmark.app.model.dto;
 
 import com.landmark.app.model.domain.TourReview;
 import com.landmark.app.utils.MapperUtils;
+import com.landmark.app.utils.StaticHelper;
 import lombok.Data;
 import org.modelmapper.TypeToken;
+import org.springframework.data.domain.Page;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -12,8 +16,10 @@ import java.util.List;
 public class TourReviewDTO {
 
     private int id;
+    @Min(0)
     private int areaCode;                   // 지역코드
     private int sigunguCode;                // 시군구코드
+    @NotNull
     private String title;                   // 관광지명 (예 : 별내 스터디 카페)
     private String overView;                // 후기 내용
     private int userId;                     // 글쓴이(사용자) 인덱스
@@ -32,11 +38,34 @@ public class TourReviewDTO {
         return MapperUtils.convert(tourReviews, new TypeToken<List<TourReviewDTO>>(){}.getType());
     }
 
+    public static Page<TourReviewDTO> of(Page<TourReview> tourReviews) {
+        return MapperUtils.convert(tourReviews, TourReviewDTO.class);
+    }
+
     @Data
     public static class RecentReview {
         private String areaName;
         private String sigunguName;
         private String firstImage;
+    }
+
+    @Data
+    public static class SearchReviewDTO {
+        private int page;
+        private int size;
+        private int type;       // 0. 전체, 1. 사용자 아이디, 2. 관광지명
+        private int tourId;
+        private String q;       // 검색어
+        private String startDate;
+        private String endDate;
+
+        public Date getStartDate() {
+            return StaticHelper.stringToDate(startDate, "yyyyMMdd");
+        }
+
+        public Date getEndDate() {
+            return StaticHelper.stringToDate(endDate, "yyyyMMdd");
+        }
     }
 
 }

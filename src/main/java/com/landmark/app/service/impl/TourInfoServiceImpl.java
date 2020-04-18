@@ -6,6 +6,8 @@ import com.landmark.app.model.repository.TourInfoRepository;
 import com.landmark.app.service.TourInfoService;
 import com.landmark.app.utils.LoggerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,16 +24,62 @@ public class TourInfoServiceImpl extends LoggerUtils implements TourInfoService 
     }
 
     @Override
-    public List<TourInfoDTO> findAllByKeyword(String keyword) {
-        List<TourInfoDTO> tourInfoDTOS = new ArrayList<>();
+    public List<Integer> findAllIdByTitle(String title) {
+        List<Integer> tourIds = new ArrayList<>();
 
         try {
-            List<TourInfo> tourInfos = tourInfoRepository.findAllByTitleContainingOrderByCreatedTimeDesc(keyword);
-            tourInfoDTOS = TourInfoDTO.of(tourInfos);
+            List<TourInfo> tourInfos = tourInfoRepository.findByTitleContaining(title);
+
+            if (!tourInfos.isEmpty()) {
+                for (TourInfo tourInfo : tourInfos) {
+                    tourIds.add(tourInfo.getId());
+                }
+            }
         } catch (Exception e) {
-            logger.error("findAllByKeyword : " + e.getMessage());
+            logger.error("findAllIdByTitle : " + e.getMessage());
         }
 
-        return tourInfoDTOS;
+        return tourIds;
+    }
+
+    @Override
+    public List<Integer> findAllIdByUserId(int userId) {
+        List<Integer> tourIds = new ArrayList<>();
+
+        try {
+            List<TourInfo> tourInfos = tourInfoRepository.findAllByUserIdOrderByCreatedTime(userId);
+
+            if (!tourInfos.isEmpty()) {
+                for (TourInfo tourInfo : tourInfos) {
+                    tourIds.add(tourInfo.getId());
+                }
+            }
+        } catch (Exception e) {
+            logger.error("findAllIdByUserId : " + e.getMessage());
+        }
+
+        return tourIds;
+    }
+
+    @Override
+    public List<TourInfoDTO.RegisteredTourInfoDTO> getRegisteredTourInfoDTO(int userId) {
+        List<TourInfoDTO.RegisteredTourInfoDTO> registeredTourInfoDTOS = new ArrayList<>();
+
+        try {
+            List<TourInfo> tourInfos = tourInfoRepository.findAllByUserIdOrderByCreatedTime(userId);
+
+            if (!tourInfos.isEmpty()) {
+                for (TourInfo tourInfo : tourInfos) {
+                    TourInfoDTO.RegisteredTourInfoDTO registeredTourInfoDTO = new TourInfoDTO.RegisteredTourInfoDTO();
+                    registeredTourInfoDTO.setId(tourInfo.getId());
+                    registeredTourInfoDTO.setTitle(tourInfo.getTitle());
+                    registeredTourInfoDTOS.add(registeredTourInfoDTO);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("getRegisteredTourInfoDTO : " + e.getMessage());
+        }
+
+        return registeredTourInfoDTOS;
     }
 }

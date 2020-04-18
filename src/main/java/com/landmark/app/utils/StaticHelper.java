@@ -15,24 +15,19 @@ public class StaticHelper {
             SimpleDateFormat sdf = new SimpleDateFormat(format);
             date = sdf.parse(stringTime);
         } catch (Exception e) {
-            e.printStackTrace();
         }
 
         return date;
     }
 
     public static Date stringToDate(String dateTime, String format) {
-        Date date = new Date();
-
         try {
             String stringTime = String.valueOf(dateTime);
             SimpleDateFormat sdf = new SimpleDateFormat(format);
-            date = sdf.parse(stringTime);
+            return sdf.parse(stringTime);
         } catch (Exception e) {
-            e.printStackTrace();
+            return null;
         }
-
-        return date;
     }
 
     public static BigInteger dateToBigInteger(Date dateTime, String format) {
@@ -41,7 +36,6 @@ public class StaticHelper {
             String stringTime = sdf.format(dateTime);
             return new BigInteger(stringTime);
         } catch (Exception e) {
-            e.printStackTrace();
             return new BigInteger("0");
         }
     }

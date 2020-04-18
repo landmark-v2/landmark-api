@@ -40,4 +40,10 @@ public class TourInfoDTO {
         return MapperUtils.convert(tourInfos, new TypeToken<List<TourInfoDTO>>(){}.getType());
     }
 
+    @Data
+    public static class RegisteredTourInfoDTO {
+        private int id;
+        private String title;
+    }
+
 }

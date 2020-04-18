@@ -1,6 +1,7 @@
 package com.landmark.app.model.domain.user;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -8,11 +9,14 @@ import java.util.Set;
 @Entity
 @Data
 @Table(name = "ROLE")
+@ToString(exclude = "userRole")
 public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    private String roleName;
 
     @OneToMany
     @JoinTable(name = "USER_ROLE",
