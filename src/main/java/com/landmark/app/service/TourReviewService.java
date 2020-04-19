@@ -7,11 +7,13 @@ import java.util.List;
 
 public interface TourReviewService {
 
+    /**
+     * 저장
+     */
     TourReviewDTO save(TourReviewDTO tourReviewDTO);
 
     /**
      * 여행 후기 최신순 10개 조회
-     * @return RecentReview(areaName, sigunguName, firstImage)
      */
     List<TourReviewDTO.RecentReview> getRecentReviews(int userId);
 
@@ -29,5 +31,15 @@ public interface TourReviewService {
      * 여행 후기 전체 조회
      */
     Page<TourReviewDTO> getReviewList(int userId, String roleName, TourReviewDTO.SearchReviewDTO searchReviewDTO);
+
+    /**
+     * file 정보 가져오기
+     */
+    TourReviewDTO.FileDTO findFileInfoById(int id);
+
+    /**
+     * file 정보 저장
+     */
+    TourReviewDTO.FileDTO saveFile(TourReviewDTO.FileDTO fileDTO);
 
 }

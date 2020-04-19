@@ -68,4 +68,10 @@ public class TourReviewDTO {
         }
     }
 
+    @Data
+    public static class FileDTO {
+        private int id;
+        private String path;
+    }
+
 }

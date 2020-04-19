@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.landmark.app.utils.Constants.TOUR_REVIEW;
+import static com.landmark.app.utils.Constants.TOUR_REVIEW_API;
 
 @RestController
-@RequestMapping(value = TOUR_REVIEW)
+@RequestMapping(value = TOUR_REVIEW_API)
 public class TourReviewController extends LoggerUtils {
 
     private TourReviewService tourReviewService;

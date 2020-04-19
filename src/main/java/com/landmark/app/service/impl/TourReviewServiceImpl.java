@@ -303,4 +303,44 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
         return new PageImpl<>(new ArrayList<>());
     }
 
+    @Override
+    public TourReviewDTO.FileDTO findFileInfoById(int id) {
+        try {
+            TourReviewDTO tourReviewDTO = TourReviewDTO.of(tourReviewRepository.findById(id));
+
+            if (tourReviewDTO != null) {
+                return getFileDTO(id, tourReviewDTO.getFirstImage());
+            }
+        } catch (Exception e) {
+            logger.error("findFileInfoById : " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    @Override
+    public TourReviewDTO.FileDTO saveFile(TourReviewDTO.FileDTO fileDTO) {
+        try {
+            TourReviewDTO tourReviewDTO = TourReviewDTO.of(tourReviewRepository.findById(fileDTO.getId()));
+
+            if (tourReviewDTO != null) {
+                tourReviewDTO.setFirstImage(fileDTO.getPath());
+                tourReviewDTO = save(tourReviewDTO);
+                logger.info("saveFile : " + fileDTO.getPath());
+                return getFileDTO(tourReviewDTO.getId(), tourReviewDTO.getFirstImage());
+            }
+        } catch (Exception e) {
+            logger.error("saveFile : " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    private TourReviewDTO.FileDTO getFileDTO(int id, String path) {
+        TourReviewDTO.FileDTO fileDTO = new TourReviewDTO.FileDTO();
+        fileDTO.setId(id);
+        fileDTO.setPath(path);
+        return fileDTO;
+    }
+
 }

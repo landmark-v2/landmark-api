@@ -30,6 +30,16 @@ public class StaticHelper {
         }
     }
 
+    public static String dateToString(Date dateTime, String format) {
+        try {
+            String stringTime = String.valueOf(dateTime);
+            SimpleDateFormat sdf = new SimpleDateFormat(format);
+            return sdf.format(stringTime);
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
     public static BigInteger dateToBigInteger(Date dateTime, String format) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat(format);
