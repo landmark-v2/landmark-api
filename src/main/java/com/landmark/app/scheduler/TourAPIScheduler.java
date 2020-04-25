@@ -29,7 +29,7 @@ public class TourAPIScheduler extends LoggerUtils {
     }
 
     // 매일 오후 11시 30분에 추가할 관광지 정보가 있으면 디비에 저장
-//    @Scheduled(cron = "0 30 23 * * *")
+//    @Scheduled(cron = "0 30 23 * * ?")
 //    public void addTourInfoFromTourAPI() {
 //        try {
 //            tourApiService.saveTourInfoFromTourAPI();
@@ -39,8 +39,8 @@ public class TourAPIScheduler extends LoggerUtils {
 //    }
 
     // 매일 새벽 1시에 tel, homepage, overview 500개씩 저장 (임시)
-    @Scheduled(cron = "0 0 1 * * *")
-    public void updateTourInfoFromTourAPI(int contentId) {
+    @Scheduled(cron = "0 0 1 * * ?")
+    public void updateTourInfoFromTourAPI() {
         try {
             Pageable pageable = PageRequest.of(0, 500, Sort.by("id").ascending());
             List<TourInfo> tourInfos = tourInfoRepository.findAllByTelIsNullAndHomepageIsNullAndOverviewIsNull(pageable).getContent();
@@ -49,7 +49,7 @@ public class TourAPIScheduler extends LoggerUtils {
                 for (TourInfo tourInfo : tourInfos) {
                     TourApiRequest tourApiRequest = new TourApiRequest();
                     tourApiRequest.setDefaultYn("Y");
-                    tourApiRequest.setContentId(contentId);
+                    tourApiRequest.setContentId(tourInfo.getContentId());
 
                     DetailCommonResponse detailCommonResponse = tourApiService.detailCommon(tourApiRequest);
 
