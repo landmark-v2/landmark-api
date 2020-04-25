@@ -15,4 +15,8 @@ public interface TourInfoRepository extends JpaRepository<TourInfo, Integer> {
 
     Page<TourInfo> findAllByTitleContainingOrderByCreatedTimeDesc(String keyword, Pageable pageable);
 
+    List<TourInfo> findAllByTelIsNullAndHomepageIsNullAndOverviewIsNull();
+
+    Page<TourInfo> findAllByTelIsNullAndHomepageIsNullAndOverviewIsNull(Pageable pageable);
+
 }

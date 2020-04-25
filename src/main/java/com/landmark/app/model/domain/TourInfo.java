@@ -43,12 +43,14 @@ public class TourInfo {
     @Column(name = "content_type_id")
     private int contentTypeId;              // 콘텐츠 타입 id
 
+    @Column(name = "content_id")
+    private int contentId;                  // 콘텐츠 id
+
     private String tel;                     // 전화번호
 
     private String title;                   // 관광지명
 
-    @Column(name = "over_view")
-    private String overView;                // 관광지 설명
+    private String overview;                // 관광지 설명
 
     @Column(name = "created_time")
     private Date createdTime;               // 등록일자

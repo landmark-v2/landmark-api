@@ -17,6 +17,7 @@ public class Constants {
     public static final String SEARCH_KEYWORD_API   = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/searchKeyword?";
     public static final String SEARCH_FESTIVAL_API  = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/searchFestival?";
     public static final String DETAIL_INTRO_API     = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/detailIntro?";
+    public static final String DETAIL_COMMON_API     = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/detailCommon?";
 
     /** API **/
     public static final String SEARCH_API           = "/search";

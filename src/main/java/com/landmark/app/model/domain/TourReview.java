@@ -29,8 +29,7 @@ public class TourReview {
 
     private String title;                   // 관광지명 (예 : 별내 스터디 카페)
 
-    @Column(name = "over_view")
-    private String overView;                // 후기 내용
+    private String overview;                // 후기 내용
 
     @Column(name = "user_id")
     private int userId;                     // 글쓴이(사용자) 인덱스

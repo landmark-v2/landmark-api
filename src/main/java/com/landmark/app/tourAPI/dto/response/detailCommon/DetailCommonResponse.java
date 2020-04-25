@@ -1,4 +1,4 @@
-package com.landmark.app.tourAPI.dto.response.detailIntro;
+package com.landmark.app.tourAPI.dto.response.detailCommon;
 
 import com.landmark.app.tourAPI.dto.Header;
 import com.landmark.app.tourAPI.dto.PageInfo;
@@ -7,10 +7,10 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class DetailIntroResponse {
+public class DetailCommonResponse {
 
     private Header header;
-    private List<DetailIntro> detailIntro;
+    private List<DetailCommon> detailCommon;
     private PageInfo pageInfo;
 
 }

@@ -24,7 +24,7 @@ public class TourInfoDTO {
     private int contentTypeId;              // 콘텐츠 타입 id
     private String tel;                     // 전화번호
     private String title;                   // 관광지명
-    private String overView;                // 관광지 설명
+    private String overview;                // 관광지 설명
     private Date createdTime;               // 등록일자
     private Date modifiedTime;              // 수정일자
     private String firstImage;              // 이미지 파일 경로

@@ -21,6 +21,7 @@ public class TourApiRequest {
     private int eventStartDate;     // 행사 시작일
     private int eventEndDate;       // 행사 종료일
     private int contentId;          // 콘텐츠 id
+    private String defaultYn;
 
     @Override
     public String toString() {
@@ -72,6 +73,10 @@ public class TourApiRequest {
 
         if (contentId != 0) {
             params += "&contentId=" + contentId;
+        }
+
+        if (defaultYn != null && !defaultYn.equals("")) {
+            params += "&defaultYN=" + defaultYn;
         }
 
         return params;

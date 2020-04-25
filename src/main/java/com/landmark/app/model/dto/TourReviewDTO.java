@@ -21,7 +21,7 @@ public class TourReviewDTO {
     private int sigunguCode;                // 시군구코드
     @NotNull
     private String title;                   // 관광지명 (예 : 별내 스터디 카페)
-    private String overView;                // 후기 내용
+    private String overview;                // 후기 내용
     private int userId;                     // 글쓴이(사용자) 인덱스
     private int tourId;                     // 관광지 인덱스(TOUR_INFO) -> 관광지 추천 API 호출한 관광지이면 0 으로 등록
     private Date createdTime;               // 등록일자

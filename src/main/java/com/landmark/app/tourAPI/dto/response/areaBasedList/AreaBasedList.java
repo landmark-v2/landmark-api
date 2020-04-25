@@ -27,9 +27,8 @@ public class AreaBasedList {
     private BigInteger modifiedTime;    // 수정일
     private int readCount;              // 조회수
     private int sigunguCode;            // 시군구코드
-    private String tel;                 // 전화번호
     private String title;               // 제목
-    private int zipCode;                // 우편번호
+    private String zipCode;             // 우편번호
 
     public Date getCreatedTime() {
         return createdTime != null ? StaticHelper.intToDate(createdTime, "yyyyMMddHHmmss") : null;
