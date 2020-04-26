@@ -15,9 +15,6 @@ import com.landmark.app.utils.LoggerUtils;
 import com.landmark.app.utils.StaticHelper;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.landmark.app.utils.Constants.*;
+import static com.landmark.app.utils.constants.Constants.*;
 
 @Service
 public class TourApiServiceImpl extends LoggerUtils implements TourApiService {

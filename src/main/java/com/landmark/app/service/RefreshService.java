@@ -2,7 +2,7 @@ package com.landmark.app.service;
 
 import com.landmark.app.model.domain.*;
 import com.landmark.app.model.repository.*;
-import com.landmark.app.utils.Constants;
+import com.landmark.app.utils.constants.Constants;
 import com.landmark.app.utils.LoggerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

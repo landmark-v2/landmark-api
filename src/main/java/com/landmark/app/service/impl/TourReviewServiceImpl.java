@@ -6,7 +6,7 @@ import com.landmark.app.model.repository.TourReviewRepository;
 import com.landmark.app.service.TourInfoService;
 import com.landmark.app.service.TourReviewService;
 import com.landmark.app.service.UserService;
-import com.landmark.app.utils.Constants;
+import com.landmark.app.utils.constants.Constants;
 import com.landmark.app.utils.LoggerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static com.landmark.app.utils.Constants.*;
+import static com.landmark.app.utils.constants.Constants.*;
 
 @Service
 public class TourReviewServiceImpl extends LoggerUtils implements TourReviewService {
@@ -321,7 +321,7 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
     @Override
     public TourReviewDTO.FileDTO saveFile(TourReviewDTO.FileDTO fileDTO) {
         try {
-            TourReviewDTO tourReviewDTO = TourReviewDTO.of(tourReviewRepository.findById(fileDTO.getId()));
+            TourReviewDTO tourReviewDTO = TourReviewDTO.of(tourReviewRepository.findById(fileDTO.getReviewId()));
 
             if (tourReviewDTO != null) {
                 tourReviewDTO.setFirstImage(fileDTO.getPath());
@@ -338,7 +338,7 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
 
     private TourReviewDTO.FileDTO getFileDTO(int id, String path) {
         TourReviewDTO.FileDTO fileDTO = new TourReviewDTO.FileDTO();
-        fileDTO.setId(id);
+        fileDTO.setReviewId(id);
         fileDTO.setPath(path);
         return fileDTO;
     }

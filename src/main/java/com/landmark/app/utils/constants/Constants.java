@@ -1,4 +1,4 @@
-package com.landmark.app.utils;
+package com.landmark.app.utils.constants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,9 +14,6 @@ public class Constants {
 
     /** 국내 관광지 추천 API **/
     public static final String AREA_BASED_LIST_API  = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?";
-    public static final String SEARCH_KEYWORD_API   = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/searchKeyword?";
-    public static final String SEARCH_FESTIVAL_API  = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/searchFestival?";
-    public static final String DETAIL_INTRO_API     = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/detailIntro?";
     public static final String DETAIL_COMMON_API     = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/detailCommon?";
 
     /** API **/
@@ -33,5 +30,14 @@ public class Constants {
     public static final int REVIEW_TYPE_ALL     = 0;    // 전체 조회
     public static final int REVIEW_TYPE_ACCOUNT = 1;    // 사용자 아이디로 조회
     public static final int REVIEW_TYPE_TITLE   = 2;    // 관광지명으로 조회
+
+    /** Content Type Id **/
+    public static final int CONTENT_TYPE_ID_TOUR            = 12;   // 관광지
+    public static final int CONTENT_TYPE_ID_CULTURE         = 14;   // 문화시설
+    public static final int CONTENT_TYPE_ID_FESTIVAL        = 15;   // 행사/공연/축제
+    public static final int CONTENT_TYPE_ID_TRAVEL_COURSE   = 25;   // 여행코스
+    public static final int CONTENT_TYPE_ID_LEPORTS         = 28;   // 레포츠
+    public static final int CONTENT_TYPE_ID_SHOPPING        = 38;   // 쇼핑
+    public static final int CONTENT_TYPE_ID_FOOD            = 39;   // 음식점
 
 }

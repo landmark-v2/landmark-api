@@ -4,6 +4,7 @@ import com.landmark.app.model.domain.TourInfo;
 import com.landmark.app.utils.MapperUtils;
 import lombok.Data;
 import org.modelmapper.TypeToken;
+import org.springframework.data.domain.Page;
 
 import java.util.Date;
 import java.util.List;
@@ -38,6 +39,10 @@ public class TourInfoDTO {
 
     public static List<TourInfoDTO> of(List<TourInfo> tourInfos) {
         return MapperUtils.convert(tourInfos, new TypeToken<List<TourInfoDTO>>(){}.getType());
+    }
+
+    public static Page<TourInfoDTO> of(Page<TourInfo> tourInfos) {
+        return MapperUtils.convert(tourInfos, TourInfoDTO.class);
     }
 
 }

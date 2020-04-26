@@ -1,90 +1,122 @@
-//package com.landmark.app.service.impl;
-//
-//import com.landmark.app.model.dto.SearchDTO;
-//import com.landmark.app.model.dto.TourInfoDTO;
-//import com.landmark.app.service.SearchService;
-//import com.landmark.app.service.TourInfoService;
-//import com.landmark.app.tourAPI.service.TourApiService;
-//import com.landmark.app.tourAPI.dto.request.TourApiRequest;
-//import com.landmark.app.utils.LoggerUtils;
-//import com.landmark.app.utils.MapperUtils;
-//import com.landmark.app.utils.StaticHelper;
-//import org.modelmapper.TypeToken;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.data.domain.*;
-//import org.springframework.stereotype.Service;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//@Service
-//public class SearchServiceImpl extends LoggerUtils implements SearchService {
-//
-//    private TourApiService tourApiService;
-//    private TourInfoService tourInfoService;
-//
-//    @Autowired
-//    public SearchServiceImpl(TourApiService tourApiService, TourInfoService tourInfoService) {
-//        this.tourApiService = tourApiService;
-//        this.tourInfoService = tourInfoService;
-//    }
-//
-//    @Override
-//    public Page<TourInfoDTO> searchKeyword(SearchDTO.SearchKeywordDTO searchKeywordDTO) {
-//        List<TourInfoDTO> tourInfoDTOS = new ArrayList<>();
-//
-//        int page = searchKeywordDTO.getPage() != 0 ? searchKeywordDTO.getPage() : 1;
-//        int size = searchKeywordDTO.getSize() != 0 ? searchKeywordDTO.getSize() : 10;
-//
-//        try {
-//            // 1. tourAPI 키워드로 조회
-//            TourApiRequest tourApiRequest = convertToTourApiRequest(searchKeywordDTO);
-//            SearchKeywordResponse searchKeywordResponse = tourApiService.searchKeyword(page, size, tourApiRequest);
-//            tourInfoDTOS.addAll(searchKeywordConvertToTourInfoDTOS(searchKeywordResponse.getSearchKeyword()));
-//
-//            // 2. TOUR_INFO 디비에서 조회
-////            tourInfoDTOS.addAll(tourInfoService.findAllByKeyword(searchKeywordDTO.getKeyword()));
-//        } catch (Exception e) {
-//            logger.error("searchKeyword : " + e.getMessage());
-//        }
-//
-//        // 3. page 설정, Page<TourInfoDTO> 형식으로 리턴
-//        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdTime"));
-//        return new PageImpl<>(tourInfoDTOS, pageable, tourInfoDTOS.size());
-//    }
-//
-//    private TourApiRequest convertToTourApiRequest(SearchDTO.SearchKeywordDTO searchKeywordDTO) {
-//        String listYN = "Y";
-//        String arrange = StaticHelper.getInfoValue(searchKeywordDTO.getArrange(), "D");
-//        int contentTypeId = searchKeywordDTO.getContentTypeId();
-//        int areaCode = searchKeywordDTO.getAreaCode();
-//        int sigunguCode = searchKeywordDTO.getSigunguCode();
-//        String cat1 = StaticHelper.getInfoValue(searchKeywordDTO.getCat1(), "");
-//        String cat2 = StaticHelper.getInfoValue(searchKeywordDTO.getCat2(), "");;
-//        String cat3 = StaticHelper.getInfoValue(searchKeywordDTO.getCat3(), "");;
-//        String keyword = StaticHelper.getInfoValue(searchKeywordDTO.getKeyword(), "");
-//
-//        TourApiRequest tourApiRequest = new TourApiRequest();
-//        tourApiRequest.setListYN(listYN);
-//        tourApiRequest.setArrange(arrange);
-//        tourApiRequest.setContentTypeId(contentTypeId);
-//        tourApiRequest.setAreaCode(areaCode);
-//        tourApiRequest.setSigunguCode(sigunguCode);
-//        tourApiRequest.setCat1(cat1);
-//        tourApiRequest.setCat2(cat2);
-//        tourApiRequest.setCat3(cat3);
-//        tourApiRequest.setKeyword(keyword);
-//
-//        return tourApiRequest;
-//    }
-//
-//    private List<TourInfoDTO> searchKeywordConvertToTourInfoDTOS(List<SearchKeyword> searchKeywords) {
-//        List<TourInfoDTO> tourInfoDTOS = MapperUtils.convert(searchKeywords, new TypeToken<List<TourInfoDTO>>(){}.getType());
-//
-//        if (tourInfoDTOS != null) {
-//            return tourInfoDTOS;
-//        } else {
-//            return new ArrayList<>();
-//        }
-//    }
-//}
+package com.landmark.app.service.impl;
+
+import com.landmark.app.model.dto.SearchTourInfoDTO;
+import com.landmark.app.model.dto.TourInfoDTO;
+import com.landmark.app.model.repository.TourInfoRepository;
+import com.landmark.app.service.SearchService;
+import com.landmark.app.utils.LoggerUtils;
+import com.landmark.app.utils.SearchTypeHelper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
+import org.springframework.stereotype.Service;
+
+import static com.landmark.app.utils.constants.SearchType.*;
+
+@Service
+public class SearchServiceImpl extends LoggerUtils implements SearchService {
+
+    private TourInfoRepository tourInfoRepository;
+
+    @Autowired
+    public SearchServiceImpl(TourInfoRepository tourInfoRepository) {
+        this.tourInfoRepository = tourInfoRepository;
+    }
+
+    @Override
+    public Page<TourInfoDTO> searchTourInfo(SearchTourInfoDTO searchDTO) throws Exception {
+        String type = searchDTO.getType() == 1 ? "createdTime" : "title";
+
+        Pageable pageable = null;
+
+        if (searchDTO.getSort() == 1) {
+            pageable = PageRequest.of(searchDTO.getPage(), searchDTO.getSize(), Sort.by(type).descending());
+        } else {
+            pageable = PageRequest.of(searchDTO.getPage(), searchDTO.getSize(), Sort.by(type).ascending());
+        }
+
+        int searchType = searchDTO.getContentTypeId() != 0 ? SearchTypeHelper.searchType(searchDTO) : 0;
+
+        try {
+            if (searchType == SEARCH_TYPE_CONTENT_TYPE) {
+                logger.info("search tourInfo : contentTypeId");
+                return TourInfoDTO.of(tourInfoRepository.findAllByContentTypeId(searchDTO.getContentTypeId(), pageable));
+            } else if (searchType == SEARCH_TYPE_AREA) {
+                logger.info("search tourInfo : contentTypeId, areaCode");
+                return TourInfoDTO.of(tourInfoRepository.findAllByAreaCodeAndContentTypeId(searchDTO.getAreaCode(), searchDTO.getContentTypeId(), pageable));
+            } else if (searchType == SEARCH_TYPE_AREA_SIGUNGU) {
+                logger.info("search tourInfo : contentTypeId, areaCode, sigunguCode");
+                return TourInfoDTO.of(tourInfoRepository.findAllByAreaCodeAndSigunguCodeAndContentTypeId(searchDTO.getAreaCode(), searchDTO.getSigunguCode(), searchDTO.getContentTypeId(), pageable));
+            } else if (searchType == SEARCH_TYPE_AREA_SIGUNGU_CAT1) {
+                logger.info("search tourInfo : contentTypeId, areaCode, sigunguCode, cat1");
+                return TourInfoDTO.of(tourInfoRepository.findAllByAreaCodeAndSigunguCodeAndCat1AndContentTypeId(searchDTO.getAreaCode(), searchDTO.getSigunguCode(), searchDTO.getCat1(), searchDTO.getContentTypeId(), pageable));
+            } else if (searchType == SEARCH_TYPE_AREA_SIGUNGU_CAT1_CAT2) {
+                logger.info("search tourInfo : contentTypeId, areaCode, sigunguCode, cat1, cat2");
+                return TourInfoDTO.of(tourInfoRepository.findAllByAreaCodeAndSigunguCodeAndCat1AndCat2AndContentTypeId(searchDTO.getAreaCode(), searchDTO.getSigunguCode(), searchDTO.getCat1(), searchDTO.getCat2(), searchDTO.getContentTypeId(), pageable));
+            } else if (searchType == SEARCH_TYPE_AREA_SIGUNGU_CAT1_CAT2_CAT3) {
+                logger.info("search tourInfo : contentTypeId, areaCode, sigunguCode, cat1, cat2, cat3");
+                return TourInfoDTO.of(tourInfoRepository.findAllByAreaCodeAndSigunguCodeAndCat1AndCat2AndCat3AndContentTypeId(searchDTO.getAreaCode(), searchDTO.getSigunguCode(), searchDTO.getCat1(), searchDTO.getCat2(), searchDTO.getCat3(), searchDTO.getContentTypeId(), pageable));
+            } else if (searchType == SEARCH_TYPE_AREA_CAT1) {
+                logger.info("search tourInfo : contentTypeId, areaCode, cat1");
+                return TourInfoDTO.of(tourInfoRepository.findAllByAreaCodeAndCat1AndContentTypeId(searchDTO.getAreaCode(), searchDTO.getCat1(), searchDTO.getContentTypeId(), pageable));
+            } else if (searchType == SEARCH_TYPE_AREA_CAT1_CAT2) {
+                logger.info("search tourInfo : contentTypeId, areaCode, cat1, cat2");
+                return TourInfoDTO.of(tourInfoRepository.findAllByAreaCodeAndCat1AndCat2AndContentTypeId(searchDTO.getAreaCode(), searchDTO.getCat1(), searchDTO.getCat2(), searchDTO.getContentTypeId(), pageable));
+            } else if (searchType == SEARCH_TYPE_AREA_CAT1_CAT2_CAT3) {
+                logger.info("search tourInfo : contentTypeId, areaCode, cat1, cat2, cat3");
+                return TourInfoDTO.of(tourInfoRepository.findAllByAreaCodeAndCat1AndCat2AndCat3AndContentTypeId(searchDTO.getAreaCode(), searchDTO.getCat1(), searchDTO.getCat2(), searchDTO.getCat3(), searchDTO.getContentTypeId(), pageable));
+            } else if (searchType == SEARCH_TYPE_CAT1) {
+                logger.info("search tourInfo : contentTypeId, cat1");
+                return TourInfoDTO.of(tourInfoRepository.findAllByCat1AndContentTypeId(searchDTO.getCat1(), searchDTO.getContentTypeId(), pageable));
+            } else if (searchType == SEARCH_TYPE_CAT1_CAT2) {
+                logger.info("search tourInfo : contentTypeId, cat1, cat2");
+                return TourInfoDTO.of(tourInfoRepository.findAllByCat1AndCat2AndContentTypeId(searchDTO.getCat1(), searchDTO.getCat2(), searchDTO.getContentTypeId(), pageable));
+            } else if (searchType == SEARCH_TYPE_CAT1_CAT2_CAT3) {
+                logger.info("search tourInfo : contentTypeId, cat1, cat2, cat3");
+                return TourInfoDTO.of(tourInfoRepository.findAllByCat1AndCat2AndCat3AndContentTypeId(searchDTO.getCat1(), searchDTO.getCat2(), searchDTO.getCat3(), searchDTO.getContentTypeId(), pageable));
+            } else if (searchType == SEARCH_TYPE_AREA_KEYWORD) {
+                logger.info("search tourInfo : contentTypeId, areaCode, keyword");
+                return TourInfoDTO.of(tourInfoRepository.findAllByAreaCodeAndContentTypeIdAndTitleContaining(searchDTO.getAreaCode(), searchDTO.getContentTypeId(), searchDTO.getKeyword(), pageable));
+            } else if (searchType == SEARCH_TYPE_AREA_SIGUNGU_KEYWORD) {
+                logger.info("search tourInfo : contentTypeId, areaCode, sigunguCode, keyword");
+                return TourInfoDTO.of(tourInfoRepository.findAllByAreaCodeAndSigunguCodeAndContentTypeIdAndTitleContaining(searchDTO.getAreaCode(), searchDTO.getSigunguCode(), searchDTO.getContentTypeId(), searchDTO.getKeyword(), pageable));
+            } else if (searchType == SEARCH_TYPE_AREA_SIGUNGU_CAT1_KEYWORD) {
+                logger.info("search tourInfo : contentTypeId, areaCode, sigunguCode, cat1, keyword");
+                return TourInfoDTO.of(tourInfoRepository.findAllByAreaCodeAndSigunguCodeAndCat1AndContentTypeIdAndTitleContaining(searchDTO.getAreaCode(), searchDTO.getSigunguCode(), searchDTO.getCat1(), searchDTO.getContentTypeId(), searchDTO.getKeyword(), pageable));
+            } else if (searchType == SEARCH_TYPE_AREA_SIGUNGU_CAT1_CAT2_KEYWORD) {
+                logger.info("search tourInfo : contentTypeId, areaCode, sigunguCode, cat1, cat2, keyword");
+                return TourInfoDTO.of(tourInfoRepository.findAllByAreaCodeAndSigunguCodeAndCat1AndCat2AndContentTypeIdAndTitleContaining(searchDTO.getAreaCode(), searchDTO.getSigunguCode(), searchDTO.getCat1(), searchDTO.getCat2(), searchDTO.getContentTypeId(), searchDTO.getKeyword(), pageable));
+            } else if (searchType == SEARCH_TYPE_AREA_SIGUNGU_CAT1_CAT2_CAT3_KEYWORD) {
+                logger.info("search tourInfo : contentTypeId, areaCode, sigunguCode, cat1, cat2, cat3, keyword");
+                return TourInfoDTO.of(tourInfoRepository.findAllByAreaCodeAndSigunguCodeAndCat1AndCat2AndCat3AndContentTypeIdAndTitleContaining(searchDTO.getAreaCode(), searchDTO.getSigunguCode(), searchDTO.getCat1(), searchDTO.getCat2(), searchDTO.getCat3(), searchDTO.getContentTypeId(), searchDTO.getKeyword(), pageable));
+            } else if (searchType == SEARCH_TYPE_AREA_CAT1_KEYWORD) {
+                logger.info("search tourInfo : contentTypeId, areaCode, cat1, keyword");
+                return TourInfoDTO.of(tourInfoRepository.findAllByAreaCodeAndCat1AndContentTypeIdAndTitleContaining(searchDTO.getAreaCode(), searchDTO.getCat1(), searchDTO.getContentTypeId(), searchDTO.getKeyword(), pageable));
+            } else if (searchType == SEARCH_TYPE_AREA_CAT1_CAT2_KEYWORD) {
+                logger.info("search tourInfo : contentTypeId, areaCode, cat1, cat2, keyword");
+                return TourInfoDTO.of(tourInfoRepository.findAllByAreaCodeAndCat1AndCat2AndContentTypeIdAndTitleContaining(searchDTO.getAreaCode(), searchDTO.getCat1(), searchDTO.getCat2(), searchDTO.getContentTypeId(), searchDTO.getKeyword(), pageable));
+            } else if (searchType == SEARCH_TYPE_AREA_CAT1_CAT2_CAT3_KEYWORD) {
+                logger.info("search tourInfo : contentTypeId, areaCode, cat1, cat2, cat3, keyword");
+                return TourInfoDTO.of(tourInfoRepository.findAllByAreaCodeAndCat1AndCat2AndCat3AndContentTypeIdAndTitleContaining(searchDTO.getAreaCode(), searchDTO.getCat1(), searchDTO.getCat2(), searchDTO.getCat3(), searchDTO.getContentTypeId(), searchDTO.getKeyword(), pageable));
+            } else if (searchType == SEARCH_TYPE_CAT1_KEYWORD) {
+                logger.info("search tourInfo : contentTypeId, cat1, keyword");
+                return TourInfoDTO.of(tourInfoRepository.findAllByCat1AndContentTypeIdAndTitleContaining(searchDTO.getCat1(), searchDTO.getContentTypeId(), searchDTO.getKeyword(), pageable));
+            } else if (searchType == SEARCH_TYPE_CAT1_CAT2_KEYWORD) {
+                logger.info("search tourInfo : contentTypeId, cat1, cat2, keyword");
+                return TourInfoDTO.of(tourInfoRepository.findAllByCat1AndCat2AndContentTypeIdAndTitleContaining(searchDTO.getCat1(), searchDTO.getCat2(), searchDTO.getContentTypeId(), searchDTO.getKeyword(), pageable));
+            } else if (searchType == SEARCH_TYPE_CAT1_CAT2_CAT3_KEYWORD) {
+                logger.info("search tourInfo : contentTypeId, cat1, cat2, cat3, keyword");
+                return TourInfoDTO.of(tourInfoRepository.findAllByCat1AndCat2AndCat3AndContentTypeIdAndTitleContaining(searchDTO.getCat1(), searchDTO.getCat2(), searchDTO.getCat3(), searchDTO.getContentTypeId(), searchDTO.getKeyword(), pageable));
+            } else if (searchType == SEARCH_TYPE_KEYWORD) {
+                logger.info("search tourInfo : contentTypeId, keyword");
+                return TourInfoDTO.of(tourInfoRepository.findAllByAndContentTypeIdAndTitleContaining(searchDTO.getContentTypeId(), searchDTO.getKeyword(), pageable));
+            } else {
+                logger.info("search tourInfo : all");
+                return TourInfoDTO.of(tourInfoRepository.findAll(pageable));
+            }
+        } catch (Exception e) {
+            logger.error("searchTourInfo : " + e.getMessage());
+            throw new Exception(e);
+        }
+    }
+
+}

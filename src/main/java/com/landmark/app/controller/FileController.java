@@ -3,7 +3,7 @@ package com.landmark.app.controller;
 import com.landmark.app.model.dto.TourReviewDTO;
 import com.landmark.app.utils.LoggerUtils;
 import com.landmark.app.service.FileService;
-import com.landmark.app.utils.UploadFileUtils;
+import com.landmark.app.utils.FileUploader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import static com.landmark.app.utils.Constants.FILE_API;
+import static com.landmark.app.utils.constants.Constants.FILE_API;
 
 @RestController
 @RequestMapping(value = FILE_API)
@@ -31,15 +31,15 @@ public class FileController extends LoggerUtils {
      * TODO 이미지 파일 url 전달 방식 생각 해 보기
      */
     @GetMapping
-    public ResponseEntity<?> getFile(@RequestParam int id) {
+    public ResponseEntity<?> getFile(@RequestParam int reviewId) {
         try {
-            TourReviewDTO.FileDTO fileDTO = fileService.load(id);
+            TourReviewDTO.FileDTO fileDTO = fileService.load(reviewId);
             String filePath = fileDTO.getPath();
 
             if (filePath != null || !filePath.equals("")) {
                 String[] filePathArr = filePath.split("/");
                 String fileName = filePathArr[filePathArr.length - 1];
-                String fileType = UploadFileUtils.getFileType(fileName);
+                String fileType = FileUploader.getFileType(fileName);
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + new String(filePath.getBytes("UTF-8"), "ISO-8859-1") + "\"");
@@ -60,10 +60,10 @@ public class FileController extends LoggerUtils {
      * file 저장
      */
     @PostMapping
-    public ResponseEntity<?> saveFile(@RequestParam int id, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> saveFile(@RequestParam int reviewId, @RequestParam("file") MultipartFile file) {
         try {
             logger.info("saveFile : " + file.getOriginalFilename());
-            return new ResponseEntity<>(fileService.store(id, file), HttpStatus.OK);
+            return new ResponseEntity<>(fileService.store(reviewId, file), HttpStatus.OK);
         } catch (Exception e) {
             logger.error("saveFile : " + e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -74,8 +74,8 @@ public class FileController extends LoggerUtils {
      * file 삭제
      */
     @DeleteMapping
-    public ResponseEntity<?> deleteFile(@RequestParam int id) {
-        return new ResponseEntity<>(fileService.delete(id), HttpStatus.OK);
+    public ResponseEntity<?> deleteFile(@RequestParam int reviewId) {
+        return new ResponseEntity<>(fileService.delete(reviewId), HttpStatus.OK);
     }
 
 }

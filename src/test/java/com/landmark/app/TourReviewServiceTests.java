@@ -2,13 +2,13 @@ package com.landmark.app;
 
 import com.landmark.app.model.dto.TourReviewDTO;
 import com.landmark.app.service.TourReviewService;
-import com.landmark.app.utils.Constants;
+import com.landmark.app.utils.constants.Constants;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static com.landmark.app.utils.Constants.ROLE_ADMIN;
+import static com.landmark.app.utils.constants.Constants.ROLE_ADMIN;
 
 @SpringBootTest
 public class TourReviewServiceTests {
