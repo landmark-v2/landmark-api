@@ -61,25 +61,4 @@ public class TourInfoServiceImpl extends LoggerUtils implements TourInfoService 
         return tourIds;
     }
 
-    @Override
-    public List<TourInfoDTO.RegisteredTourInfoDTO> getRegisteredTourInfoDTO(int userId) {
-        List<TourInfoDTO.RegisteredTourInfoDTO> registeredTourInfoDTOS = new ArrayList<>();
-
-        try {
-            List<TourInfo> tourInfos = tourInfoRepository.findAllByUserIdOrderByCreatedTime(userId);
-
-            if (!tourInfos.isEmpty()) {
-                for (TourInfo tourInfo : tourInfos) {
-                    TourInfoDTO.RegisteredTourInfoDTO registeredTourInfoDTO = new TourInfoDTO.RegisteredTourInfoDTO();
-                    registeredTourInfoDTO.setId(tourInfo.getId());
-                    registeredTourInfoDTO.setTitle(tourInfo.getTitle());
-                    registeredTourInfoDTOS.add(registeredTourInfoDTO);
-                }
-            }
-        } catch (Exception e) {
-            logger.error("getRegisteredTourInfoDTO : " + e.getMessage());
-        }
-
-        return registeredTourInfoDTOS;
-    }
 }

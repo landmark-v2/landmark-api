@@ -28,6 +28,7 @@ public class FileController extends LoggerUtils {
 
     /**
      * file 불러오기
+     * TODO 이미지 파일 url 전달 방식 생각 해 보기
      */
     @GetMapping
     public ResponseEntity<?> getFile(@RequestParam int id) {
