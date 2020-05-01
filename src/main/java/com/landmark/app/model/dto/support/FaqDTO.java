@@ -19,16 +19,12 @@ public class FaqDTO {
     private Date createdTime;
     private Date modifiedTime;
 
-    public static FaqDTO of(FaqDTO faqDTO) {
-        return MapperUtils.convert(faqDTO, FaqDTO.class);
+    public static FaqDTO of(Faq faq) {
+        return MapperUtils.convert(faq, FaqDTO.class);
     }
 
     public static List<TourInfoDTO> of(List<Faq> Faqs) {
         return MapperUtils.convert(Faqs, new TypeToken<List<FaqDTO>>(){}.getType());
-    }
-
-    public static Page<FaqDTO> of(Page<Faq> Faqs) {
-        return MapperUtils.convert(Faqs, FaqDTO.class);
     }
 
 }

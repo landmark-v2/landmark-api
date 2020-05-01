@@ -20,7 +20,7 @@ public class FaqServiceImpl extends LoggerUtils implements FaqService {
         try{
             faqDTO.setModifiedTime(new Date());
             Faq faq = faqRepository.saveAndFlush(Faq.of(faqDTO));
-            return FaqDTO.of(faqDTO);
+            return FaqDTO.of(faq);
         } catch (Exception e){
             logger.error("Faq save : " + e.getMessage());
             return null;

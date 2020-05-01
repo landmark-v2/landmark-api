@@ -1,6 +1,5 @@
 package com.landmark.app.model.dto.support;
 
-import com.landmark.app.model.domain.support.Notice;
 import com.landmark.app.model.domain.support.Qna;
 import com.landmark.app.utils.MapperUtils;
 import lombok.Data;
@@ -17,7 +16,6 @@ public class QnaDTO {
     private int userId;
     private String title;
     private String contenet;
-    private String comment;
     private Date createdTime;
     private Date modifiedTime;
 

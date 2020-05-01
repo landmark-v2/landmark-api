@@ -27,8 +27,6 @@ public class Qna {
 
     private String contenet;
 
-    private String comment;
-
     @Column(name = "created_time")
     private Date createdTime;
 

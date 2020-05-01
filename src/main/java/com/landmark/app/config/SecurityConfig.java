@@ -60,6 +60,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/info/**").hasAnyRole(ADMIN, DEV)
                 .antMatchers(HttpMethod.PUT, "/info/**").hasAnyRole(ADMIN, DEV)
                 .antMatchers(HttpMethod.DELETE, "/info/**").hasAnyRole(ADMIN, DEV)
+                .antMatchers(HttpMethod.POST, "/faq/**").hasRole(DEV)
+                .antMatchers(HttpMethod.GET, "/faq/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/faq/**").hasRole(DEV)
+                .antMatchers(HttpMethod.DELETE, "/faq/**").hasRole(DEV)
                 .anyRequest().authenticated();
 
 

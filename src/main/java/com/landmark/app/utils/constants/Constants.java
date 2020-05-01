@@ -24,7 +24,8 @@ public class Constants {
     public static final String SEARCH_API           = "/search";
     public static final String TOUR_REVIEW_API      = "/review";
     public static final String FILE_API             = "/file";
-    public static final String TOUR_INFO_API            = "/info";
+    public static final String TOUR_INFO_API        = "/info";
+    public static final String QNA_API              = "/qna";
 
     /** ROLE **/
     public static final String ROLE_USER        = "ROLE_USER";      // 일반 사용자

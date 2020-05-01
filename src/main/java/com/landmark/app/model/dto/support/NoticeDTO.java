@@ -1,8 +1,6 @@
 package com.landmark.app.model.dto.support;
 
-import com.landmark.app.model.domain.TourInfo;
 import com.landmark.app.model.domain.support.Notice;
-import com.landmark.app.model.dto.TourInfoDTO;
 import com.landmark.app.utils.MapperUtils;
 import lombok.Data;
 import org.modelmapper.TypeToken;
