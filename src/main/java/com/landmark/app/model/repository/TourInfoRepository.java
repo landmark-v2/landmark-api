@@ -51,8 +51,8 @@ public interface TourInfoRepository extends JpaRepository<TourInfo, Integer> {
     Page<TourInfo> findAllByContentTypeId(int contentTypeId, Pageable pageable);
 
 
-    @Query(value = "select * from TOUR_INFO i where i.id=:id and i.userId=:userId")
-    TourInfo findByIdUserId(@Param("id") int id, @Param("userId") int userId);
+    @Override
+    Optional<TourInfo> findById(Integer id);
 
     @Query(value = "delete from TOUR_INFO where user_id=:userId and id=:id", nativeQuery = true)
     void deleteTourByIdUserId(@Param("id") int id, @Param("userId") int userId);

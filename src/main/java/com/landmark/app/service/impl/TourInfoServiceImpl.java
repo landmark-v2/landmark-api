@@ -134,7 +134,7 @@ public class TourInfoServiceImpl extends LoggerUtils implements TourInfoService 
     @Override
     public void deleteTours(int id, int user_id){
         try{
-            TourInfoDTO tourInfoDTO = TourInfoDTO.of(tourInfoRepository.findByIdUserId(id, user_id));
+            TourInfoDTO tourInfoDTO = TourInfoDTO.of(tourInfoRepository.findById(id).get());
             if(tourInfoDTO.getUserId() == user_id){
                 tourInfoRepository.deleteTourByIdUserId(id, user_id);
             }
