@@ -1,20 +1,19 @@
 package com.landmark.app;
 
 import com.landmark.app.model.dto.TourInfoDTO;
-import com.landmark.app.service.TourInquiryService;
+import com.landmark.app.service.TourInfoService;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class TourInquiryServiceTests {
-
-    private TourInquiryService tourInquiryService;
+public class TourInfoServiceTests {
+    private com.landmark.app.service.TourInfoService TourInfoService;
 
     @Autowired
-    public TourInquiryServiceTests(TourInquiryService tourInquiryService) {
-        this.tourInquiryService = tourInquiryService;
+    public TourInfoServiceTests(TourInfoService TourInfoService) {
+        this.TourInfoService = TourInfoService;
     }
 
     @Test
@@ -25,7 +24,7 @@ public class TourInquiryServiceTests {
             tourInfoDTO.setUserId(2);
             tourInfoDTO.setOverview("커요");
             tourInfoDTO.setTitle("강원대학교");
-            System.out.println(tourInquiryService.registerTourist(tourInfoDTO).toString());
+            System.out.println(TourInfoService.registerTourist(tourInfoDTO).toString());
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -37,7 +36,7 @@ public class TourInquiryServiceTests {
         try{
             int id = 25380;
             int userId = 2;
-            tourInquiryService.deleteTours(id, userId);
+            TourInfoService.deleteTours(id, userId);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -52,7 +51,7 @@ public class TourInquiryServiceTests {
             tourInfoDTO.setAreaCode(3532);
             tourInfoDTO.setOverview("컴퓨터과학전공");
             tourInfoDTO.setTitle("KNU");
-            tourInquiryService.updateTours(tourInfoDTO);
+            TourInfoService.updateTours(tourInfoDTO);
         } catch (Exception e){
             e.printStackTrace();
         }
