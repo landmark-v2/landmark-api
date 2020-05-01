@@ -45,4 +45,17 @@ public class TourInfoDTO {
         return MapperUtils.convert(tourInfos, TourInfoDTO.class);
     }
 
+
+    @Data
+    public static class RegisteredTourInfoDTO {
+        private int id;
+        private String title;
+    }
+
+    @Data
+    public static class DeleteTourInfoDTO{
+        private int id;
+        private int user_id;
+    }
+
 }

@@ -6,7 +6,9 @@ import com.landmark.app.utils.constants.Constants;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.PropertySource;
 
 import static com.landmark.app.utils.constants.Constants.ROLE_ADMIN;
 
@@ -36,16 +38,19 @@ public class TourReviewServiceTests {
     }
 
     @Test
-    @Ignore
     public void registerReviewTest() {
-        TourReviewDTO tourReviewDTO = new TourReviewDTO();
-        tourReviewDTO.setAreaCode(31);
-        tourReviewDTO.setSigunguCode(9);
-        tourReviewDTO.setTitle("바나나보트");
-        tourReviewDTO.setUserId(2);
-        tourReviewDTO.setTourId(1);
-        tourReviewDTO.setPrivate(true);
-        System.out.println(tourReviewService.registerReview(tourReviewDTO).toString());
+        try {
+            TourReviewDTO tourReviewDTO = new TourReviewDTO();
+            tourReviewDTO.setAreaCode(31);
+            tourReviewDTO.setSigunguCode(9);
+            tourReviewDTO.setTitle("바나나보트");
+            tourReviewDTO.setUserId(10);
+            tourReviewDTO.setTourId(3);
+            tourReviewDTO.setPrivate(true);
+            System.out.println(tourReviewService.registerReview(tourReviewDTO).toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
