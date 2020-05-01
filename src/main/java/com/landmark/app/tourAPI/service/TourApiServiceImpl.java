@@ -12,7 +12,7 @@ import com.landmark.app.tourAPI.dto.response.areaBasedList.AreaBasedListResponse
 import com.landmark.app.tourAPI.dto.response.detailCommon.DetailCommon;
 import com.landmark.app.tourAPI.dto.response.detailCommon.DetailCommonResponse;
 import com.landmark.app.utils.LoggerUtils;
-import com.landmark.app.utils.StaticHelper;
+import com.landmark.app.utils.helper.StaticHelper;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

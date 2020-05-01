@@ -1,6 +1,6 @@
 package com.landmark.app.tourAPI.dto.response.detailCommon;
 
-import com.landmark.app.utils.StaticHelper;
+import com.landmark.app.utils.helper.StaticHelper;
 import lombok.Data;
 
 import java.math.BigInteger;

@@ -76,7 +76,7 @@ public class TourReviewController extends LoggerUtils {
         try {
             UserDTO user = new UserDTO();   // TODO 스프링 시큐리티 적용 후 변경
             int userId = user.getId();
-            String roleName = user.getRole().getRoleName();
+            String roleName = user.getRole().getRolename();
             return new ResponseEntity<>(tourReviewService.getReviewList(userId, roleName, searchReviewDTO), HttpStatus.OK);
         } catch (Exception e) {
             logger.error("getAllReviews : " + e.getMessage());

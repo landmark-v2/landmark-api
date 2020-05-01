@@ -1,4 +1,4 @@
-package com.landmark.app.utils;
+package com.landmark.app.utils.helper;
 
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 
-public class FileUploader {
+public class FileUploadHelper {
 
     public static String fileSave(String uploadPath, MultipartFile file, int id) {
         try {

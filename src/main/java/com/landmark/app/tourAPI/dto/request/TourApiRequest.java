@@ -1,6 +1,6 @@
 package com.landmark.app.tourAPI.dto.request;
 
-import com.landmark.app.utils.StaticHelper;
+import com.landmark.app.utils.helper.StaticHelper;
 import lombok.Getter;
 import lombok.Setter;
 

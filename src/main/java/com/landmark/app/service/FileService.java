@@ -2,7 +2,7 @@ package com.landmark.app.service;
 
 import com.landmark.app.model.dto.TourReviewDTO;
 import com.landmark.app.utils.LoggerUtils;
-import com.landmark.app.utils.FileUploader;
+import com.landmark.app.utils.helper.FileUploadHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -69,7 +69,7 @@ public class FileService extends LoggerUtils {
                 return "Invalid file content type (valid type : JPG, JPEG, PNG)";
             }
 
-            String savedFilePath = FileUploader.fileSave(rootLocation.toString(), file, reviewId);
+            String savedFilePath = FileUploadHelper.fileSave(rootLocation.toString(), file, reviewId);
 
             if (savedFilePath.equals("")) {
                 return "Failed to save file";

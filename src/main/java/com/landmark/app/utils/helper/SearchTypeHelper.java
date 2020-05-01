@@ -1,4 +1,4 @@
-package com.landmark.app.utils;
+package com.landmark.app.utils.helper;
 
 import com.landmark.app.model.dto.SearchTourInfoDTO;
 

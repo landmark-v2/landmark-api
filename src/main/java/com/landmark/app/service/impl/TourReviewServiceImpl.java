@@ -5,7 +5,7 @@ import com.landmark.app.model.dto.TourReviewDTO;
 import com.landmark.app.model.repository.TourReviewRepository;
 import com.landmark.app.service.TourInfoService;
 import com.landmark.app.service.TourReviewService;
-import com.landmark.app.service.UserService;
+import com.landmark.app.service.user.UserService;
 import com.landmark.app.utils.constants.Constants;
 import com.landmark.app.utils.LoggerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -249,7 +249,7 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
 
             if (type == REVIEW_TYPE_ACCOUNT) {
                 if (!q.equals("")) {
-                    int userId = userService.findIdByUserName(q);
+                    int userId = userService.findIdByUsername(q);
 
                     if (searchDate) {
                         // 사용자 아이디로 검색 (기간)

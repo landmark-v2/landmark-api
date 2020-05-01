@@ -12,6 +12,10 @@ public class Constants {
     public static Map<String, String> cat2Map = new HashMap<>();
     public static Map<String, String> cat3Map = new HashMap<>();
 
+    /** spring security + jwt **/
+    public static final String AUTH_HEADER_NAME = "auth-token";
+    public static final String AUTH_HEADER_ROLE = "auth-role";
+
     /** 국내 관광지 추천 API **/
     public static final String AREA_BASED_LIST_API  = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?";
     public static final String DETAIL_COMMON_API     = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/detailCommon?";

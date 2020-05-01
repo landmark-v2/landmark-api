@@ -3,7 +3,7 @@ package com.landmark.app.controller;
 import com.landmark.app.model.dto.TourReviewDTO;
 import com.landmark.app.utils.LoggerUtils;
 import com.landmark.app.service.FileService;
-import com.landmark.app.utils.FileUploader;
+import com.landmark.app.utils.helper.FileUploadHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -39,7 +39,7 @@ public class FileController extends LoggerUtils {
             if (filePath != null || !filePath.equals("")) {
                 String[] filePathArr = filePath.split("/");
                 String fileName = filePathArr[filePathArr.length - 1];
-                String fileType = FileUploader.getFileType(fileName);
+                String fileType = FileUploadHelper.getFileType(fileName);
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + new String(filePath.getBytes("UTF-8"), "ISO-8859-1") + "\"");

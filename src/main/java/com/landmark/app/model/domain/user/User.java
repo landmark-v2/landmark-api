@@ -1,24 +1,32 @@
 package com.landmark.app.model.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.landmark.app.model.dto.user.UserDTO;
+import com.landmark.app.utils.MapperUtils;
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Entity
 @Data
 @Table(name = "USER")
 @ToString(exclude = "role")
-public class User {
+public class User implements UserDetails, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String userName;
+    private String username;
 
-    private String passWord;
+    private String password;
 
     private String name;
 
@@ -32,4 +40,38 @@ public class User {
     @JsonIgnore
     private Role role;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        Role userRoles = this.getRole();
+        if (userRoles != null) {
+            SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRoles.getRolename());
+            authorities.add(authority);
+        }
+        return authorities;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public static User of(UserDTO userDTO) {
+        return MapperUtils.convert(userDTO, User.class);
+    }
 }

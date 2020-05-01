@@ -2,7 +2,7 @@ package com.landmark.app.model.dto;
 
 import com.landmark.app.model.domain.TourReview;
 import com.landmark.app.utils.MapperUtils;
-import com.landmark.app.utils.StaticHelper;
+import com.landmark.app.utils.helper.StaticHelper;
 import lombok.Data;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;

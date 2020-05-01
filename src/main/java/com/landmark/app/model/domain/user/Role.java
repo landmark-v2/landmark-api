@@ -1,5 +1,7 @@
 package com.landmark.app.model.domain.user;
 
+import com.landmark.app.model.dto.user.RoleDTO;
+import com.landmark.app.utils.MapperUtils;
 import lombok.Data;
 import lombok.ToString;
 
@@ -16,7 +18,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String roleName;
+    private String rolename;
 
     @OneToMany
     @JoinTable(name = "USER_ROLE",
@@ -24,5 +26,9 @@ public class Role {
             inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")}
     )
     private Set<User> userRole;
+
+    public static Role of(RoleDTO roleDTO) {
+        return MapperUtils.convert(roleDTO, Role.class);
+    }
 
 }

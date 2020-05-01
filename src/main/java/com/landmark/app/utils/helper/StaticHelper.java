@@ -1,4 +1,4 @@
-package com.landmark.app.utils;
+package com.landmark.app.utils.helper;
 
 import java.math.BigInteger;
 import java.net.URLEncoder;

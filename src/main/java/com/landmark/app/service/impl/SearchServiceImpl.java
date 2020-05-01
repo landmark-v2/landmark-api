@@ -5,7 +5,7 @@ import com.landmark.app.model.dto.TourInfoDTO;
 import com.landmark.app.model.repository.TourInfoRepository;
 import com.landmark.app.service.SearchService;
 import com.landmark.app.utils.LoggerUtils;
-import com.landmark.app.utils.SearchTypeHelper;
+import com.landmark.app.utils.helper.SearchTypeHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
