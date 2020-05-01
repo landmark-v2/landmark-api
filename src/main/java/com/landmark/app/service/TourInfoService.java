@@ -28,12 +28,7 @@ public interface TourInfoService {
     /**
      * 관광지 수정
      */
-    void updateTours(TourInfoDTO tourInfoDTO);
-
-    /**
-     * 관광지 조회 -> 보현이가 구현함
-     */
-    List<TourInfoDTO.RegisteredTourInfoDTO> getTours(int user_id);
+    void updateTours(TourInfoDTO tourInfoDTO, int userId);
 
     /**
      * 관광지 삭제

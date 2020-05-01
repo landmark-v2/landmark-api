@@ -1,6 +1,7 @@
 package com.landmark.app.model.repository;
 
 import com.landmark.app.model.domain.TourInfo;
+import com.landmark.app.model.dto.TourInfoDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface TourInfoRepository extends JpaRepository<TourInfo, Integer> {
 
@@ -47,6 +49,10 @@ public interface TourInfoRepository extends JpaRepository<TourInfo, Integer> {
     Page<TourInfo> findAllByCat1AndCat2AndCat3AndContentTypeIdAndTitleContaining(String cat1, String cat2, String cat3, int contentTypeId, String title, Pageable pageable);
     Page<TourInfo> findAllByAndContentTypeIdAndTitleContaining(int contentTypeId, String title, Pageable pageable);
     Page<TourInfo> findAllByContentTypeId(int contentTypeId, Pageable pageable);
+
+
+    @Query(value = "select * from TOUR_INFO i where i.id=:id and i.userId=:userId")
+    TourInfo findByIdUserId(@Param("id") int id, @Param("userId") int userId);
 
     @Query(value = "delete from TOUR_INFO where user_id=:userId and id=:id", nativeQuery = true)
     void deleteTourByIdUserId(@Param("id") int id, @Param("userId") int userId);

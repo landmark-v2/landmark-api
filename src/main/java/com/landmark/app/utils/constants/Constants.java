@@ -24,7 +24,7 @@ public class Constants {
     public static final String SEARCH_API           = "/search";
     public static final String TOUR_REVIEW_API      = "/review";
     public static final String FILE_API             = "/file";
-    public static final String TOUR_INQUIRY_API            = "/inquiry";
+    public static final String TOUR_INFO_API            = "/info";
 
     /** ROLE **/
     public static final String ROLE_USER        = "ROLE_USER";      // 일반 사용자
@@ -44,5 +44,10 @@ public class Constants {
     public static final int CONTENT_TYPE_ID_LEPORTS         = 28;   // 레포츠
     public static final int CONTENT_TYPE_ID_SHOPPING        = 38;   // 쇼핑
     public static final int CONTENT_TYPE_ID_FOOD            = 39;   // 음식점
+
+    /** EXCEPT ROLE **/
+    public static final String USER = "USER";
+    public static final String ADMIN = "ADMIN";
+    public static final String DEV = "DEV";
 
 }

@@ -19,6 +19,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import static com.landmark.app.utils.constants.Constants.*;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -54,6 +56,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/review/**").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/review/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/search").permitAll()
+                .antMatchers(HttpMethod.POST, "/info/**").hasAnyRole(ADMIN, DEV)
+                .antMatchers(HttpMethod.GET, "/info/**").hasAnyRole(ADMIN, DEV)
+                .antMatchers(HttpMethod.PUT, "/info/**").hasAnyRole(ADMIN, DEV)
+                .antMatchers(HttpMethod.DELETE, "/info/**").hasAnyRole(ADMIN, DEV)
                 .anyRequest().authenticated();
 
 
