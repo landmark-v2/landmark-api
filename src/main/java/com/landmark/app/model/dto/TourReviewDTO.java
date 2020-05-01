@@ -28,7 +28,6 @@ public class TourReviewDTO {
     private Date modifiedTime;              // 수정일자
     private String firstImage;              // 이미지 파일 경로
     private boolean isPrivate;              // T-비공개, F-공개
-    private boolean usedTourApi;            // 관광지 추천 API 사용 여부
 
     public static TourReviewDTO of(TourReview tourReview) {
         return MapperUtils.convert(tourReview, TourReviewDTO.class);

@@ -49,9 +49,6 @@ public class TourReview {
     @Column(name = "is_private")
     private boolean isPrivate;              // T-비공개, F-공개
 
-    @Column(name = "used_tour_api")
-    private boolean usedTourApi;            // 관광지 추천 API 사용 여부
-
     public static TourReview of(TourReviewDTO tourReviewDTO) {
         return MapperUtils.convert(tourReviewDTO, TourReview.class);
     }
