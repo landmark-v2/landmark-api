@@ -25,7 +25,7 @@ public class Qna {
 
     private String title;
 
-    private String contenet;
+    private String content;
 
     @Column(name = "created_time")
     private Date createdTime;

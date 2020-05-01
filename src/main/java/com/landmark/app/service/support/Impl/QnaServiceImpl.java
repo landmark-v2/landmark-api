@@ -46,7 +46,7 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
             int getUserId = qnaDTO.getUserId();
             if(getUserId == userId){
                 String title = qnaDTO.getTitle();
-                String content = qnaDTO.getContenet();
+                String content = qnaDTO.getContent();
                 Date modifiedTime = new Date();
                 int id = qnaDTO.getId();
 
@@ -61,7 +61,7 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
     @Override
     public void deleteQna(int id, int userId) {
         try{
-            QnaDTO qnaDTO = QnaDTO.of(qnaRepository.findById(id).get());
+            QnaDTO qnaDTO = QnaDTO.of(qnaRepository.findById(id).orElse(null));
             if(userId == qnaDTO.getUserId()){
                 qnaRepository.deleteById(id);
             }
@@ -98,7 +98,7 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
     @Override
     public void deleteQnaComment(int id, int userId, int qnaId) {
         try{
-            QnaCommentDTO qnaCommentDTO = QnaCommentDTO.of(qnaCommentRepository.findById(id).get());
+            QnaCommentDTO qnaCommentDTO = QnaCommentDTO.of(qnaCommentRepository.findById(id).orElse(null));
             if(qnaCommentDTO.getUserId() == userId && qnaCommentDTO.getQnaId() == qnaId){
                 qnaCommentRepository.deleteById(id);
             }
@@ -108,7 +108,7 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
     }
 
     @Override
-    public void updateQnaCommet(QnaCommentDTO qnaCommentDTO, int id, int userId, int qnaId) {
+    public void updateQnaComment(QnaCommentDTO qnaCommentDTO, int id, int userId, int qnaId) {
         try{
             if(userId == qnaCommentDTO.getUserId() && qnaCommentDTO.getQnaId() == qnaId && qnaCommentDTO.getId() == id){
                 String comment = qnaCommentDTO.getComment();

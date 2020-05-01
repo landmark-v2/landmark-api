@@ -23,8 +23,11 @@ public class FaqDTO {
         return MapperUtils.convert(faq, FaqDTO.class);
     }
 
-    public static List<TourInfoDTO> of(List<Faq> Faqs) {
+    public static List<FaqDTO> of(List<Faq> Faqs) {
         return MapperUtils.convert(Faqs, new TypeToken<List<FaqDTO>>(){}.getType());
     }
 
+    public static Page<FaqDTO> of(Page<Faq> faq){
+        return MapperUtils.convert(faq, FaqDTO.class);
+    }
 }

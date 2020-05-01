@@ -32,7 +32,7 @@ public interface QnaService {
     /**
      * QNA 댓글 수정
      */
-    void updateQnaCommet(QnaCommentDTO qnaCommentDTO, int id, int userId, int qnaId);
+    void updateQnaComment(QnaCommentDTO qnaCommentDTO, int id, int userId, int qnaId);
 }
 
 
