@@ -50,9 +50,9 @@ public class FaqServiceImpl extends LoggerUtils implements FaqService {
     @Override
     public void deleteFaq(int id) {
         try{
-            faqRepository.deleteFaqById(id);
+            faqRepository.deleteById(id);
         } catch (Exception e){
-            logger.error("Fqa delete : " + e.getMessage());
+            logger.error("Faq delete : " + e.getMessage());
         }
 
     }

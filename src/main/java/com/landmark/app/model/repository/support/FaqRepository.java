@@ -14,11 +14,12 @@ public interface FaqRepository extends JpaRepository<Faq, Integer> {
 
     @Transactional
     @Modifying
-    @Query("update FAQ set " +
-            "title=:title, content=:content, modified_time=:modifiedTime " +
-            "where id=:id")
+    @Query("update Faq f set " +
+            "f.title=:title, f.content=:content, f.modifiedTime=:modifiedTime " +
+            "where f.id=:id")
     void updateFaqById(@Param("title") String title, @Param("content") String content, @Param("modifiedTime") Date modifiedTime, @Param("id") int id);
 
-    @Query("delete from FAQ where id=:id")
-    void deleteFaqById(@Param("id") int id);
+    @Modifying
+    @Transactional
+    void deleteById(int id);
 }

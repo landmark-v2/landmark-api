@@ -13,11 +13,11 @@ public interface NoticeRepository extends JpaRepository<Notice, Integer> {
 
     @Transactional
     @Modifying
-    @Query("update NOTICE set " +
-            "title =: title, content =: content, modified_Time =: modifiedTime " +
-            "where id =: id")
+    @Query("update Notice n set " +
+            "n.title =: title, n.content =: content, n.modifiedTime =: modifiedTime " +
+            "where n.id =: id")
     void updateNoticeById(@Param("title") String title, @Param("content") String content, @Param("modifiedTime") Date modifiedTime, @Param("id") int id);
 
-    @Query("delete from Notice where id =: id")
+    @Query("delete from Notice n where n.id =: id")
     void deleteNoticeById(@Param("id") int id);
 }

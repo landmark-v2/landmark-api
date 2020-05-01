@@ -28,7 +28,7 @@ public class SearchController extends LoggerUtils {
     /**
      * 관광지 정보 검색 (필터링)
      */
-    @GetMapping(value = "/tour-info")
+    @GetMapping
     public ResponseEntity<?> getTourInfos(@RequestBody SearchTourInfoDTO searchTourInfoDTO) {
         try {
             return new ResponseEntity<>(searchService.searchTourInfo(setSearchDTO(searchTourInfoDTO)), HttpStatus.OK);
