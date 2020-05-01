@@ -66,6 +66,17 @@ public class UserServiceImpl extends LoggerUtils implements UserService {
         }
     }
 
+    @Override
+    public UserDTO findById(int id) throws Exception {
+        try {
+            User user = userRepository.findById(id).get();
+            return UserDTO.of(user);
+        } catch (Exception e) {
+            logger.error("findById : " + e.getMessage());
+            throw new Exception(e);
+        }
+    }
+
     private UserDTO toUserDTO(UserDTO userDTO) {
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setRolename(ROLE_USER);

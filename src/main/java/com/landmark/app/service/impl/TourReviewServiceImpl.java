@@ -1,6 +1,7 @@
 package com.landmark.app.service.impl;
 
 import com.landmark.app.model.domain.TourReview;
+import com.landmark.app.model.dto.TourInfoDTO;
 import com.landmark.app.model.dto.TourReviewDTO;
 import com.landmark.app.model.repository.TourReviewRepository;
 import com.landmark.app.service.TourInfoService;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -94,7 +96,7 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
 
     @Override
     public Page<TourReviewDTO> getReviewList(int userId, String roleName, TourReviewDTO.SearchReviewDTO searchReviewDTO) {
-        int page = searchReviewDTO.getPage() == 0 ? 1 : searchReviewDTO.getPage();
+        int page = searchReviewDTO.getPage();
         int size = searchReviewDTO.getSize() == 0 ? 10 : searchReviewDTO.getSize();
 
         String q = searchReviewDTO.getQ() != null ? searchReviewDTO.getQ() : "";
@@ -116,6 +118,78 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
         return new PageImpl<>(new ArrayList<>());
     }
 
+    @Override
+    public TourReviewDTO findById(int id) {
+        try {
+            TourReview tourReview = tourReviewRepository.findById(id);
+            return TourReviewDTO.of(tourReview);
+        } catch (Exception e) {
+            logger.error("findById : " + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public TourReviewDTO updateReview(TourReviewDTO.UpdateReviewDTO updateReviewDTO, int userId) {
+        try {
+            TourReviewDTO tourReviewDTO = findById(updateReviewDTO.getId());
+
+            if (!StringUtils.isEmpty(updateReviewDTO.getTitle())) {
+                tourReviewDTO.setTitle(updateReviewDTO.getTitle());
+            }
+
+            if (!StringUtils.isEmpty(updateReviewDTO.getOverview())) {
+                tourReviewDTO.setOverview(updateReviewDTO.getOverview());
+            }
+
+            if (updateReviewDTO.isPrivate() != tourReviewDTO.isPrivate()) {
+                tourReviewDTO.setPrivate(updateReviewDTO.isPrivate());
+            }
+
+            return save(tourReviewDTO);
+        } catch (Exception e) {
+            logger.error("updateReview : " + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public boolean deleteReview(int userId, String role, int reviewId) {
+        try {
+            TourReviewDTO tourReviewDTO = findById(reviewId);
+
+            if (role.equalsIgnoreCase(ROLE_ADMIN)) {
+                TourInfoDTO tourInfoDTO = tourInfoService.findById(tourReviewDTO.getTourId());
+
+                if (userId == tourInfoDTO.getUserId()) {
+                    tourReviewRepository.deleteById(reviewId);
+                    return true;
+                }
+            } else {
+                tourReviewRepository.deleteByIdAndUserId(reviewId, userId);
+                return true;
+            }
+        } catch (Exception e) {
+            logger.error("deleteReview - " + role + " : " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean deleteReview(int reviewId) {
+        try {
+            if (findById(reviewId) != null) {
+                tourReviewRepository.deleteById(reviewId);
+                return true;
+            }
+        } catch (Exception e) {
+            logger.error("deleteReview - ROLE_DEV : " + e.getMessage());
+        }
+
+        return false;
+    }
+
     private boolean isSearchDate(Date date) {
         if (date != null) {
             return true;
@@ -127,6 +201,7 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
     // 일반 사용자의 여행 후기 조회
     private Page<TourReviewDTO> allReviewListOfUser(int userId, String title, Date startDate, Date endDate, Pageable pageable) {
         try {
+            // 기간을 적었는지 체크
             boolean searchDate = isSearchDate(startDate);
 
             if (!title.equals("")) {

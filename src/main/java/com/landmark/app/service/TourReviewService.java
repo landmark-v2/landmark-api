@@ -33,6 +33,26 @@ public interface TourReviewService {
     Page<TourReviewDTO> getReviewList(int userId, String roleName, TourReviewDTO.SearchReviewDTO searchReviewDTO);
 
     /**
+     * 여행 후기 조회
+     */
+    TourReviewDTO findById(int id);
+
+    /**
+     * 여행 후기 수정
+     */
+    TourReviewDTO updateReview(TourReviewDTO.UpdateReviewDTO updateReviewDTO, int userId);
+
+    /**
+     * 여행 후기 삭제 - 관리자, 일반 사용자
+     */
+    boolean deleteReview(int userId, String role, int reviewId);
+
+    /**
+     * 여행 후기 삭제 - 개발자
+     */
+    boolean deleteReview(int reviewId);
+
+    /**
      * file 정보 가져오기
      */
     TourReviewDTO.FileDTO findFileInfoById(int id);

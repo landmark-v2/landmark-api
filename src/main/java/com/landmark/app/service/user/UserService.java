@@ -11,4 +11,6 @@ public interface UserService extends UserDetailsService {
 
     int findIdByUsername(String username) throws Exception;
 
+    UserDTO findById(int id) throws Exception;
+
 }

@@ -49,9 +49,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().headers().cacheControl();
 
         http.authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS).permitAll()
-                //checking user info
-                .antMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/review/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/review/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/review/**").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/review/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/search").permitAll()
                 .anyRequest().authenticated();
 
 

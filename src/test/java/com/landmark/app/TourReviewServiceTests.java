@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.PropertySource;
 
 import static com.landmark.app.utils.constants.Constants.ROLE_ADMIN;
+import static com.landmark.app.utils.constants.Constants.ROLE_USER;
 
 @SpringBootTest
 public class TourReviewServiceTests {
@@ -57,11 +58,11 @@ public class TourReviewServiceTests {
     @Ignore
     public void getReviewListTest() {
         TourReviewDTO.SearchReviewDTO searchReviewDTO = new TourReviewDTO.SearchReviewDTO();
-        searchReviewDTO.setPage(1);
+        searchReviewDTO.setPage(0);
         searchReviewDTO.setSize(10);
 
-        int userId = 1;
-        String roleName = ROLE_ADMIN;
+        int userId = 11;
+        String roleName = ROLE_USER;
 
         System.out.println(tourReviewService.getReviewList(userId, roleName, searchReviewDTO).getContent());
     }

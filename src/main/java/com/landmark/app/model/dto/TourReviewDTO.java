@@ -73,4 +73,12 @@ public class TourReviewDTO {
         private String path;
     }
 
+    @Data
+    public static class UpdateReviewDTO {
+        private int id;
+        private String title;                   // 관광지명 (예 : 별내 스터디 카페)
+        private String overview;                // 후기 내용
+        private boolean isPrivate;              // T-비공개, F-공개
+    }
+
 }

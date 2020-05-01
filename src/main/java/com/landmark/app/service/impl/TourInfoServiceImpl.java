@@ -61,4 +61,15 @@ public class TourInfoServiceImpl extends LoggerUtils implements TourInfoService 
         return tourIds;
     }
 
+    @Override
+    public TourInfoDTO findById(int id) {
+        try {
+            TourInfo tourInfo = tourInfoRepository.findById(id).get();
+            return TourInfoDTO.of(tourInfo);
+        } catch (Exception e) {
+            logger.error("findById : " + e.getMessage());
+            return null;
+        }
+    }
+
 }

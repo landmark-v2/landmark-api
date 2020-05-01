@@ -31,7 +31,7 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
         } catch (Exception e) {
             SecurityContextHolder.clearContext();
             ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            throw new ServletException(HttpServletResponse.SC_UNAUTHORIZED + " 로그인 실패");
+            throw new ServletException(HttpServletResponse.SC_UNAUTHORIZED + " 권한 없음");
         }
     }
 
