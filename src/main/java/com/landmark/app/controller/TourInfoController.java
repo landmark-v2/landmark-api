@@ -1,5 +1,6 @@
 package com.landmark.app.controller;
 
+import com.landmark.app.service.TourInfoService;
 import com.landmark.app.utils.LoggerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,11 +11,11 @@ import static com.landmark.app.utils.constants.Constants.TOUR_INQUIRY_API;
 @RestController
 @RequestMapping(value = TOUR_INQUIRY_API)
 public class TourInfoController extends LoggerUtils {
-    private TourInquiryService tourInquiryService;
+    private TourInfoService tourInfoService;
 
     @Autowired
-    public TourInfoController(TourInquiryService tourInquiryService) {
-        this.tourInquiryService = tourInquiryService;
+    public TourInfoController(TourInfoService tourInfoService) {
+        this.tourInfoService = tourInfoService;
     }
 
 }
