@@ -115,7 +115,7 @@ public class SearchServiceImpl extends LoggerUtils implements SearchService {
             }
         } catch (Exception e) {
             logger.error("searchTourInfo : " + e.getMessage());
-            throw new Exception(e);
+            return null;
         }
     }
 

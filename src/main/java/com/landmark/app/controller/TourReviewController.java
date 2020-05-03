@@ -44,7 +44,7 @@ public class TourReviewController extends LoggerUtils {
     }
 
     /**
-     * 사용자의 지역별 후기 개수
+     * 사용자의 지역별 후기 개수 -> 지역별 전체 조회로 수정
      */
     @GetMapping(value = "/count")
     public ResponseEntity<?> countByAreaCode(@RequestParam int areaCode, HttpServletRequest request) {

@@ -1,16 +1,15 @@
 package com.landmark.app.utils.constants;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.json.simple.JSONArray;
 
 public class Constants {
 
-    public static Map<Integer, String> areaCodeMap = new HashMap<>();
-    public static Map<Map<Integer, Integer>, String> sigunguCodeMap = new HashMap<>();
-    public static Map<Integer, String> contentTypeMap = new HashMap<>();
-    public static Map<String, String> cat1Map = new HashMap<>();
-    public static Map<String, String> cat2Map = new HashMap<>();
-    public static Map<String, String> cat3Map = new HashMap<>();
+    public static JSONArray areaCodes = new JSONArray();
+    public static JSONArray sigunguCodes = new JSONArray();
+    public static JSONArray contentTypeIds = new JSONArray();
+    public static JSONArray cat1s = new JSONArray();
+    public static JSONArray cat2s = new JSONArray();
+    public static JSONArray cat3s = new JSONArray();
 
     /** spring security + jwt **/
     public static final String AUTH_HEADER_NAME = "auth-token";
@@ -26,6 +25,7 @@ public class Constants {
     public static final String FILE_API             = "/file";
     public static final String TOUR_INFO_API        = "/info";
     public static final String QNA_API              = "/qna";
+    public static final String CODE_API             = "/code";
 
     /** ROLE **/
     public static final String ROLE_USER        = "ROLE_USER";      // 일반 사용자

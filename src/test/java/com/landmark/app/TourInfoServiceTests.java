@@ -43,6 +43,7 @@ public class TourInfoServiceTests {
     }
 
     @Test
+    @Ignore
     public void updateTourInfoTest(){
         try{
             TourInfoDTO tourInfoDTO = new TourInfoDTO();
@@ -51,7 +52,7 @@ public class TourInfoServiceTests {
             tourInfoDTO.setAreaCode(3532);
             tourInfoDTO.setOverview("컴퓨터과학전공");
             tourInfoDTO.setTitle("KNU");
-            TourInfoService.updateTours(tourInfoDTO);
+            TourInfoService.updateTours(tourInfoDTO, 2);
         } catch (Exception e){
             e.printStackTrace();
         }

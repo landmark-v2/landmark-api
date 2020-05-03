@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface QnaRepository extends JpaRepository<Qna, Integer> {
     @Transactional
     @Modifying
-    @Query("update QNA q set " +
+    @Query("update Qna q set " +
             "q.title =: title, q.content =: content, q.modifiedTime =: modifiedTime " +
             "where q.userId =: userId and q.id =: id")
     void updateQnaByIdUserId(@Param("title") String title, @Param("content") String content, @Param("modifiedTime") Date modifiedTime,

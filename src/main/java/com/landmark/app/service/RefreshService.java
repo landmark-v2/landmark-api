@@ -4,12 +4,11 @@ import com.landmark.app.model.domain.*;
 import com.landmark.app.model.repository.*;
 import com.landmark.app.utils.constants.Constants;
 import com.landmark.app.utils.LoggerUtils;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class RefreshService extends LoggerUtils {
@@ -33,95 +32,116 @@ public class RefreshService extends LoggerUtils {
     }
 
     public void refreshAll() {
-        refreshAreaCodeMap();
-        refreshSigunguCodeMap();
-        refreshContentTypeMap();
-        refreshCat1Map();
-        refreshCat2Map();
-        refreshCat3Map();
+        refreshAreaCode();
+        refreshSigunguCode();
+        refreshContentTypeId();
+        refreshCat1();
+        refreshCat2();
+        refreshCat3();
+
+        logger.info("-- refresh --");
     }
 
-    public void refreshAreaCodeMap() {
+    public void refreshAreaCode() {
         try {
             List<AreaCode> areaCodes = areaCodeRepository.findAll();
 
             for (AreaCode areaCode : areaCodes) {
-                Constants.areaCodeMap.put(areaCode.getCode(), areaCode.getName());
+                JSONObject areaCodeJson = new JSONObject();
+                areaCodeJson.put("code", areaCode.getCode());
+                areaCodeJson.put("name", areaCode.getName());
+                Constants.areaCodes.add(areaCodeJson);
             }
+
+            logger.info("AreaCode count = " + Constants.areaCodes.size());
         } catch (Exception e) {
-            logger.error("refreshAreaCodeMap : " + e.getMessage());
+            logger.error("refreshAreaCode : " + e.getMessage());
         }
     }
 
-    public void refreshSigunguCodeMap() {
+    public void refreshSigunguCode() {
         try {
             List<SigunguCode> sigunguCodes = sigunguCodeRepository.findAll();
 
             for (SigunguCode sigunguCode : sigunguCodes) {
-                Map<Integer, Integer> pkMap = new HashMap<>();
-                pkMap.put(sigunguCode.getAreaCode(), sigunguCode.getCode());
-                Constants.sigunguCodeMap.put(pkMap, sigunguCode.getName());
+                JSONObject sigunguCodeJson = new JSONObject();
+                sigunguCodeJson.put("areaCode", sigunguCode.getAreaCode());
+                sigunguCodeJson.put("code", sigunguCode.getCode());
+                sigunguCodeJson.put("name", sigunguCode.getName());
+                Constants.sigunguCodes.add(sigunguCodeJson);
             }
 
-            logger.info("-- refresh sigunguCodeMap --");
+            logger.info("SigunguCode count = " + Constants.sigunguCodes.size());
         } catch (Exception e) {
-            logger.error("refreshSigunguCodeMap : " + e.getMessage());
+            logger.error("refreshSigunguCode : " + e.getMessage());
         }
     }
 
-    public void refreshContentTypeMap() {
+    public void refreshContentTypeId() {
         try {
             List<ContentType> contentTypes = contentTypeRepository.findAll();
 
             for (ContentType contentType : contentTypes) {
-                Constants.contentTypeMap.put(contentType.getContentTypeId(), contentType.getName());
+                JSONObject contentTypeIdJson = new JSONObject();
+                contentTypeIdJson.put("contentTypeId", contentType.getContentTypeId());
+                contentTypeIdJson.put("name", contentType.getName());
+                Constants.contentTypeIds.add(contentTypeIdJson);
             }
 
-            logger.info("-- refresh contentTypeMap --");
+            logger.info("ContentTypeId count = " + Constants.contentTypeIds.size());
         } catch (Exception e) {
-            logger.error("refreshContentTypeMap : " + e.getMessage());
+            logger.error("refreshContentTypeId : " + e.getMessage());
         }
     }
 
-    public void refreshCat1Map() {
+    public void refreshCat1() {
         try {
             List<Cat1> cat1s = cat1Repository.findAll();
 
             for (Cat1 cat1 : cat1s) {
-                Constants.cat1Map.put(cat1.getCode(), cat1.getName());
+                JSONObject cat1Json = new JSONObject();
+                cat1Json.put("code", cat1.getCode());
+                cat1Json.put("name", cat1.getName());
+                Constants.cat1s.add(cat1Json);
             }
 
-            logger.info("-- refresh cat1Map --");
+            logger.info("Cat1 count = " + Constants.cat1s.size());
         } catch (Exception e) {
-            logger.error("refreshCat1Map : " + e.getMessage());
+            logger.error("refreshCat1 : " + e.getMessage());
         }
     }
 
-    public void refreshCat2Map() {
+    public void refreshCat2() {
         try {
             List<Cat2> cat2s = cat2Repository.findAll();
 
             for (Cat2 cat2 : cat2s) {
-                Constants.cat2Map.put(cat2.getCode(), cat2.getName());
+                JSONObject cat2Json = new JSONObject();
+                cat2Json.put("code", cat2.getCode());
+                cat2Json.put("name", cat2.getName());
+                Constants.cat2s.add(cat2Json);
             }
 
-            logger.info("-- refresh cat2Map --");
+            logger.info("Cat2 count = " + Constants.cat2s.size());
         } catch (Exception e) {
-            logger.error("refreshCat2Map : " + e.getMessage());
+            logger.error("refreshCat2 : " + e.getMessage());
         }
     }
 
-    public void refreshCat3Map() {
+    public void refreshCat3() {
         try {
             List<Cat3> cat3s = cat3Repository.findAll();
 
             for (Cat3 cat3 : cat3s) {
-                Constants.cat3Map.put(cat3.getCode(), cat3.getName());
+                JSONObject cat3Json = new JSONObject();
+                cat3Json.put("code", cat3.getCode());
+                cat3Json.put("name", cat3.getName());
+                Constants.cat3s.add(cat3Json);
             }
 
-            logger.info("-- refresh cat3Map --");
+            logger.info("Cat3 count = " + Constants.cat3s.size());
         } catch (Exception e) {
-            logger.error("refreshCat3Map : " + e.getMessage());
+            logger.error("refreshCat3 : " + e.getMessage());
         }
     }
 }

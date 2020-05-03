@@ -35,7 +35,7 @@ public class TourReviewServiceTests {
     public void countByAreaCodeTest() {
         int userId = 2;
         int areaCode = 31;
-        System.out.println(Constants.areaCodeMap.get(areaCode) + " : " + tourReviewService.countByAreaCode(areaCode, userId));
+        System.out.println(Constants.areaCodes.get(areaCode) + " : " + tourReviewService.countByAreaCode(areaCode, userId));
     }
 
     @Test

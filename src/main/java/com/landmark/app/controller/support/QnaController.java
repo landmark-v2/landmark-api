@@ -1,4 +1,4 @@
-package com.landmark.app.controller;
+package com.landmark.app.controller.support;
 
 import com.landmark.app.service.support.QnaService;
 import org.springframework.beans.factory.annotation.Autowired;

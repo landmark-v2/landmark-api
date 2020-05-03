@@ -1,4 +1,4 @@
-package com.landmark.app.controller;
+package com.landmark.app.controller.support;
 
 import com.landmark.app.model.dto.TourReviewDTO;
 import com.landmark.app.utils.LoggerUtils;
