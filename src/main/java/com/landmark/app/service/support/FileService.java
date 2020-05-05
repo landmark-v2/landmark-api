@@ -1,6 +1,7 @@
-package com.landmark.app.service;
+package com.landmark.app.service.support;
 
 import com.landmark.app.model.dto.TourReviewDTO;
+import com.landmark.app.service.TourReviewService;
 import com.landmark.app.utils.LoggerUtils;
 import com.landmark.app.utils.helper.FileUploadHelper;
 import org.springframework.beans.factory.annotation.Autowired;

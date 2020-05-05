@@ -20,6 +20,8 @@ public class Constants {
     public static final String DETAIL_COMMON_API     = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/detailCommon?";
 
     /** API **/
+    public static final String USER_API             = "/users";
+    public static final String ADMIN_API            = "/admin";
     public static final String SEARCH_API           = "/search";
     public static final String TOUR_REVIEW_API      = "/review";
     public static final String FILE_API             = "/file";

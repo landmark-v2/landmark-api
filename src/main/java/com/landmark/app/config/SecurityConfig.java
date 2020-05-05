@@ -51,7 +51,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().headers().cacheControl();
 
         http.authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/review/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/users/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/users/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/users/**").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/users/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/review/**").permitAll()
                 .antMatchers(HttpMethod.PUT, "/review/**").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/review/**").permitAll()

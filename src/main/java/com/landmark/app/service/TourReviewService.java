@@ -1,6 +1,8 @@
 package com.landmark.app.service;
 
 import com.landmark.app.model.dto.TourReviewDTO;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -19,8 +21,9 @@ public interface TourReviewService {
 
     /**
      * 사용자의 지역별 후기 개수
+     * - int -> JSONArray 변경 (전체 지역의 리뷰 카운트 조회)
      */
-    int countByAreaCode(int areaCode, int userId);
+    JSONArray countAllByUserIdGroupByAreaCode(int userId);
 
     /**
      * 여행 후기 등록

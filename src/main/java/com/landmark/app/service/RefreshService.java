@@ -39,7 +39,7 @@ public class RefreshService extends LoggerUtils {
         refreshCat2();
         refreshCat3();
 
-        logger.info("-- refresh --");
+        logger.info("== refresh ==");
     }
 
     public void refreshAreaCode() {

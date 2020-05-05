@@ -1,5 +1,6 @@
 package com.landmark.app.service.impl;
 
+import com.landmark.app.model.domain.AreaCode;
 import com.landmark.app.model.domain.TourReview;
 import com.landmark.app.model.dto.TourInfoDTO;
 import com.landmark.app.model.dto.TourReviewDTO;
@@ -9,6 +10,7 @@ import com.landmark.app.service.TourReviewService;
 import com.landmark.app.service.user.UserService;
 import com.landmark.app.utils.constants.Constants;
 import com.landmark.app.utils.LoggerUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -107,13 +109,23 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
     }
 
     @Override
-    public int countByAreaCode(int areaCode, int userId) {
+    public JSONArray countAllByUserIdGroupByAreaCode(int userId) {
+        JSONArray jsonArr = new JSONArray();
+
         try {
-            return tourReviewRepository.countAllByAreaCodeAndUserId(areaCode, userId);
+            List<AreaCode.AreaCodeCount> counts = tourReviewRepository.countAllByUserIdGroupByAreaCode(userId);
+
+            for (AreaCode.AreaCodeCount count : counts) {
+                JSONObject countObj = new JSONObject();
+                countObj.put("areaCode", count.getAreaCode());
+                countObj.put("count", count.getCnt());
+                jsonArr.add(countObj);
+            }
         } catch (Exception e) {
-            logger.error("countByAreaCode : " + e.getMessage());
-            return 0;
+            logger.error("countAllByUserIdGroupByAreaCode : " + e.getMessage());
         }
+
+        return jsonArr;
     }
 
     @Override
