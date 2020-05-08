@@ -1,5 +1,6 @@
 package com.landmark.app.service.impl;
 
+import com.landmark.app.model.domain.AreaCode;
 import com.landmark.app.model.domain.TourReview;
 import com.landmark.app.model.dto.TourInfoDTO;
 import com.landmark.app.model.dto.TourReviewDTO;
@@ -9,6 +10,8 @@ import com.landmark.app.service.TourReviewService;
 import com.landmark.app.service.user.UserService;
 import com.landmark.app.utils.constants.Constants;
 import com.landmark.app.utils.LoggerUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -55,13 +58,9 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
             List<TourReviewDTO> tourReviewDTOS = TourReviewDTO.of(tourReviewRepository.findTop10ByUserId(userId));
 
             for (TourReviewDTO tourReviewDTO : tourReviewDTOS) {
-                Map<Integer, Integer> sigunguPkMap = new HashMap<>();
-                sigunguPkMap.put(tourReviewDTO.getAreaCode(), tourReviewDTO.getSigunguCode());
-
-                String areaName = Constants.areaCodeMap.get(tourReviewDTO.getAreaCode());
-                String sigunguName = Constants.sigunguCodeMap.get(sigunguPkMap);
-
-                recentReviews.add(getRecentReview(areaName, sigunguName, tourReviewDTO.getFirstImage()));
+                String areaName = getAreaName(tourReviewDTO.getAreaCode());
+                String sigunguName = getSigunguName(tourReviewDTO.getAreaCode(), tourReviewDTO.getSigunguCode());
+                recentReviews.add(getRecentReview(areaName, sigunguName, tourReviewDTO.getFirstImage(), tourReviewDTO.getModifiedTime()));
             }
         } catch (Exception e) {
             logger.error("getRecentHistories : " + e.getMessage());
@@ -70,22 +69,63 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
         return recentReviews;
     }
 
-    private TourReviewDTO.RecentReview getRecentReview(String areaName, String sigunguName, String firstImage) {
+    private TourReviewDTO.RecentReview getRecentReview(String areaName, String sigunguName, String firstImage, Date modifiedTime) {
         TourReviewDTO.RecentReview recentReview = new TourReviewDTO.RecentReview();
         recentReview.setAreaName(areaName);
         recentReview.setSigunguName(sigunguName);
         recentReview.setFirstImage(firstImage);
+        recentReview.setModifiedTime(modifiedTime);
         return recentReview;
     }
 
-    @Override
-    public int countByAreaCode(int areaCode, int userId) {
-        try {
-            return tourReviewRepository.countAllByAreaCodeAndUserId(areaCode, userId);
-        } catch (Exception e) {
-            logger.error("countByAreaCode : " + e.getMessage());
-            return 0;
+    private String getAreaName(int areaCode) throws Exception {
+        if (!areaCodes.isEmpty()) {
+            for (Object obj : areaCodes) {
+                JSONObject areaCodeJson = (JSONObject) obj;
+
+                if (Integer.parseInt(areaCodeJson.get("code").toString()) == areaCode) {
+                    return areaCodeJson.get("name").toString();
+                }
+            }
         }
+
+        return "";
+    }
+
+    private String getSigunguName(int areaCode, int sigunguCode) throws Exception {
+        if (!sigunguCodes.isEmpty()) {
+            for (Object obj : sigunguCodes) {
+                JSONObject sigunguCodeJson = (JSONObject) obj;
+                int area = Integer.parseInt(sigunguCodeJson.get("areaCode").toString());
+                int sigungu = Integer.parseInt(sigunguCodeJson.get("code").toString());
+
+                if (area == areaCode && sigungu == sigunguCode) {
+                    return sigunguCodeJson.get("name").toString();
+                }
+            }
+        }
+
+        return "";
+    }
+
+    @Override
+    public JSONArray countAllByUserIdGroupByAreaCode(int userId) {
+        JSONArray jsonArr = new JSONArray();
+
+        try {
+            List<AreaCode.AreaCodeCount> counts = tourReviewRepository.countAllByUserIdGroupByAreaCode(userId);
+
+            for (AreaCode.AreaCodeCount count : counts) {
+                JSONObject countObj = new JSONObject();
+                countObj.put("areaCode", count.getAreaCode());
+                countObj.put("count", count.getCnt());
+                jsonArr.add(countObj);
+            }
+        } catch (Exception e) {
+            logger.error("countAllByUserIdGroupByAreaCode : " + e.getMessage());
+        }
+
+        return jsonArr;
     }
 
     @Override

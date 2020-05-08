@@ -46,6 +46,7 @@ public class TourReviewDTO {
         private String areaName;
         private String sigunguName;
         private String firstImage;
+        private Date ModifiedTime;
     }
 
     @Data

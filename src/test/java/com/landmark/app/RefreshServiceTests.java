@@ -20,6 +20,6 @@ public class RefreshServiceTests {
     @Test
     @Ignore
     public void refreshTest() {
-        System.out.println(Constants.sigunguCodeMap);
+        System.out.println(Constants.sigunguCodes);
     }
 }

@@ -4,7 +4,10 @@ import com.landmark.app.model.domain.user.User;
 import com.landmark.app.model.dto.user.RoleDTO;
 import com.landmark.app.model.dto.user.UserDTO;
 import com.landmark.app.model.repository.UserRepository;
+import com.landmark.app.service.RedisService;
 import com.landmark.app.utils.LoggerUtils;
+import com.landmark.app.utils.MailUtils;
+import com.landmark.app.utils.helper.StaticHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static com.landmark.app.utils.constants.Constants.*;
 
@@ -20,10 +24,14 @@ import static com.landmark.app.utils.constants.Constants.*;
 public class UserServiceImpl extends LoggerUtils implements UserService {
 
     private UserRepository userRepository;
+    private RedisService redisService;
+    private MailUtils mailUtils;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, RedisService redisService, MailUtils mailUtils) {
         this.userRepository = userRepository;
+        this.redisService = redisService;
+        this.mailUtils = mailUtils;
     }
 
     @Override
@@ -55,6 +63,14 @@ public class UserServiceImpl extends LoggerUtils implements UserService {
         }
     }
 
+    private UserDTO toUserDTO(UserDTO userDTO) {
+        RoleDTO roleDTO = new RoleDTO();
+        roleDTO.setRolename(ROLE_USER);
+        userDTO.setRole(roleDTO);
+        userDTO.setPassword(new BCryptPasswordEncoder().encode(userDTO.getPassword()));
+        return userDTO;
+    }
+
     @Override
     public int findIdByUsername(String username) throws Exception {
         try {
@@ -77,11 +93,59 @@ public class UserServiceImpl extends LoggerUtils implements UserService {
         }
     }
 
-    private UserDTO toUserDTO(UserDTO userDTO) {
-        RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setRolename(ROLE_USER);
-        userDTO.setRole(roleDTO);
-        userDTO.setPassword(new BCryptPasswordEncoder().encode(userDTO.getPassword()));
-        return userDTO;
+    @Override
+    public boolean sendCertNum(String email) throws Exception {
+        try {
+            int certNum = StaticHelper.getCertNum();
+            String title = "[랜드마크] 이메일 인증번호 입니다.";
+            String content = "인증번호 : " + certNum + " \n\n인증번호를 3분 이내에 입력해주세요 :) \n\n";
+
+            if (redisService.save(email, certNum + "")) {
+                redisService.expire(email, 3, TimeUnit.MINUTES);
+                return mailUtils.sendMail(email, title, content);
+            }
+        } catch (Exception e) {
+            logger.error("sendCertNum : " + e.getMessage());
+            throw new Exception(e);
+        }
+
+        return false;
     }
+
+    @Override
+    public boolean checkCertNum(String email, int certNum) throws Exception {
+        try {
+            String savedCertNum = redisService.get(email);
+
+            if (savedCertNum.equals(certNum + "")) {
+                return true;
+            }
+        } catch (Exception e) {
+            logger.error("checkCertNum : " + e.getMessage());
+            throw new Exception(e);
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean checkUsername(String username) throws Exception {
+        return false;
+    }
+
+    @Override
+    public boolean checkEmail(String email) throws Exception {
+        return false;
+    }
+
+    @Override
+    public UserDTO updateUser(UserDTO userDTO) throws Exception {
+        return null;
+    }
+
+    @Override
+    public boolean deleteUser(int id) throws Exception {
+        return false;
+    }
+
 }

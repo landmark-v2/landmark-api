@@ -3,6 +3,8 @@ package com.landmark.app.controller;
 import com.landmark.app.model.dto.SearchTourInfoDTO;
 import com.landmark.app.service.SearchService;
 import com.landmark.app.utils.LoggerUtils;
+import com.landmark.app.utils.constants.Constants;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.landmark.app.utils.constants.Constants.*;
 
@@ -38,7 +43,8 @@ public class SearchController extends LoggerUtils {
         }
     }
 
-    private SearchTourInfoDTO setSearchDTO(SearchTourInfoDTO searchTourInfoDTO) {
+    // 검색 내용 세팅
+    private SearchTourInfoDTO setSearchDTO(SearchTourInfoDTO searchTourInfoDTO) throws Exception {
         int page = searchTourInfoDTO.getPage();
         int size = searchTourInfoDTO.getSize() > 0 ? searchTourInfoDTO.getSize() : 10;
         // 정렬 기준 : 1. 등록일순, 2. 제목순 - default = 1
@@ -50,7 +56,7 @@ public class SearchController extends LoggerUtils {
 
         int contentTypeId = searchTourInfoDTO.getContentTypeId();
 
-        if (!contentTypeMap.containsKey(contentTypeId)) {
+        if (!checkContentTypeId(contentTypeId)) {
             contentTypeId = 0;
         }
 
@@ -81,6 +87,25 @@ public class SearchController extends LoggerUtils {
         searchTourInfoDTO.setKeyword(keyword);
 
         return searchTourInfoDTO;
+    }
+
+    // contentTypeId 가 디비에 저장된 데이터인지 체크
+    private boolean checkContentTypeId(int contentTypeId) throws Exception {
+        if (!contentTypeIds.isEmpty()) {
+            List<Integer> contentTypeIdList = new ArrayList<>();
+
+            for (Object obj : contentTypeIds) {
+                JSONObject contentTypeIdJson = (JSONObject) obj;
+                int contentType = Integer.parseInt(contentTypeIdJson.get("contentTypeId").toString());
+                contentTypeIdList.add(contentType);
+            }
+
+            if (contentTypeIdList.contains(contentTypeId)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

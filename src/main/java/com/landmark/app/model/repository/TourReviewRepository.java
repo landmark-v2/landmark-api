@@ -1,5 +1,6 @@
 package com.landmark.app.model.repository;
 
+import com.landmark.app.model.domain.AreaCode;
 import com.landmark.app.model.domain.TourReview;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,10 @@ public interface TourReviewRepository extends JpaRepository<TourReview, Integer>
     List<TourReview> findTop10ByUserId(@Param("userId") int userId);
 
     int countAllByAreaCodeAndUserId(int areaCode, int userId);
+
+    @Query("select r.areaCode, count(r) as cnt from TourReview r where r.userId = :userId group by r.areaCode")
+    List<AreaCode.AreaCodeCount> countAllByUserIdGroupByAreaCode(@Param("userId") int userId);
+
 
     TourReview findById(int id);
 

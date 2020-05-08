@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 
 import static com.landmark.app.utils.constants.Constants.*;
 
@@ -44,16 +43,16 @@ public class TourReviewController extends LoggerUtils {
     }
 
     /**
-     * 사용자의 지역별 후기 개수
+     * 사용자의 지역별 후기 개수 -> 지역별 전체 조회로 수정
      */
     @GetMapping(value = "/count")
-    public ResponseEntity<?> countByAreaCode(@RequestParam int areaCode, HttpServletRequest request) {
+    public ResponseEntity<?> countByAreaCode(HttpServletRequest request) {
         try {
             int userId = accountHelper.getAccountId(request);
-            return new ResponseEntity<>(tourReviewService.countByAreaCode(areaCode, userId), HttpStatus.OK);
+            return new ResponseEntity<>(tourReviewService.countAllByUserIdGroupByAreaCode(userId), HttpStatus.OK);
         } catch (Exception e) {
             logger.error("countByAreaCode : " + e.getMessage());
-            return new ResponseEntity<>(0, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

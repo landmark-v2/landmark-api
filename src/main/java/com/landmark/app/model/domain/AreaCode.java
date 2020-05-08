@@ -2,6 +2,7 @@ package com.landmark.app.model.domain;
 
 import lombok.Data;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -15,5 +16,15 @@ public class AreaCode {
     private int code;
 
     private String name;
+
+    @Data
+    public static class AreaCodeCount {
+
+        @Id
+        @Column(name = "area_code")
+        private int areaCode;
+
+        private int cnt;
+    }
 
 }
