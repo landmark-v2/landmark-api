@@ -17,11 +17,14 @@ public interface QnaCommentRepository extends JpaRepository<QnaComment, Integer>
     @Override
     void deleteById(Integer integer);
 
+    /*
     @Transactional
     @Modifying
     @Query("update QNA_COMMENT c set " +
-            "c.comment =: comment, c.modifiedTime =: modifiedTime " +
-            "where c.id =: id and c.userId =: userId and c.qnaId := qnaId")
-    void updateQnaCommentByIdUserId(@Param("comment") String comment, @Param("modifiedTime")Date modifiedTime,
+            "c.comment=:comment, c.modifiedTime=:modifiedTime " +
+            "where c.id=:id and c.userId=:userId and c.qnaId=:qnaId")
+    void updateQnaCommentByIdUserId(@Param("comment") String comment, @Param("modifiedTime") Date modifiedTime,
                                     @Param("id") int id, @Param("userId") int userId, @Param("qnaId") int qnaId);
+
+     */
 }

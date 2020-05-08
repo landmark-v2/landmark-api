@@ -43,19 +43,13 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
     @Override
     public void updateQna(QnaDTO qnaDTO, int userId) {
         try{
-            int getUserId = qnaDTO.getUserId();
-            if(getUserId == userId){
-                String title = qnaDTO.getTitle();
-                String content = qnaDTO.getContent();
-                Date modifiedTime = new Date();
-                int id = qnaDTO.getId();
-
-                qnaRepository.updateQnaByIdUserId(title, content, modifiedTime, userId, id);
+            if(qnaDTO.getUserId() == userId){
+                qnaDTO.setModifiedTime(new Date());
+                qnaSave(qnaDTO);
             }
         } catch (Exception e){
             logger.error("Qna update : " + e.getMessage());
         }
-
     }
 
     @Override
@@ -89,16 +83,14 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
     @Override
     public QnaCommentDTO registerQnaComment(QnaCommentDTO qnaCommentDTO, int qnaId) {
         qnaCommentDTO.setCreatedTime(new Date());
-        if (qnaId == qnaCommentDTO.getQnaId()){
-            return commentSave(qnaCommentDTO);
-        }
-        return null;
+        qnaCommentDTO.setQnaId(qnaId);
+        return commentSave(qnaCommentDTO);
     }
 
     @Override
     public void deleteQnaComment(int id, int userId, int qnaId) {
         try{
-            QnaCommentDTO qnaCommentDTO = QnaCommentDTO.of(qnaCommentRepository.findById(id).orElse(null));
+            QnaCommentDTO qnaCommentDTO = QnaCommentDTO.of(qnaCommentRepository.findById(id).get());
             if(qnaCommentDTO.getUserId() == userId && qnaCommentDTO.getQnaId() == qnaId){
                 qnaCommentRepository.deleteById(id);
             }
@@ -108,12 +100,11 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
     }
 
     @Override
-    public void updateQnaComment(QnaCommentDTO qnaCommentDTO, int id, int userId, int qnaId) {
+    public void updateQnaComment(QnaCommentDTO qnaCommentDTO, int userId) {
         try{
-            if(userId == qnaCommentDTO.getUserId() && qnaCommentDTO.getQnaId() == qnaId && qnaCommentDTO.getId() == id){
-                String comment = qnaCommentDTO.getComment();
-                Date modifiedTime = new Date();
-                qnaCommentRepository.updateQnaCommentByIdUserId(comment, modifiedTime, id, userId, qnaId);
+            if(userId == qnaCommentDTO.getUserId()){
+                qnaCommentDTO.setModifiedTime(new Date());
+                commentSave(qnaCommentDTO);
             }
         } catch (Exception e){
             logger.error("Qna Comment update : " + e.getMessage());

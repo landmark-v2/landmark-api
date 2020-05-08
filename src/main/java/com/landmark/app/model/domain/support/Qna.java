@@ -5,10 +5,7 @@ import com.landmark.app.utils.MapperUtils;
 import lombok.Data;
 import org.modelmapper.TypeToken;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +15,7 @@ import java.util.List;
 public class Qna {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "user_id")
@@ -38,4 +36,6 @@ public class Qna {
     public static List<Qna> of(List<QnaDTO> qnaDTOS) {
         return MapperUtils.convert(qnaDTOS, new TypeToken<List<Qna>>(){}.getType());
     }
+
+
 }

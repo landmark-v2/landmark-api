@@ -24,6 +24,7 @@ public class QnaDTO {
     public static List<QnaDTO> of(List<Qna> qna) {
         return MapperUtils.convert(qna, new TypeToken<List<QnaDTO>>(){}.getType());
     }
+
     public static Page<QnaDTO> of(Page<Qna> qna) {
         return MapperUtils.convert(qna, QnaDTO.class);
     }
