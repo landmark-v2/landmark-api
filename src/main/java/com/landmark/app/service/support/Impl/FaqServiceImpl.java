@@ -37,11 +37,7 @@ public class FaqServiceImpl extends LoggerUtils implements FaqService {
     @Override
     public void updateFaq(FaqDTO faqDTO) {
         try{
-            String title = faqDTO.getTitle();
-            String content = faqDTO.getContent();
-            Date modifiedTime = new Date();
-            int id = faqDTO.getId();
-            faqRepository.updateFaqById(title, content, modifiedTime, id);
+            save(faqDTO);
         } catch (Exception e){
             logger.error("Faq update : " + e.getMessage());
         }
