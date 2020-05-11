@@ -64,14 +64,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/info/**").hasAnyRole(ADMIN, DEV)
                 .antMatchers(HttpMethod.PUT, "/info/**").hasAnyRole(ADMIN, DEV)
                 .antMatchers(HttpMethod.DELETE, "/info/**").hasAnyRole(ADMIN, DEV)
-//                .antMatchers(HttpMethod.POST, "/faq/**").hasRole(DEV)
-//                .antMatchers(HttpMethod.GET, "/faq/**").permitAll()
-//                .antMatchers(HttpMethod.PUT, "/faq/**").hasRole(DEV)
-//                .antMatchers(HttpMethod.DELETE, "/faq/**").hasRole(DEV)
+                .antMatchers(HttpMethod.POST, "/faq/**").hasRole(DEV)
+                .antMatchers(HttpMethod.GET, "/faq/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/faq/**").hasRole(DEV)
+                .antMatchers(HttpMethod.DELETE, "/faq/**").hasRole(DEV)
                 .antMatchers(HttpMethod.POST, "/qna/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/qna/**").permitAll()
                 .antMatchers(HttpMethod.PUT, "/qna/**").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/qna/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/notice/**").hasRole(DEV)
+                .antMatchers(HttpMethod.GET, "/notice/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/notice/**").hasRole(DEV)
+//                .antMatchers(HttpMethod.DELETE, "/notice/**").hasRole(DEV)
                 .anyRequest().authenticated();
 
 

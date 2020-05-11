@@ -36,11 +36,7 @@ public class NoticeServiceImpl extends LoggerUtils implements NoticeService {
     @Override
     public void updateNotice(NoticeDTO noticeDTO) {
         try{
-            int id = noticeDTO.getId();
-            String title = noticeDTO.getTitle();
-            String content = noticeDTO.getContent();
-            Date modifiedTime = new Date();
-            noticeRepository.updateNoticeById(title, content, modifiedTime, id);
+            save(noticeDTO);
         } catch (Exception e){
             logger.error("Notice update : " + e.getMessage());
         }
@@ -49,7 +45,7 @@ public class NoticeServiceImpl extends LoggerUtils implements NoticeService {
     @Override
     public void deleteNotice(int id) {
         try{
-            noticeRepository.deleteNoticeById(id);
+            noticeRepository.deleteById(id);
         } catch (Exception e){
             logger.error("Notice delete : " + e.getMessage());
         }
