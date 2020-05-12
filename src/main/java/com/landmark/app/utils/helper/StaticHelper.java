@@ -15,6 +15,15 @@ public class StaticHelper {
         }
     }
 
+    public static String dateToString(Date date, String format) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(format);
+            return sdf.format(date);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public static int getCertNum() {
         try {
             // 6자리 인증 코드 생성

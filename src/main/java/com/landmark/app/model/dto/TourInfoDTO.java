@@ -2,6 +2,7 @@ package com.landmark.app.model.dto;
 
 import com.landmark.app.model.domain.TourInfo;
 import com.landmark.app.utils.MapperUtils;
+import com.landmark.app.utils.helper.StaticHelper;
 import lombok.Data;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
@@ -32,6 +33,14 @@ public class TourInfoDTO {
     private String firstImage2;             // 썸네일 이미지 파일 경로
     private String homepage;                // url
     private int readCount;                  // 조회수 : redis 에 저장 (key : TourInfo{id}, value : count)
+
+    public String getCreatedTime() {
+        return StaticHelper.dateToString(createdTime, "yyyy-MM-dd HH:mm");
+    }
+
+    public String getModifiedTime() {
+        return StaticHelper.dateToString(modifiedTime, "yyyy-MM-dd HH:mm");
+    }
 
     public static TourInfoDTO of(TourInfo tourInfo) {
         return MapperUtils.convert(tourInfo, TourInfoDTO.class);
