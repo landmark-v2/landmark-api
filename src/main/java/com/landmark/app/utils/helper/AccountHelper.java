@@ -41,4 +41,15 @@ public class AccountHelper extends LoggerUtils {
         }
     }
 
+    public String getRole(HttpServletRequest request) {
+        try {
+            String username = tokenAuthentication.generateAuthenticationFromRequest(request).getName();
+            UserDTO user = userService.findByUsername(username);
+            return user.getRole().getRolename();
+        } catch (Exception e) {
+            logger.error("getRole : " + e.getMessage());
+            return null;
+        }
+    }
+
 }

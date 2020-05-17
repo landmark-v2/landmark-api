@@ -8,7 +8,7 @@ public interface UserService extends UserDetailsService {
     UserDTO findByUsername(String username) throws Exception;
 
     // 회원가입
-    UserDTO register(UserDTO userDTO) throws Exception;
+    UserDTO save(UserDTO userDTO) throws Exception;
 
     int findIdByUsername(String username) throws Exception;
 
@@ -28,9 +28,9 @@ public interface UserService extends UserDetailsService {
     boolean checkEmail(String email) throws Exception;
 
     // 회원정보 수정
-    UserDTO updateUser(UserDTO userDTO) throws Exception;
+    UserDTO updateUser(UserDTO userDTO, UserDTO.UpdateUserDTO updateUserDTO) throws Exception;
 
     // 회원탈퇴
-    boolean deleteUser(int id) throws Exception;
+    boolean deleteUser(int id, UserDTO userDTO) throws Exception;
 
 }

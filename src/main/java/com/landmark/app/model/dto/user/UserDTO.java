@@ -5,6 +5,7 @@ import com.landmark.app.model.domain.user.User;
 import com.landmark.app.utils.MapperUtils;
 import com.landmark.app.utils.constants.Constants;
 import lombok.Data;
+import lombok.Getter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,6 +36,14 @@ public class UserDTO {
 
     @JsonIgnore
     private RoleDTO role;
+
+    @Getter
+    public static class UpdateUserDTO {
+        private String password;
+        private String name;
+        private String email;
+        private int certNum;
+    }
 
     public static UserDTO of(User user) {
         return MapperUtils.convert(user, UserDTO.class);

@@ -3,11 +3,14 @@ package com.landmark.app.controller.user;
 import com.landmark.app.model.dto.user.UserDTO;
 import com.landmark.app.service.user.UserService;
 import com.landmark.app.utils.LoggerUtils;
+import com.landmark.app.utils.helper.AccountHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import static com.landmark.app.utils.constants.Constants.USER_API;
@@ -17,10 +20,12 @@ import static com.landmark.app.utils.constants.Constants.USER_API;
 public class UserController extends LoggerUtils {
 
     private UserService userService;
+    private AccountHelper accountHelper;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AccountHelper accountHelper) {
         this.userService = userService;
+        this.accountHelper = accountHelper;
     }
 
     /**
@@ -37,7 +42,7 @@ public class UserController extends LoggerUtils {
     }
 
     /**
-     * 인증번호 인증
+     * 인증번호 확인
      */
     @GetMapping(value = "/cert")
     public ResponseEntity<?> checkCertNum(@RequestParam String email, @RequestParam int certNum) {
@@ -52,11 +57,28 @@ public class UserController extends LoggerUtils {
     /**
      * 아이디 중복 체크
      */
+    @GetMapping(value = "/check")
+    public ResponseEntity<?> checkDuplicationAccount(@RequestParam String account) {
+        try {
+            return new ResponseEntity<>(userService.checkUsername(account), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("checkDuplicationAccount : " + e.getMessage());
+            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     /**
      * 이메일 중복 체크
      */
-
+    @GetMapping(value = "/check")
+    public ResponseEntity<?> checkDuplicationEmail(@RequestParam String email) {
+        try {
+            return new ResponseEntity<>(userService.checkEmail(email), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("checkDuplicationEmail : " + e.getMessage());
+            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     /**
      * 회원가입
@@ -64,7 +86,9 @@ public class UserController extends LoggerUtils {
     @PostMapping
     public ResponseEntity<?> register(@Valid @RequestBody UserDTO userDTO) {
         try {
-            return new ResponseEntity<>(userService.register(userDTO), HttpStatus.OK);
+            UserDTO user = userService.save(userDTO);
+            logger.info("Register User - " + user.toString());
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
             logger.error("register : " + e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -74,17 +98,63 @@ public class UserController extends LoggerUtils {
     /**
      * 회원정보 조회
      */
+    @GetMapping
+    public ResponseEntity<?> getUser(HttpServletRequest request) {
+        try {
+            UserDTO user = accountHelper.getAccountInfo(request);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("getUser : " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     /**
      * 회원정보 수정
      */
+    @PutMapping
+    public ResponseEntity<?> updateUser(@Valid @RequestBody UserDTO.UpdateUserDTO updateUser, HttpServletRequest request) {
+        try {
+            UserDTO user = accountHelper.getAccountInfo(request);
+            return new ResponseEntity<>(userService.updateUser(user, updateUser), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("updateUser : " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     /**
      * 비밀번호 확인
      */
+    @GetMapping(value = "/check")
+    public ResponseEntity<?> checkPassword(@RequestParam String password, HttpServletRequest request) {
+        try {
+            UserDTO user = accountHelper.getAccountInfo(request);
+
+            // 기존의 암호화된 비밀번호와 입력한 비밀번호를 비교한다.
+            if (new BCryptPasswordEncoder().matches(password, user.getPassword())) {
+                return new ResponseEntity<>(true, HttpStatus.OK);
+            }
+
+            return new ResponseEntity<>(false, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("updateUser : " + e.getMessage());
+            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     /**
      * 회원탈퇴
      */
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable int id, HttpServletRequest request) {
+        try {
+            UserDTO user = accountHelper.getAccountInfo(request);
+            return new ResponseEntity<>(userService.deleteUser(id, user), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("deleteUser : " + e.getMessage());
+            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }

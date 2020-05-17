@@ -7,6 +7,7 @@ import com.landmark.app.model.repository.UserRepository;
 import com.landmark.app.service.RedisService;
 import com.landmark.app.utils.LoggerUtils;
 import com.landmark.app.utils.MailUtils;
+import com.landmark.app.utils.constants.Constants;
 import com.landmark.app.utils.helper.StaticHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -53,12 +55,12 @@ public class UserServiceImpl extends LoggerUtils implements UserService {
     }
 
     @Override
-    public UserDTO register(UserDTO userDTO) throws Exception {
+    public UserDTO save(UserDTO userDTO) throws Exception {
         try {
             User user = User.of(toUserDTO(userDTO));
             return UserDTO.of(userRepository.saveAndFlush(user));
         } catch (Exception e) {
-            logger.error("register : " + e.getMessage());
+            logger.error("save : " + e.getMessage());
             throw new Exception(e);
         }
     }
@@ -130,22 +132,87 @@ public class UserServiceImpl extends LoggerUtils implements UserService {
 
     @Override
     public boolean checkUsername(String username) throws Exception {
+        try {
+            userRepository.findByUsername(username).isPresent();
+        } catch (Exception e) {
+            logger.error("checkCertNum : " + e.getMessage());
+            throw new Exception(e);
+        }
+
         return false;
     }
 
     @Override
     public boolean checkEmail(String email) throws Exception {
+        try {
+            userRepository.findByEmail(email).isPresent();
+        } catch (Exception e) {
+            logger.error("checkEmail : " + e.getMessage());
+            throw new Exception(e);
+        }
+
         return false;
     }
 
     @Override
-    public UserDTO updateUser(UserDTO userDTO) throws Exception {
-        return null;
+    public UserDTO updateUser(UserDTO userDTO, UserDTO.UpdateUserDTO updateUserDTO) throws Exception {
+        try {
+            if (userDTO != null) {
+                String account = userDTO.getUsername();
+
+                if (StringUtils.isEmpty(updateUserDTO.getName()) && !userDTO.getName().equals(updateUserDTO.getName())) {
+                    userDTO.setName(updateUserDTO.getName());
+                }
+
+                if (StringUtils.isEmpty(updateUserDTO.getPassword())) {
+                    userDTO.setPassword(updateUserDTO.getPassword());
+                }
+
+                if (StringUtils.isEmpty(updateUserDTO.getEmail())) {
+                    // 이메일 변경 시 인증번호를 발급 받아서 인증번호 유효성 체크 후 변경한다.
+                    if (checkCertNum(updateUserDTO.getEmail(), updateUserDTO.getCertNum())) {
+                        userDTO.setEmail(updateUserDTO.getEmail());
+                    } else {
+                        logger.error("Update User (" + account + ") - Email Cert Number Invalid : " + updateUserDTO.getEmail());
+                    }
+                }
+
+                userDTO = save(userDTO);
+            }
+        } catch (Exception e) {
+            logger.error("updateUser : " + e.getMessage());
+            throw new Exception(e);
+        }
+
+        return userDTO;
     }
 
     @Override
-    public boolean deleteUser(int id) throws Exception {
-        return false;
+    public boolean deleteUser(int id, UserDTO userDTO) throws Exception {
+        try {
+            // 개발자는 모든 사용자 강퇴 가능
+            if (userDTO.getRole().getRolename().equals(ROLE_DEV)) {
+                // 1. qna, 리뷰, 여행지 정보 등 삭제
+
+                // 2. 사용자 삭제
+                userRepository.deleteById(id);
+                logger.info("Developer -> Delete User Index : " + id);
+                return true;
+            }
+            // 그외에는 본인만 회원탈퇴
+            else {
+                // 1. qna, 리뷰, 여행지 정보 등 삭제
+
+                // 2. 사용자 삭제
+                userRepository.deleteById(id);
+                logger.info("Delete User Index : " + id);
+            }
+
+            return true;
+        } catch (Exception e) {
+            logger.error("deleteUser : " + e.getMessage());
+            throw new Exception(e);
+        }
     }
 
 }
