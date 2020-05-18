@@ -31,6 +31,6 @@ public interface UserService extends UserDetailsService {
     UserDTO updateUser(UserDTO userDTO, UserDTO.UpdateUserDTO updateUserDTO) throws Exception;
 
     // 회원탈퇴
-    boolean deleteUser(int id, UserDTO userDTO) throws Exception;
+    boolean deleteUser(int id, String role) throws Exception;
 
 }

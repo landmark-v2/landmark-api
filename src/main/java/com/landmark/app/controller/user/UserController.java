@@ -3,6 +3,7 @@ package com.landmark.app.controller.user;
 import com.landmark.app.model.dto.user.UserDTO;
 import com.landmark.app.service.user.UserService;
 import com.landmark.app.utils.LoggerUtils;
+import com.landmark.app.utils.constants.Constants;
 import com.landmark.app.utils.helper.AccountHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,7 +58,7 @@ public class UserController extends LoggerUtils {
     /**
      * 아이디 중복 체크
      */
-    @GetMapping(value = "/check")
+    @GetMapping(value = "/check/account")
     public ResponseEntity<?> checkDuplicationAccount(@RequestParam String account) {
         try {
             return new ResponseEntity<>(userService.checkUsername(account), HttpStatus.OK);
@@ -70,7 +71,7 @@ public class UserController extends LoggerUtils {
     /**
      * 이메일 중복 체크
      */
-    @GetMapping(value = "/check")
+    @GetMapping(value = "/check/email")
     public ResponseEntity<?> checkDuplicationEmail(@RequestParam String email) {
         try {
             return new ResponseEntity<>(userService.checkEmail(email), HttpStatus.OK);
@@ -126,17 +127,13 @@ public class UserController extends LoggerUtils {
     /**
      * 비밀번호 확인
      */
-    @GetMapping(value = "/check")
+    @GetMapping(value = "/check/pw")
     public ResponseEntity<?> checkPassword(@RequestParam String password, HttpServletRequest request) {
         try {
             UserDTO user = accountHelper.getAccountInfo(request);
 
             // 기존의 암호화된 비밀번호와 입력한 비밀번호를 비교한다.
-            if (new BCryptPasswordEncoder().matches(password, user.getPassword())) {
-                return new ResponseEntity<>(true, HttpStatus.OK);
-            }
-
-            return new ResponseEntity<>(false, HttpStatus.OK);
+            return new ResponseEntity<>(new BCryptPasswordEncoder().matches(password, user.getPassword()), HttpStatus.OK);
         } catch (Exception e) {
             logger.error("updateUser : " + e.getMessage());
             return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -150,7 +147,15 @@ public class UserController extends LoggerUtils {
     public ResponseEntity<?> deleteUser(@PathVariable int id, HttpServletRequest request) {
         try {
             UserDTO user = accountHelper.getAccountInfo(request);
-            return new ResponseEntity<>(userService.deleteUser(id, user), HttpStatus.OK);
+
+            if (id == user.getId()) {
+                String role = user.getRole().getRolename();
+                return new ResponseEntity<>(userService.deleteUser(id, role), HttpStatus.OK);
+            } else {
+                // 탈퇴하려는 인덱스 번호와 로그인 한 사용자의 인덱스 번호가 다르면 false 리턴
+                logger.info("Index Invalid : request index - " + id + ", user index - " + user.getId());
+                return new ResponseEntity<>(false, HttpStatus.BAD_REQUEST);
+            }
         } catch (Exception e) {
             logger.error("deleteUser : " + e.getMessage());
             return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);

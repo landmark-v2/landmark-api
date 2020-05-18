@@ -3,7 +3,11 @@ package com.landmark.app.service.user;
 import com.landmark.app.model.domain.user.User;
 import com.landmark.app.model.dto.user.RoleDTO;
 import com.landmark.app.model.dto.user.UserDTO;
+import com.landmark.app.model.repository.TourInfoRepository;
+import com.landmark.app.model.repository.TourReviewRepository;
 import com.landmark.app.model.repository.UserRepository;
+import com.landmark.app.model.repository.support.QnaCommentRepository;
+import com.landmark.app.model.repository.support.QnaRepository;
 import com.landmark.app.service.RedisService;
 import com.landmark.app.utils.LoggerUtils;
 import com.landmark.app.utils.MailUtils;
@@ -26,11 +30,16 @@ import static com.landmark.app.utils.constants.Constants.*;
 public class UserServiceImpl extends LoggerUtils implements UserService {
 
     private UserRepository userRepository;
+    private QnaRepository qnaRepository;
+    private QnaCommentRepository qnaCommentRepository;
+    private TourInfoRepository tourInfoRepository;
+    private TourReviewRepository tourReviewRepository;
     private RedisService redisService;
     private MailUtils mailUtils;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RedisService redisService, MailUtils mailUtils) {
+    public UserServiceImpl(UserRepository userRepository, QnaRepository qnaRepository, QnaCommentRepository qnaCommentRepository, TourInfoRepository tourInfoRepository, TourReviewRepository tourReviewRepository,
+                           RedisService redisService, MailUtils mailUtils) {
         this.userRepository = userRepository;
         this.redisService = redisService;
         this.mailUtils = mailUtils;
@@ -160,15 +169,15 @@ public class UserServiceImpl extends LoggerUtils implements UserService {
             if (userDTO != null) {
                 String account = userDTO.getUsername();
 
-                if (StringUtils.isEmpty(updateUserDTO.getName()) && !userDTO.getName().equals(updateUserDTO.getName())) {
+                if (!StringUtils.isEmpty(updateUserDTO.getName()) && !userDTO.getName().equals(updateUserDTO.getName())) {
                     userDTO.setName(updateUserDTO.getName());
                 }
 
-                if (StringUtils.isEmpty(updateUserDTO.getPassword())) {
+                if (!StringUtils.isEmpty(updateUserDTO.getPassword())) {
                     userDTO.setPassword(updateUserDTO.getPassword());
                 }
 
-                if (StringUtils.isEmpty(updateUserDTO.getEmail())) {
+                if (!StringUtils.isEmpty(updateUserDTO.getEmail())) {
                     // 이메일 변경 시 인증번호를 발급 받아서 인증번호 유효성 체크 후 변경한다.
                     if (checkCertNum(updateUserDTO.getEmail(), updateUserDTO.getCertNum())) {
                         userDTO.setEmail(updateUserDTO.getEmail());
@@ -188,26 +197,20 @@ public class UserServiceImpl extends LoggerUtils implements UserService {
     }
 
     @Override
-    public boolean deleteUser(int id, UserDTO userDTO) throws Exception {
+    public boolean deleteUser(int id, String role) throws Exception {
         try {
-            // 개발자는 모든 사용자 강퇴 가능
-            if (userDTO.getRole().getRolename().equals(ROLE_DEV)) {
-                // 1. qna, 리뷰, 여행지 정보 등 삭제
+            // TODO 1. qna, 리뷰, 여행지 정보 삭제
 
-                // 2. 사용자 삭제
-                userRepository.deleteById(id);
-                logger.info("Developer -> Delete User Index : " + id);
-                return true;
-            }
-            // 그외에는 본인만 회원탈퇴
-            else {
-                // 1. qna, 리뷰, 여행지 정보 등 삭제
 
-                // 2. 사용자 삭제
-                userRepository.deleteById(id);
-                logger.info("Delete User Index : " + id);
+            // TODO 개발자 또는 관광지 관리자라면 QnA 댓글도 삭제
+            if (!role.equals(ROLE_USER)) {
+
             }
 
+            // 2. 사용자 삭제
+            userRepository.deleteById(id);
+
+            logger.info("Delete User Index : " + id);
             return true;
         } catch (Exception e) {
             logger.error("deleteUser : " + e.getMessage());
