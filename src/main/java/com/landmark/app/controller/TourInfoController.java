@@ -34,7 +34,7 @@ public class TourInfoController extends LoggerUtils {
             tourInfoDTO.setUserId(userId);
             return new ResponseEntity<>(tourInfoService.registerTourist(tourInfoDTO), HttpStatus.OK);
         } catch (Exception e) {
-            logger.error("registerTour : " + e.getMessage());
+            logger.error("registerTourInfo : " + e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -45,13 +45,13 @@ public class TourInfoController extends LoggerUtils {
             int userId = accountHelper.getAccountId(request);
             return new ResponseEntity<>(tourInfoService.updateTours(tourInfoDTO, userId), HttpStatus.OK);
         } catch (Exception e) {
-            logger.error("updateReview : " + e.getMessage());
+            logger.error("updateTourInfo : " + e.getMessage());
             return new ResponseEntity<>(0, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<?> deleteReview(@PathVariable("id") int id, HttpServletRequest request) {
+    public ResponseEntity<?> deleteTour(@PathVariable("id") int id, HttpServletRequest request) {
         try {
             UserDTO user = accountHelper.getAccountInfo(request);
             String role = user.getRole().getRolename();
@@ -59,7 +59,7 @@ public class TourInfoController extends LoggerUtils {
 
             return new ResponseEntity<>(tourInfoService.deleteTours(id, userId, role), HttpStatus.OK);
         } catch (Exception e) {
-            logger.error("updateReview : " + e.getMessage());
+            logger.error("updateTourInfo : " + e.getMessage());
             return new ResponseEntity<>(0, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
