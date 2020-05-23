@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public interface QnaRepository extends JpaRepository<Qna, Integer> {
@@ -26,4 +27,7 @@ public interface QnaRepository extends JpaRepository<Qna, Integer> {
 
     @Override
     Optional<Qna> findById(Integer integer);
+
+    List<Qna> findAllByUserId(int userId);
+
 }

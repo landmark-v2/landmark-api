@@ -9,6 +9,7 @@ import com.landmark.app.model.repository.UserRepository;
 import com.landmark.app.model.repository.support.QnaCommentRepository;
 import com.landmark.app.model.repository.support.QnaRepository;
 import com.landmark.app.service.RedisService;
+import com.landmark.app.service.support.QnaService;
 import com.landmark.app.utils.LoggerUtils;
 import com.landmark.app.utils.MailUtils;
 import com.landmark.app.utils.constants.Constants;
@@ -30,18 +31,15 @@ import static com.landmark.app.utils.constants.Constants.*;
 public class UserServiceImpl extends LoggerUtils implements UserService {
 
     private UserRepository userRepository;
-    private QnaRepository qnaRepository;
-    private QnaCommentRepository qnaCommentRepository;
-    private TourInfoRepository tourInfoRepository;
-    private TourReviewRepository tourReviewRepository;
     private RedisService redisService;
+    private QnaService qnaService;
     private MailUtils mailUtils;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, QnaRepository qnaRepository, QnaCommentRepository qnaCommentRepository, TourInfoRepository tourInfoRepository, TourReviewRepository tourReviewRepository,
-                           RedisService redisService, MailUtils mailUtils) {
+    public UserServiceImpl(UserRepository userRepository, QnaService qnaService, RedisService redisService, MailUtils mailUtils) {
         this.userRepository = userRepository;
         this.redisService = redisService;
+        this.qnaService = qnaService;
         this.mailUtils = mailUtils;
     }
 
@@ -199,16 +197,11 @@ public class UserServiceImpl extends LoggerUtils implements UserService {
     @Override
     public boolean deleteUser(int id, String role) throws Exception {
         try {
-            // TODO 1. qna, 리뷰, 여행지 정보 삭제
-
-
-            // TODO 개발자 또는 관광지 관리자라면 QnA 댓글도 삭제
-            if (!role.equals(ROLE_USER)) {
-
+            // 1. qna 삭제
+            if (qnaService.deleteByUserId(id)) {
+                // 2. 사용자 삭제
+                userRepository.deleteById(id);
             }
-
-            // 2. 사용자 삭제
-            userRepository.deleteById(id);
 
             logger.info("Delete User Index : " + id);
             return true;

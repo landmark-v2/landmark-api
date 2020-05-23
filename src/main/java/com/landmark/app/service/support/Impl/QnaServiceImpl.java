@@ -9,8 +9,10 @@ import com.landmark.app.model.repository.support.QnaRepository;
 import com.landmark.app.service.support.QnaService;
 import com.landmark.app.utils.LoggerUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class QnaServiceImpl extends LoggerUtils implements QnaService {
@@ -110,5 +112,33 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
             logger.error("Qna Comment update : " + e.getMessage());
         }
 
+    }
+
+    @Override
+    public boolean deleteByUserId(int userId) {
+        try {
+            // 1. 해당 유저의 qna 리스트를 불러온다.
+            List<QnaDTO> qnas = QnaDTO.of(qnaRepository.findAllByUserId(userId));
+
+            if (!ObjectUtils.isEmpty(qnas)) {
+                for (QnaDTO qna : qnas) {
+                    // 2. qna 에 달린 댓글이 있으면 삭제한다.
+                    try {
+                        qnaCommentRepository.deleteByQnaId(qna.getId());
+                    } catch (Exception e) {
+                        continue;
+                    }
+
+                    // 3. qna 를 삭제한다.
+                    qnaRepository.deleteById(qna.getId());
+                }
+            }
+
+            // qna 가 없거나 삭제 했으면 return true
+            return true;
+        } catch (Exception e) {
+            logger.error("deleteByUserId : " + e.getMessage());
+            return false;
+        }
     }
 }

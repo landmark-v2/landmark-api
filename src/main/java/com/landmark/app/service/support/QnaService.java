@@ -33,6 +33,12 @@ public interface QnaService {
      * QNA 댓글 수정
      */
     void updateQnaComment(QnaCommentDTO qnaCommentDTO, int userId);
+
+    /**
+     * 회원탈퇴 시 QnA, 댓글 있으면 삭제
+     */
+    boolean deleteByUserId(int userId);
+
 }
 
 

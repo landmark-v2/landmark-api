@@ -17,6 +17,10 @@ public interface QnaCommentRepository extends JpaRepository<QnaComment, Integer>
     @Override
     void deleteById(Integer integer);
 
+    @Modifying
+    @Transactional
+    int deleteByQnaId(int qnaId);
+
     /*
     @Transactional
     @Modifying
