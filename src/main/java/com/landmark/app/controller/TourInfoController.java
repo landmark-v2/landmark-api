@@ -1,21 +1,67 @@
 package com.landmark.app.controller;
 
+import com.landmark.app.model.dto.TourInfoDTO;
+import com.landmark.app.model.dto.TourReviewDTO;
+import com.landmark.app.model.dto.user.UserDTO;
 import com.landmark.app.service.TourInfoService;
 import com.landmark.app.utils.LoggerUtils;
+import com.landmark.app.utils.helper.AccountHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import static com.landmark.app.utils.constants.Constants.TOUR_INFO_API;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import static com.landmark.app.utils.constants.Constants.*;
 
 @RestController
 @RequestMapping(value = TOUR_INFO_API)
 public class TourInfoController extends LoggerUtils {
     private TourInfoService tourInfoService;
+    private AccountHelper accountHelper;
 
     @Autowired
     public TourInfoController(TourInfoService tourInfoService) {
         this.tourInfoService = tourInfoService;
+    }
+
+    @GetMapping(value = "/register")
+    public ResponseEntity<?> registerTour(@Valid @RequestBody TourInfoDTO tourInfoDTO, HttpServletRequest request) {
+        try {
+            int userId = accountHelper.getAccountId(request);
+            tourInfoDTO.setUserId(userId);
+            return new ResponseEntity<>(tourInfoService.registerTourist(tourInfoDTO), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("registerTour : " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping(value = "/update")
+    public ResponseEntity<?> updateTour(@RequestBody TourInfoDTO tourInfoDTO, HttpServletRequest request) {
+        try {
+            int userId = accountHelper.getAccountId(request);
+            return new ResponseEntity<>(tourInfoService.updateTours(tourInfoDTO, userId), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("updateReview : " + e.getMessage());
+            return new ResponseEntity<>(0, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping(value = "/delete/{id}")
+    public ResponseEntity<?> deleteReview(@PathVariable("id") int id, HttpServletRequest request) {
+        try {
+            UserDTO user = accountHelper.getAccountInfo(request);
+            String role = user.getRole().getRolename();
+            int userId = accountHelper.getAccountId(request);
+
+            return new ResponseEntity<>(tourInfoService.deleteTours(id, userId, role), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("updateReview : " + e.getMessage());
+            return new ResponseEntity<>(0, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

@@ -28,11 +28,11 @@ public interface TourInfoService {
     /**
      * 관광지 수정
      */
-    void updateTours(TourInfoDTO tourInfoDTO, int userId);
+    TourInfoDTO updateTours(TourInfoDTO tourInfoDTO, int userId);
 
     /**
      * 관광지 삭제
      */
-    void deleteTours(int id, int user_id);
+    boolean deleteTours(int id, int user_id, String role);
 
 }

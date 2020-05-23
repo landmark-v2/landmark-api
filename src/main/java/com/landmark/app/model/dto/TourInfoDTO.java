@@ -56,15 +56,20 @@ public class TourInfoDTO {
 
 
     @Data
-    public static class RegisteredTourInfoDTO {
+    public static class UpdateTourInfoDTO {
         private int id;
-        private String title;
-    }
-
-    @Data
-    public static class DeleteTourInfoDTO{
-        private int id;
-        private int user_id;
+        private String addr1;                   // 주소
+        private String addr2;                   // 상세주소
+        private int areaCode;                   // 지역코드
+        private int sigunguCode;                // 시군구코드
+        private String cat1;                    // 대분류
+        private String cat2;                    // 중분류
+        private String cat3;                    // 소분류
+        private int contentId;                  // 콘텐츠 id
+        private int contentTypeId;              // 콘텐츠 타입 id
+        private String tel;                     // 전화번호
+        private String title;                   // 관광지명
+        private String overview;                // 관광지 설명
     }
 
 }
