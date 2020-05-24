@@ -11,11 +11,11 @@ public interface NoticeService {
     /**
      * 공지 수정
      */
-    void updateNotice(NoticeDTO noticeDTO);
+    NoticeDTO updateNotice(NoticeDTO noticeDTO, String role);
 
     /**
      * 공지 삭제
      */
-    void deleteNotice(int id);
+    boolean deleteNotice(int id, String role);
 
 }

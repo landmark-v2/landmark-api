@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+import static com.landmark.app.utils.constants.Constants.ROLE_DEV;
+
 @Service
 public class NoticeServiceImpl extends LoggerUtils implements NoticeService {
 
@@ -34,20 +36,27 @@ public class NoticeServiceImpl extends LoggerUtils implements NoticeService {
     }
 
     @Override
-    public void updateNotice(NoticeDTO noticeDTO) {
+    public NoticeDTO updateNotice(NoticeDTO noticeDTO, String role) {
         try{
-            save(noticeDTO);
+            if(role.equalsIgnoreCase(ROLE_DEV)){
+                return save(noticeDTO);
+            }
         } catch (Exception e){
             logger.error("Notice update : " + e.getMessage());
         }
+        return null;
     }
 
     @Override
-    public void deleteNotice(int id) {
+    public boolean deleteNotice(int id, String role) {
         try{
-            noticeRepository.deleteById(id);
+            if(role.equalsIgnoreCase(ROLE_DEV)){
+                noticeRepository.deleteById(id);
+                return true;
+            }
         } catch (Exception e){
             logger.error("Notice delete : " + e.getMessage());
         }
+        return false;
     }
 }
