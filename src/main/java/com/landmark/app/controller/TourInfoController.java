@@ -51,14 +51,14 @@ public class TourInfoController extends LoggerUtils {
         }
     }
 
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<?> deleteTour(@PathVariable("id") int id, HttpServletRequest request) {
+    @DeleteMapping(value = "/{tourId}")
+    public ResponseEntity<?> deleteTour(@PathVariable("tourId") int tourId, HttpServletRequest request) {
         try {
             UserDTO user = accountHelper.getAccountInfo(request);
             String role = user.getRole().getRolename();
             int userId = accountHelper.getAccountId(request);
 
-            return new ResponseEntity<>(tourInfoService.deleteTours(id, userId, role), HttpStatus.OK);
+            return new ResponseEntity<>(tourInfoService.deleteTours(tourId, userId, role), HttpStatus.OK);
         } catch (Exception e) {
             logger.error("updateTourInfo : " + e.getMessage());
             return new ResponseEntity<>(0, HttpStatus.INTERNAL_SERVER_ERROR);
