@@ -1,9 +1,11 @@
 package com.landmark.app.service.impl;
 
 import com.landmark.app.model.domain.AreaCode;
+import com.landmark.app.model.domain.AreaCodeCount;
 import com.landmark.app.model.domain.TourReview;
 import com.landmark.app.model.dto.TourInfoDTO;
 import com.landmark.app.model.dto.TourReviewDTO;
+import com.landmark.app.model.repository.AreaCodeCountRepository;
 import com.landmark.app.model.repository.TourReviewRepository;
 import com.landmark.app.service.TourInfoService;
 import com.landmark.app.service.TourReviewService;
@@ -28,12 +30,14 @@ import static com.landmark.app.utils.constants.Constants.*;
 public class TourReviewServiceImpl extends LoggerUtils implements TourReviewService {
 
     private TourReviewRepository tourReviewRepository;
+    private AreaCodeCountRepository areaCodeCountRepository;
     private TourInfoService tourInfoService;
     private UserService userService;
 
     @Autowired
-    public TourReviewServiceImpl(TourReviewRepository tourReviewRepository, TourInfoService tourInfoService, UserService userService) {
+    public TourReviewServiceImpl(TourReviewRepository tourReviewRepository, AreaCodeCountRepository areaCodeCountRepository, TourInfoService tourInfoService, UserService userService) {
         this.tourReviewRepository = tourReviewRepository;
+        this.areaCodeCountRepository = areaCodeCountRepository;
         this.tourInfoService = tourInfoService;
         this.userService = userService;
     }
@@ -113,15 +117,17 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
         JSONArray jsonArr = new JSONArray();
 
         try {
-            List<AreaCode.AreaCodeCount> counts = tourReviewRepository.countAllByUserIdGroupByAreaCode(userId);
+            List<AreaCodeCount> counts = areaCodeCountRepository.countAllByUserIdGroupByAreaCode(userId);
 
-            for (AreaCode.AreaCodeCount count : counts) {
+            for (AreaCodeCount count : counts) {
                 JSONObject countObj = new JSONObject();
                 countObj.put("areaCode", count.getAreaCode());
-                countObj.put("count", count.getCnt());
+                countObj.put("name", count.getName());
+                countObj.put("count", count.getLevel());
                 jsonArr.add(countObj);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error("countAllByUserIdGroupByAreaCode : " + e.getMessage());
         }
 
