@@ -26,14 +26,14 @@ public class TourReviewServiceTests {
     @Test
     @Ignore
     public void getRecentReviewsTest() {
-        int userId = 2;
+        int userId = 11;
         System.out.println(tourReviewService.getRecentReviews(userId));
     }
 
     @Test
     @Ignore
     public void countByAreaCodeTest() {
-        int userId = 2;
+        int userId = 11;
         System.out.println(tourReviewService.countAllByUserIdGroupByAreaCode(userId));
     }
 

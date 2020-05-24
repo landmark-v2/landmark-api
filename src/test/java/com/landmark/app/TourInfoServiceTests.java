@@ -36,7 +36,7 @@ public class TourInfoServiceTests {
         try{
             int id = 25380;
             int userId = 2;
-            TourInfoService.deleteTours(id, userId);
+//            TourInfoService.deleteTours(id, userId);
         } catch (Exception e){
             e.printStackTrace();
         }

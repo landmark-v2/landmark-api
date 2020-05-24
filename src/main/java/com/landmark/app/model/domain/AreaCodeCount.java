@@ -5,16 +5,17 @@ import lombok.Data;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 @Entity
 @Data
-@Table(name = "AREA_CODE")
-public class AreaCode {
+public class AreaCodeCount {
 
     @Id
-    private int code;
+    @Column(name = "area_code")
+    private int areaCode;
 
     private String name;
+
+    private int level;
 
 }
