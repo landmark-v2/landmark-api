@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+import static com.landmark.app.utils.constants.Constants.ROLE_DEV;
+
 @Service
 public class FaqServiceImpl extends LoggerUtils implements FaqService {
 
@@ -35,21 +37,27 @@ public class FaqServiceImpl extends LoggerUtils implements FaqService {
     }
 
     @Override
-    public void updateFaq(FaqDTO faqDTO) {
+    public FaqDTO updateFaq(FaqDTO faqDTO, String role) {
         try{
-            save(faqDTO);
+            if(role.equalsIgnoreCase(ROLE_DEV)) {
+                return save(faqDTO);
+            }
         } catch (Exception e){
             logger.error("Faq update : " + e.getMessage());
         }
+        return null;
     }
 
     @Override
-    public void deleteFaq(int id) {
+    public boolean deleteFaq(int id, String role) {
         try{
-            faqRepository.deleteById(id);
+            if(role.equalsIgnoreCase(ROLE_DEV)){
+                faqRepository.deleteById(id);
+                return true;
+            }
         } catch (Exception e){
             logger.error("Faq delete : " + e.getMessage());
         }
-
+        return false;
     }
 }

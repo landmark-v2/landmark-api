@@ -11,10 +11,10 @@ public interface FaqService {
     /**
      * FAQ 수정
      */
-    void updateFaq(FaqDTO faqDTO);
+    FaqDTO updateFaq(FaqDTO faqDTO, String role);
 
     /**
      * FAQ 삭제
      */
-    void deleteFaq(int id);
+    boolean deleteFaq(int faqId, String role);
 }
