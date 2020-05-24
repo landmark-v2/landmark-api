@@ -28,7 +28,7 @@ public class TourInfoController extends LoggerUtils {
         this.accountHelper = accountHelper;
     }
 
-    @GetMapping(value = "/register")
+    @GetMapping
     public ResponseEntity<?> registerTour(@Valid @RequestBody TourInfoDTO tourInfoDTO, HttpServletRequest request) {
         try {
             int userId = accountHelper.getAccountId(request);
@@ -40,7 +40,7 @@ public class TourInfoController extends LoggerUtils {
         }
     }
 
-    @PutMapping(value = "/update")
+    @PutMapping
     public ResponseEntity<?> updateTour(@RequestBody TourInfoDTO tourInfoDTO, HttpServletRequest request) {
         try {
             int userId = accountHelper.getAccountId(request);
@@ -51,7 +51,7 @@ public class TourInfoController extends LoggerUtils {
         }
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteTour(@PathVariable("id") int id, HttpServletRequest request) {
         try {
             UserDTO user = accountHelper.getAccountInfo(request);
