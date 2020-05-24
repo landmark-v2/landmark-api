@@ -14,6 +14,8 @@ import org.springframework.util.ObjectUtils;
 import java.util.Date;
 import java.util.List;
 
+import static com.landmark.app.utils.constants.Constants.ROLE_DEV;
+
 @Service
 public class QnaServiceImpl extends LoggerUtils implements QnaService {
 
@@ -43,26 +45,29 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
     }
 
     @Override
-    public void updateQna(QnaDTO qnaDTO, int userId) {
+    public QnaDTO updateQna(QnaDTO qnaDTO, int userId) {
         try{
             if(qnaDTO.getUserId() == userId){
                 qnaDTO.setModifiedTime(new Date());
-                qnaSave(qnaDTO);
+                return qnaSave(qnaDTO);
             }
         } catch (Exception e){
             logger.error("Qna update : " + e.getMessage());
         }
+        return null;
     }
 
     @Override
-    public void deleteQna(int id, int userId) {
+    public boolean deleteQna(int id, int userId, String role) {
         try{
             QnaDTO qnaDTO = QnaDTO.of(qnaRepository.findById(id).orElse(null));
-            if(userId == qnaDTO.getUserId()){
+            if(userId == qnaDTO.getUserId() || role.equalsIgnoreCase(ROLE_DEV)){
                 qnaRepository.deleteById(id);
             }
+            return true;
         } catch (Exception e) {
             logger.error("Qna delete : " + e.getMessage());
+            return false;
         }
     }
 
@@ -90,28 +95,30 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
     }
 
     @Override
-    public void deleteQnaComment(int id, int userId, int qnaId) {
+    public boolean deleteQnaComment(int id, int userId, int qnaId, String role) {
         try{
             QnaCommentDTO qnaCommentDTO = QnaCommentDTO.of(qnaCommentRepository.findById(id).get());
-            if(qnaCommentDTO.getUserId() == userId && qnaCommentDTO.getQnaId() == qnaId){
+            if((qnaCommentDTO.getUserId() == userId && qnaCommentDTO.getQnaId() == qnaId ) || role.equalsIgnoreCase(ROLE_DEV)){
                 qnaCommentRepository.deleteById(id);
             }
+            return true;
         } catch (Exception e){
             logger.error("Qna Comment delete : " + e.getMessage());
+            return false;
         }
     }
 
     @Override
-    public void updateQnaComment(QnaCommentDTO qnaCommentDTO, int userId) {
+    public QnaCommentDTO updateQnaComment(QnaCommentDTO qnaCommentDTO, int userId) {
         try{
             if(userId == qnaCommentDTO.getUserId()){
                 qnaCommentDTO.setModifiedTime(new Date());
-                commentSave(qnaCommentDTO);
+                return commentSave(qnaCommentDTO);
             }
         } catch (Exception e){
             logger.error("Qna Comment update : " + e.getMessage());
         }
-
+        return null;
     }
 
     @Override
