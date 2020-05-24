@@ -23,8 +23,9 @@ public class TourInfoController extends LoggerUtils {
     private AccountHelper accountHelper;
 
     @Autowired
-    public TourInfoController(TourInfoService tourInfoService) {
+    public TourInfoController(TourInfoService tourInfoService, AccountHelper accountHelper) {
         this.tourInfoService = tourInfoService;
+        this.accountHelper = accountHelper;
     }
 
     @GetMapping(value = "/register")
