@@ -63,7 +63,7 @@ public class QnaController extends LoggerUtils {
 
             return new ResponseEntity<>(qnaService.deleteQna(id, userId, role), HttpStatus.OK);
         } catch (Exception e) {
-            logger.error("updateReview : " + e.getMessage());
+            logger.error("updateQna : " + e.getMessage());
             return new ResponseEntity<>(0, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -77,7 +77,7 @@ public class QnaController extends LoggerUtils {
             commentDTO.setUserId(userId);
             return new ResponseEntity<>(qnaService.registerQnaComment(commentDTO, qnaId), HttpStatus.OK);
         } catch (Exception e) {
-            logger.error("registerQnA : " + e.getMessage());
+            logger.error("registerQnAComment : " + e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -88,7 +88,7 @@ public class QnaController extends LoggerUtils {
             int userId = accountHelper.getAccountId(request);
             return new ResponseEntity<>(qnaService.updateQnaComment(commentDTO, userId), HttpStatus.OK);
         } catch (Exception e) {
-            logger.error("updateQnA : " + e.getMessage());
+            logger.error("updateQnAComment : " + e.getMessage());
             return new ResponseEntity<>(0, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -103,7 +103,7 @@ public class QnaController extends LoggerUtils {
 
             return new ResponseEntity<>(qnaService.deleteQnaComment(id, userId, qnaId, role), HttpStatus.OK);
         } catch (Exception e) {
-            logger.error("updateReview : " + e.getMessage());
+            logger.error("deleteQnAComment : " + e.getMessage());
             return new ResponseEntity<>(0, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
