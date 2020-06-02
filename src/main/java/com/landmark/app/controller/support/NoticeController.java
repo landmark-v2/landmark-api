@@ -30,7 +30,7 @@ public class NoticeController extends LoggerUtils {
     }
 
     @GetMapping
-    public ResponseEntity<?> registerNotice(@Valid @RequestBody NoticeDTO noticeDTO, HttpServletRequest request) {
+    public ResponseEntity<?> registerNotice(@Valid @RequestParam NoticeDTO noticeDTO, HttpServletRequest request) {
         try {
             return new ResponseEntity<>(noticeService.registerNotice(noticeDTO), HttpStatus.OK);
         } catch (Exception e) {
@@ -40,7 +40,7 @@ public class NoticeController extends LoggerUtils {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateNotice(@RequestBody NoticeDTO noticeDTO, HttpServletRequest request) {
+    public ResponseEntity<?> updateNotice(@RequestParam NoticeDTO noticeDTO, HttpServletRequest request) {
         try {
             UserDTO user = accountHelper.getAccountInfo(request);
             String role = user.getRole().getRolename();

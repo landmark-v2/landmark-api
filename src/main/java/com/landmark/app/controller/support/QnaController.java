@@ -32,7 +32,7 @@ public class QnaController extends LoggerUtils {
 
     /** QnA */
     @GetMapping
-    public ResponseEntity<?> registerQna(@Valid @RequestBody QnaDTO qnaDTO, HttpServletRequest request) {
+    public ResponseEntity<?> registerQna(@Valid @RequestParam QnaDTO qnaDTO, HttpServletRequest request) {
         try {
             int userId = accountHelper.getAccountId(request);
             qnaDTO.setUserId(userId);
@@ -44,7 +44,7 @@ public class QnaController extends LoggerUtils {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateQna(@RequestBody QnaDTO qnaDTO, HttpServletRequest request) {
+    public ResponseEntity<?> updateQna(@RequestParam QnaDTO qnaDTO, HttpServletRequest request) {
         try {
             int userId = accountHelper.getAccountId(request);
             return new ResponseEntity<>(qnaService.updateQna(qnaDTO, userId), HttpStatus.OK);

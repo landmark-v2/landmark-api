@@ -60,7 +60,7 @@ public class TourReviewController extends LoggerUtils {
      * 여행 후기 등록
      */
     @PostMapping
-    public ResponseEntity<?> registerTourReview(@Valid @RequestBody TourReviewDTO tourReviewDTO, HttpServletRequest request) {
+    public ResponseEntity<?> registerTourReview(@Valid @RequestParam TourReviewDTO tourReviewDTO, HttpServletRequest request) {
         try {
             int userId = accountHelper.getAccountId(request);
             tourReviewDTO.setUserId(userId);
@@ -75,7 +75,7 @@ public class TourReviewController extends LoggerUtils {
      * 여행 후기 전체 조회
      */
     @GetMapping
-    public ResponseEntity<?> getAllReviews(@RequestBody TourReviewDTO.SearchReviewDTO searchReviewDTO, HttpServletRequest request) {
+    public ResponseEntity<?> getAllReviews(@RequestParam TourReviewDTO.SearchReviewDTO searchReviewDTO, HttpServletRequest request) {
         try {
             UserDTO user = accountHelper.getAccountInfo(request);
             int userId = user.getId();
@@ -91,7 +91,7 @@ public class TourReviewController extends LoggerUtils {
      * 여행 후기 수정
      */
     @PutMapping
-    public ResponseEntity<?> updateReview(@RequestBody TourReviewDTO.UpdateReviewDTO updateReviewDTO, HttpServletRequest request) {
+    public ResponseEntity<?> updateReview(@RequestParam TourReviewDTO.UpdateReviewDTO updateReviewDTO, HttpServletRequest request) {
         try {
             int userId = accountHelper.getAccountId(request);
             return new ResponseEntity<>(tourReviewService.updateReview(updateReviewDTO, userId), HttpStatus.OK);

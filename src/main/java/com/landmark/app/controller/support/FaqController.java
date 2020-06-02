@@ -30,7 +30,7 @@ public class FaqController extends LoggerUtils {
     }
 
     @GetMapping
-    public ResponseEntity<?> registerFaq(@Valid @RequestBody FaqDTO faqDTO, HttpServletRequest request) {
+    public ResponseEntity<?> registerFaq(@Valid @RequestParam FaqDTO faqDTO, HttpServletRequest request) {
         try {
             return new ResponseEntity<>(faqService.registerFaq(faqDTO), HttpStatus.OK);
         } catch (Exception e) {
@@ -40,7 +40,7 @@ public class FaqController extends LoggerUtils {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateFaq(@RequestBody FaqDTO faqDTO, HttpServletRequest request) {
+    public ResponseEntity<?> updateFaq(@RequestParam FaqDTO faqDTO, HttpServletRequest request) {
         try {
             UserDTO user = accountHelper.getAccountInfo(request);
             String role = user.getRole().getRolename();

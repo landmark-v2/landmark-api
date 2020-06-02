@@ -29,7 +29,7 @@ public class TourInfoController extends LoggerUtils {
     }
 
     @GetMapping
-    public ResponseEntity<?> registerTour(@Valid @RequestBody TourInfoDTO tourInfoDTO, HttpServletRequest request) {
+    public ResponseEntity<?> registerTour(@Valid @RequestParam TourInfoDTO tourInfoDTO, HttpServletRequest request) {
         try {
             int userId = accountHelper.getAccountId(request);
             tourInfoDTO.setUserId(userId);
@@ -41,7 +41,7 @@ public class TourInfoController extends LoggerUtils {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateTour(@RequestBody TourInfoDTO tourInfoDTO, HttpServletRequest request) {
+    public ResponseEntity<?> updateTour(@RequestParam TourInfoDTO tourInfoDTO, HttpServletRequest request) {
         try {
             int userId = accountHelper.getAccountId(request);
             return new ResponseEntity<>(tourInfoService.updateTours(tourInfoDTO, userId), HttpStatus.OK);

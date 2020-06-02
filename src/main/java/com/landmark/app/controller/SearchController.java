@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +31,7 @@ public class SearchController extends LoggerUtils {
      * 관광지 정보 검색 (필터링)
      */
     @GetMapping
-    public ResponseEntity<?> getTourInfos(@RequestBody SearchTourInfoDTO searchTourInfoDTO) {
+    public ResponseEntity<?> getTourInfos(@RequestParam SearchTourInfoDTO searchTourInfoDTO) {
         try {
             return new ResponseEntity<>(searchService.searchTourInfo(setSearchDTO(searchTourInfoDTO)), HttpStatus.OK);
         } catch (Exception e) {
