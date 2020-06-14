@@ -50,11 +50,6 @@ public class TourInfoDTO {
         return MapperUtils.convert(tourInfos, new TypeToken<List<TourInfoDTO>>(){}.getType());
     }
 
-    public static Page<TourInfoDTO> of(Page<TourInfo> tourInfos) {
-        return MapperUtils.convert(tourInfos, TourInfoDTO.class);
-    }
-
-
     @Data
     public static class UpdateTourInfoDTO {
         private int id;

@@ -1,6 +1,5 @@
 package com.landmark.app.service.impl;
 
-import com.landmark.app.model.domain.AreaCode;
 import com.landmark.app.model.domain.AreaCodeCount;
 import com.landmark.app.model.domain.TourReview;
 import com.landmark.app.model.dto.TourInfoDTO;
@@ -10,15 +9,11 @@ import com.landmark.app.model.repository.TourReviewRepository;
 import com.landmark.app.service.TourInfoService;
 import com.landmark.app.service.TourReviewService;
 import com.landmark.app.service.user.UserService;
-import com.landmark.app.utils.constants.Constants;
 import com.landmark.app.utils.LoggerUtils;
+import com.landmark.app.utils.helper.StaticHelper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -45,9 +40,23 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
     @Override
     public TourReviewDTO save(TourReviewDTO tourReviewDTO) {
         try {
-            tourReviewDTO.setModifiedTime(new Date());
-            TourReview tourReview = tourReviewRepository.saveAndFlush(TourReview.of(tourReviewDTO));
-            return TourReviewDTO.of(tourReview);
+            TourReview tourReview = new TourReview();
+
+            if (tourReviewDTO.getId() != 0) {
+                tourReview.setId(tourReviewDTO.getId());
+            }
+
+            tourReview.setAreaCode(tourReviewDTO.getAreaCode());
+            tourReview.setSigunguCode(tourReviewDTO.getSigunguCode());
+            tourReview.setTitle(tourReviewDTO.getTitle());
+            tourReview.setOverview(tourReviewDTO.getOverview());
+            tourReview.setUserId(tourReviewDTO.getUserId());
+            tourReview.setTourId(tourReviewDTO.getTourId());
+            tourReview.setCreatedTime(StaticHelper.stringToDate(tourReviewDTO.getCreatedTime(), "yyyy-MM-dd HH:mm"));
+            tourReview.setModifiedTime(new Date());
+            tourReview.setFirstImage(tourReviewDTO.getFirstImage());
+            tourReview.setPrivate(tourReviewDTO.isPrivate());
+            return TourReviewDTO.of(tourReviewRepository.saveAndFlush(tourReview));
         } catch (Exception e) {
             logger.error("save : " + e.getMessage());
             return null;
@@ -73,7 +82,7 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
         return recentReviews;
     }
 
-    private TourReviewDTO.RecentReview getRecentReview(String areaName, String sigunguName, String firstImage, Date modifiedTime) {
+    private TourReviewDTO.RecentReview getRecentReview(String areaName, String sigunguName, String firstImage, String modifiedTime) {
         TourReviewDTO.RecentReview recentReview = new TourReviewDTO.RecentReview();
         recentReview.setAreaName(areaName);
         recentReview.setSigunguName(sigunguName);
@@ -141,27 +150,22 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
     }
 
     @Override
-    public Page<TourReviewDTO> getReviewList(int userId, String roleName, TourReviewDTO.SearchReviewDTO searchReviewDTO) {
-        int page = searchReviewDTO.getPage();
-        int size = searchReviewDTO.getSize() == 0 ? 10 : searchReviewDTO.getSize();
-
+    public List<TourReviewDTO> getReviewList(int userId, String roleName, TourReviewDTO.SearchReviewDTO searchReviewDTO) {
         String q = searchReviewDTO.getQ() != null ? searchReviewDTO.getQ() : "";
         Date startDate = searchReviewDTO.getStartDate();
         Date endDate = searchReviewDTO.getEndDate();
 
-        Pageable pageable = PageRequest.of(page, size);
-
         if (roleName.equals(ROLE_USER)) {
-            return allReviewListOfUser(userId, q, startDate, endDate, pageable);
+            return allReviewListOfUser(userId, q, startDate, endDate);
         } else if (roleName.equals(ROLE_ADMIN)) {
             int tourId = searchReviewDTO.getTourId();
-            return allReviewListOfAdmin(userId, tourId, q, startDate, endDate, pageable);
+            return allReviewListOfAdmin(userId, tourId, q, startDate, endDate);
         } else if (roleName.equals(ROLE_DEV)) {
             int type = searchReviewDTO.getType() <= REVIEW_TYPE_TITLE ? searchReviewDTO.getType() : 0;
-            return allReviewListOfDev(type, q, startDate, endDate, pageable);
+            return allReviewListOfDev(type, q, startDate, endDate);
         }
 
-        return new PageImpl<>(new ArrayList<>());
+        return new ArrayList<>();
     }
 
     @Override
@@ -176,7 +180,7 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
     }
 
     @Override
-    public TourReviewDTO updateReview(TourReviewDTO.UpdateReviewDTO updateReviewDTO, int userId) {
+    public TourReviewDTO updateReview(TourReviewDTO.UpdateReviewDTO updateReviewDTO) {
         try {
             TourReviewDTO tourReviewDTO = findById(updateReviewDTO.getId());
 
@@ -191,6 +195,9 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
             if (updateReviewDTO.isPrivate() != tourReviewDTO.isPrivate()) {
                 tourReviewDTO.setPrivate(updateReviewDTO.isPrivate());
             }
+
+            System.out.println(updateReviewDTO);
+            System.out.println(tourReviewDTO);
 
             return save(tourReviewDTO);
         } catch (Exception e) {
@@ -245,7 +252,7 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
     }
 
     // 일반 사용자의 여행 후기 조회
-    private Page<TourReviewDTO> allReviewListOfUser(int userId, String title, Date startDate, Date endDate, Pageable pageable) {
+    private List<TourReviewDTO> allReviewListOfUser(int userId, String title, Date startDate, Date endDate) {
         try {
             // 기간을 적었는지 체크
             boolean searchDate = isSearchDate(startDate);
@@ -253,29 +260,29 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
             if (!title.equals("")) {
                 if (searchDate) {
                     // 후기 제목으로 검색 (기간)
-                    return TourReviewDTO.of(tourReviewRepository.findAllByUserIdAndTitleContainingAndCreatedTimeBetweenOrderByCreatedTimeDesc(userId, title, startDate, endDate, pageable));
+                    return TourReviewDTO.of(tourReviewRepository.findAllByUserIdAndTitleContainingAndCreatedTimeBetweenOrderByCreatedTimeDesc(userId, title, startDate, endDate));
                 } else {
                     // 후기 제목으로 검색
-                    return TourReviewDTO.of(tourReviewRepository.findAllByUserIdAndTitleContainingOrderByCreatedTimeDesc(userId, title, pageable));
+                    return TourReviewDTO.of(tourReviewRepository.findAllByUserIdAndTitleContainingOrderByCreatedTimeDesc(userId, title));
                 }
             } else {
                 if (searchDate) {
                     // 전체 조회 (기간)
-                    return TourReviewDTO.of(tourReviewRepository.findAllByUserIdAndCreatedTimeBetweenOrderByCreatedTimeDesc(userId, startDate, endDate, pageable));
+                    return TourReviewDTO.of(tourReviewRepository.findAllByUserIdAndCreatedTimeBetweenOrderByCreatedTimeDesc(userId, startDate, endDate));
                 } else {
                     // 전체 조회
-                    return TourReviewDTO.of(tourReviewRepository.findAllByUserIdOrderByCreatedTimeDesc(userId, pageable));
+                    return TourReviewDTO.of(tourReviewRepository.findAllByUserIdOrderByCreatedTimeDesc(userId));
                 }
             }
         } catch (Exception e) {
             logger.error("allReviewListOfUser userId : " + userId + ", q : " + title + ", error : " + e.getMessage());
         }
 
-        return new PageImpl<>(new ArrayList<>());
+        return new  ArrayList<>();
     }
 
     // 관광지 관리자의 여행 후기 조회
-    private Page<TourReviewDTO> allReviewListOfAdmin(int userId, int tourId, String title, Date startDate, Date endDate, Pageable pageable) {
+    private List<TourReviewDTO> allReviewListOfAdmin(int userId, int tourId, String title, Date startDate, Date endDate) {
         try {
             boolean searchDate = isSearchDate(startDate);
 
@@ -283,7 +290,7 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
                 if (searchDate) {
                     if (tourId != 0) {
                         // 관광지 별 후기 제목으로 검색 (기간)
-                        return TourReviewDTO.of(tourReviewRepository.findAllByTourIdAndTitleContainingAndCreatedTimeBetweenOrderByCreatedTimeDesc(tourId, title, startDate, endDate, pageable));
+                        return TourReviewDTO.of(tourReviewRepository.findAllByTourIdAndTitleContainingAndCreatedTimeBetweenOrderByCreatedTimeDesc(tourId, title, startDate, endDate));
                     } else {
                         // 후기 제목으로 검색 (기간)
                         List<TourReview> tourReviews = new ArrayList<>();
@@ -296,12 +303,12 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
                             }
                         }
 
-                        return new PageImpl<>(TourReviewDTO.of(tourReviews), pageable, tourReviews.size());
+                        return TourReviewDTO.of(tourReviews);
                     }
                 } else {
                     if (tourId != 0) {
                         // 관광지 별 후기 제목으로 검색
-                        return TourReviewDTO.of(tourReviewRepository.findAllByTourIdAndTitleContainingOrderByCreatedTimeDesc(tourId, title, pageable));
+                        return TourReviewDTO.of(tourReviewRepository.findAllByTourIdAndTitleContainingOrderByCreatedTimeDesc(tourId, title));
                     } else {
                         // 후기 제목으로 검색
                         List<TourReview> tourReviews = new ArrayList<>();
@@ -314,7 +321,7 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
                             }
                         }
 
-                        return new PageImpl<>(TourReviewDTO.of(tourReviews), pageable, tourReviews.size());
+                        return TourReviewDTO.of(tourReviews);
                     }
                 }
             } else {
@@ -322,7 +329,7 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
                     if (tourId != 0) {
                         // 관광지 별 검색 (기간)
                         List<TourReview> tourReviews = tourReviewRepository.findAllByTourIdAndCreatedTimeBetweenOrderByCreatedTimeDesc(tourId, startDate, endDate);
-                        return new PageImpl<>(TourReviewDTO.of(tourReviews), pageable, tourReviews.size());
+                        return TourReviewDTO.of(tourReviews);
                     }
 
                     // 전체 조회 (기간)
@@ -335,12 +342,12 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
                         }
                     }
 
-                    return new PageImpl<>(TourReviewDTO.of(tourReviews), pageable, tourReviews.size());
+                    return TourReviewDTO.of(tourReviews);
                 } else {
                     if (tourId != 0) {
                         // 관광지 별 검색
                         List<TourReview> tourReviews = tourReviewRepository.findAllByTourIdOrderByCreatedTimeDesc(tourId);
-                        return new PageImpl<>(TourReviewDTO.of(tourReviews), pageable, tourReviews.size());
+                        return TourReviewDTO.of(tourReviews);
                     }
 
                     // 전제 조회
@@ -353,18 +360,18 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
                         }
                     }
 
-                    return new PageImpl<>(TourReviewDTO.of(tourReviews), pageable, tourReviews.size());
+                    return TourReviewDTO.of(tourReviews);
                 }
             }
         } catch (Exception e) {
             logger.error("allReviewListOfAdmin userId : " + userId + ", tourId : " + tourId + ", q : " + title + ", error : " + e.getMessage());
         }
 
-        return new PageImpl<>(new ArrayList<>());
+        return new ArrayList<>();
     }
 
     // 개발자의 여행 후기 조회
-    private Page<TourReviewDTO> allReviewListOfDev(int type, String q, Date startDate, Date endDate, Pageable pageable) {
+    private List<TourReviewDTO> allReviewListOfDev(int type, String q, Date startDate, Date endDate) {
         try {
             boolean searchDate = isSearchDate(startDate);
 
@@ -374,10 +381,10 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
 
                     if (searchDate) {
                         // 사용자 아이디로 검색 (기간)
-                        return TourReviewDTO.of(tourReviewRepository.findAllByUserIdAndCreatedTimeBetweenOrderByCreatedTimeDesc(userId, startDate, endDate, pageable));
+                        return TourReviewDTO.of(tourReviewRepository.findAllByUserIdAndCreatedTimeBetweenOrderByCreatedTimeDesc(userId, startDate, endDate));
                     } else {
                         // 사용자 아이디로 검색
-                        return TourReviewDTO.of(tourReviewRepository.findAllByUserIdOrderByCreatedTimeDesc(userId, pageable));
+                        return TourReviewDTO.of(tourReviewRepository.findAllByUserIdOrderByCreatedTimeDesc(userId));
                     }
                 }
             } else if (type == REVIEW_TYPE_TITLE) {
@@ -394,7 +401,7 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
                                 tourReviews.addAll(tourReviewsByTourId);
                             }
 
-                            return new PageImpl<>(TourReviewDTO.of(tourReviews), pageable, tourReviews.size());
+                            return TourReviewDTO.of(tourReviews);
                         } else {
                             // 관광지로 검색
                             List<TourReview> tourReviews = new ArrayList<>();
@@ -404,7 +411,7 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
                                 tourReviews.addAll(tourReviewsByTourId);
                             }
 
-                            return new PageImpl<>(TourReviewDTO.of(tourReviews), pageable, tourReviews.size());
+                            return TourReviewDTO.of(tourReviews);
                         }
                     }
                 }
@@ -412,16 +419,16 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
 
             if (searchDate) {
                 // 전체 조회 (기간)
-                return TourReviewDTO.of(tourReviewRepository.findAllByCreatedTimeBetweenOrderByCreatedTimeDesc(startDate, endDate, pageable));
+                return TourReviewDTO.of(tourReviewRepository.findAllByCreatedTimeBetweenOrderByCreatedTimeDesc(startDate, endDate));
             } else {
                 // 전체 조회
-                return TourReviewDTO.of(tourReviewRepository.findAllByOrderByCreatedTimeDesc(pageable));
+                return TourReviewDTO.of(tourReviewRepository.findAllByOrderByCreatedTimeDesc());
             }
         } catch (Exception e) {
             logger.error("allReviewListOfDev type : " + type + ", q : " + q + ", error : " + e.getMessage());
         }
 
-        return new PageImpl<>(new ArrayList<>());
+        return new ArrayList<>();
     }
 
     @Override

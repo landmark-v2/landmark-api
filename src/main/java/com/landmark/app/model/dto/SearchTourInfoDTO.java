@@ -5,10 +5,6 @@ import lombok.Data;
 @Data
 public class SearchTourInfoDTO {
 
-    private int page;
-    private int size;
-    private int type;       // 정렬 기준 : 1. 등록일순, 2. 제목순
-    private int sort;       // 정렬 : 1. 내림차순, 2. 오름차순
     private int areaCode;
     private int sigunguCode;
     /**

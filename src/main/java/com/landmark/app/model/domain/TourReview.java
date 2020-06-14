@@ -49,10 +49,6 @@ public class TourReview {
     @Column(name = "is_private")
     private boolean isPrivate;              // T-비공개, F-공개
 
-    public static TourReview of(TourReviewDTO tourReviewDTO) {
-        return MapperUtils.convert(tourReviewDTO, TourReview.class);
-    }
-
     public static List<TourReview> of(List<TourReviewDTO> tourReviewDTOS) {
         return MapperUtils.convert(tourReviewDTOS, new TypeToken<List<TourReview>>(){}.getType());
     }

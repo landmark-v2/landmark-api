@@ -2,8 +2,6 @@ package com.landmark.app.service;
 
 import com.landmark.app.model.dto.TourReviewDTO;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -33,7 +31,7 @@ public interface TourReviewService {
     /**
      * 여행 후기 전체 조회
      */
-    Page<TourReviewDTO> getReviewList(int userId, String roleName, TourReviewDTO.SearchReviewDTO searchReviewDTO);
+    List<TourReviewDTO> getReviewList(int userId, String roleName, TourReviewDTO.SearchReviewDTO searchReviewDTO);
 
     /**
      * 여행 후기 조회
@@ -43,7 +41,7 @@ public interface TourReviewService {
     /**
      * 여행 후기 수정
      */
-    TourReviewDTO updateReview(TourReviewDTO.UpdateReviewDTO updateReviewDTO, int userId);
+    TourReviewDTO updateReview(TourReviewDTO.UpdateReviewDTO updateReviewDTO);
 
     /**
      * 여행 후기 삭제 - 관리자, 일반 사용자

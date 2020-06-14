@@ -30,9 +30,10 @@ public class SearchController extends LoggerUtils {
     /**
      * 관광지 정보 검색 (필터링)
      */
-    @GetMapping
-    public ResponseEntity<?> getTourInfos(@RequestParam SearchTourInfoDTO searchTourInfoDTO) {
+    @PostMapping
+    public ResponseEntity<?> getTourInfos(@RequestBody SearchTourInfoDTO searchTourInfoDTO) {
         try {
+            System.out.println(searchTourInfoDTO.toString());
             return new ResponseEntity<>(searchService.searchTourInfo(setSearchDTO(searchTourInfoDTO)), HttpStatus.OK);
         } catch (Exception e) {
             logger.error("getTourInfos : " + e.getMessage());
@@ -42,12 +43,6 @@ public class SearchController extends LoggerUtils {
 
     // 검색 내용 세팅
     private SearchTourInfoDTO setSearchDTO(SearchTourInfoDTO searchTourInfoDTO) throws Exception {
-        int page = searchTourInfoDTO.getPage();
-        int size = searchTourInfoDTO.getSize() > 0 ? searchTourInfoDTO.getSize() : 10;
-        // 정렬 기준 : 1. 등록일순, 2. 제목순 - default = 1
-        int type = searchTourInfoDTO.getType() != 1 || searchTourInfoDTO.getType() != 2 ? 1 : searchTourInfoDTO.getType();
-        // 정렬 : 1. 내림차순 (DESC), 2. 오름차순 (ASC) - default = 1
-        int sort = searchTourInfoDTO.getSort() != 1 || searchTourInfoDTO.getSort() != 2 ? 1 : searchTourInfoDTO.getSort();
         int areaCode = searchTourInfoDTO.getAreaCode();
         int sigunguCode = areaCode != 0 ? searchTourInfoDTO.getSigunguCode() : 0;
 
@@ -71,10 +66,6 @@ public class SearchController extends LoggerUtils {
 
         String keyword = StringUtils.isEmpty(searchTourInfoDTO.getKeyword()) ? "" : searchTourInfoDTO.getKeyword();
 
-        searchTourInfoDTO.setPage(page);
-        searchTourInfoDTO.setSize(size);
-        searchTourInfoDTO.setType(type);
-        searchTourInfoDTO.setSort(sort);
         searchTourInfoDTO.setAreaCode(areaCode);
         searchTourInfoDTO.setSigunguCode(sigunguCode);
         searchTourInfoDTO.setContentTypeId(contentTypeId);
