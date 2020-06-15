@@ -42,6 +42,7 @@ public class TourReviewDTO {
 
     @Data
     public static class RecentReview {
+        private int id;
         private String areaName;
         private String sigunguName;
         private String firstImage;

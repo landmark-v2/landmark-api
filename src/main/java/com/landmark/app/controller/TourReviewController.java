@@ -123,4 +123,13 @@ public class TourReviewController extends LoggerUtils {
         }
     }
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<?> getReview(@PathVariable int id) {
+        try {
+            return new ResponseEntity<>(tourReviewService.findById(id), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

@@ -73,7 +73,7 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
             for (TourReviewDTO tourReviewDTO : tourReviewDTOS) {
                 String areaName = getAreaName(tourReviewDTO.getAreaCode());
                 String sigunguName = getSigunguName(tourReviewDTO.getAreaCode(), tourReviewDTO.getSigunguCode());
-                recentReviews.add(getRecentReview(areaName, sigunguName, tourReviewDTO.getFirstImage(), tourReviewDTO.getModifiedTime()));
+                recentReviews.add(getRecentReview(tourReviewDTO.getId(), areaName, sigunguName, tourReviewDTO.getFirstImage(), tourReviewDTO.getModifiedTime()));
             }
         } catch (Exception e) {
             logger.error("getRecentHistories : " + e.getMessage());
@@ -82,8 +82,9 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
         return recentReviews;
     }
 
-    private TourReviewDTO.RecentReview getRecentReview(String areaName, String sigunguName, String firstImage, String modifiedTime) {
+    private TourReviewDTO.RecentReview getRecentReview(int id, String areaName, String sigunguName, String firstImage, String modifiedTime) {
         TourReviewDTO.RecentReview recentReview = new TourReviewDTO.RecentReview();
+        recentReview.setId(id);
         recentReview.setAreaName(areaName);
         recentReview.setSigunguName(sigunguName);
         recentReview.setFirstImage(firstImage);
