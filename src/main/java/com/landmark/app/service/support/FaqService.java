@@ -20,7 +20,9 @@ public interface FaqService {
      */
     boolean deleteFaq(int faqId, String role);
 
-    /** faq 검색 */
+    /** faq 전체 조회 */
     List<FaqDTO> getAllFaq();
 
+    /** 특정 faq 가져오기 */
+    FaqDTO getFaq(int id);
 }

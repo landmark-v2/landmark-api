@@ -31,7 +31,7 @@ public class FaqController extends LoggerUtils {
 
     /** FAQ 전체 조회 */
     @GetMapping
-    public ResponseEntity<?> getFaqs(HttpServletRequest request){
+    public ResponseEntity<?> getAllFaq(HttpServletRequest request){
         try{
             return new ResponseEntity<>(faqService.getAllFaq(), HttpStatus.OK);
         } catch (Exception e){
@@ -40,9 +40,20 @@ public class FaqController extends LoggerUtils {
         }
     }
 
+    /** FAQ 글 가져오기 */
+    @GetMapping(value = "/{faqId}")
+    public ResponseEntity<?> getFaq(@PathVariable("faqId") int faqId , HttpServletRequest request){
+        try{
+            return new ResponseEntity<>(faqService.getFaq(faqId), HttpStatus.OK);
+        } catch (Exception e){
+            logger.error("getFaq : " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     /** FAQ 등록 */
     @PostMapping
-    public ResponseEntity<?> registerFaq(@Valid @RequestParam FaqDTO faqDTO, HttpServletRequest request) {
+    public ResponseEntity<?> registerFaq(@Valid @RequestBody FaqDTO faqDTO, HttpServletRequest request) {
         try {
             return new ResponseEntity<>(faqService.registerFaq(faqDTO), HttpStatus.OK);
         } catch (Exception e) {
@@ -53,7 +64,7 @@ public class FaqController extends LoggerUtils {
 
     /** FAQ 수정 */
     @PutMapping
-    public ResponseEntity<?> updateFaq(@RequestParam FaqDTO faqDTO, HttpServletRequest request) {
+    public ResponseEntity<?> updateFaq(@RequestBody FaqDTO faqDTO, HttpServletRequest request) {
         try {
             UserDTO user = accountHelper.getAccountInfo(request);
             String role = user.getRole().getRolename();

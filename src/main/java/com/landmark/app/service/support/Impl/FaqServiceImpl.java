@@ -74,14 +74,15 @@ public class FaqServiceImpl extends LoggerUtils implements FaqService {
         }
     }
 
-    /*
-    private FaqDTO getFaq(int id, String title, String content, Date modifiedTime){
-        FaqDTO faq = new FaqDTO();
-        faq.setId(id);
-        faq.setTitle(title);
-        faq.setContent(content);
-        faq.setModifiedTime(modifiedTime);
-        return faq;
+    @Override
+    public FaqDTO getFaq(int id) {
+        try{
+            return FaqDTO.of(faqRepository.findById(id));
+        } catch (Exception e){
+            logger.error("getFaq : " + e.getMessage());
+            return null;
+        }
     }
-     */
+
+
 }
