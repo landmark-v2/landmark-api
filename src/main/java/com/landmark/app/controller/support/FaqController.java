@@ -29,7 +29,19 @@ public class FaqController extends LoggerUtils {
         this.accountHelper = accountHelper;
     }
 
+    /** FAQ 전체 조회 */
     @GetMapping
+    public ResponseEntity<?> getFaqs(HttpServletRequest request){
+        try{
+            return new ResponseEntity<>(faqService.getAllFaq(), HttpStatus.OK);
+        } catch (Exception e){
+            logger.error("getAllFaqs : " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /** FAQ 등록 */
+    @PostMapping
     public ResponseEntity<?> registerFaq(@Valid @RequestParam FaqDTO faqDTO, HttpServletRequest request) {
         try {
             return new ResponseEntity<>(faqService.registerFaq(faqDTO), HttpStatus.OK);
@@ -39,6 +51,7 @@ public class FaqController extends LoggerUtils {
         }
     }
 
+    /** FAQ 수정 */
     @PutMapping
     public ResponseEntity<?> updateFaq(@RequestParam FaqDTO faqDTO, HttpServletRequest request) {
         try {
@@ -51,6 +64,7 @@ public class FaqController extends LoggerUtils {
         }
     }
 
+    /** FAQ 삭제 */
     @DeleteMapping(value = "/{faqId}")
     public ResponseEntity<?> deleteFaq(@PathVariable("faqId") int faqId, HttpServletRequest request) {
         try {

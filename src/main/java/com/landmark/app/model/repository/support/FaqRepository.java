@@ -15,4 +15,7 @@ public interface FaqRepository extends JpaRepository<Faq, Integer> {
     @Modifying
     @Transactional
     void deleteById(int id);
+
+    @Override
+    List<Faq> findAll();
 }

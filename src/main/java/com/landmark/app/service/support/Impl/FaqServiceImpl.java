@@ -7,7 +7,9 @@ import com.landmark.app.service.support.FaqService;
 import com.landmark.app.utils.LoggerUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static com.landmark.app.utils.constants.Constants.ROLE_DEV;
 
@@ -59,5 +61,23 @@ public class FaqServiceImpl extends LoggerUtils implements FaqService {
             logger.error("Faq delete : " + e.getMessage());
         }
         return false;
+    }
+
+    @Override
+    public List<Integer> getAllFaq() {
+        List<Integer> faqId = new ArrayList<>();
+
+        try{
+            List<Faq> faqList = faqRepository.findAll();
+
+            if(!faqList.isEmpty()){
+                for(Faq faq : faqList){
+                    faqId.add(faq.getId());
+                }
+            }
+        } catch (Exception e){
+            logger.error("findAll : " + e.getMessage());
+        }
+        return faqId;
     }
 }
