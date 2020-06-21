@@ -3,6 +3,7 @@ package com.landmark.app.model.dto.support;
 import com.landmark.app.model.domain.support.Faq;
 import com.landmark.app.model.dto.TourInfoDTO;
 import com.landmark.app.utils.MapperUtils;
+import com.landmark.app.utils.helper.StaticHelper;
 import lombok.Data;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;

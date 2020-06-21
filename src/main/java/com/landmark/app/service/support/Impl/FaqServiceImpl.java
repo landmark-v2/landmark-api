@@ -65,19 +65,23 @@ public class FaqServiceImpl extends LoggerUtils implements FaqService {
 
     @Override
     public List<FaqDTO> getAllFaq() {
-        List<FaqDTO> faqs = new ArrayList<>();
-
         try{
-            List<FaqDTO> faqList = FaqDTO.of(faqRepository.findAll());
-
-            if(!faqList.isEmpty()){
-                for(FaqDTO faq : faqList){
-                    faqs.add(faq);
-                }
-            }
+            List<FaqDTO> faqs = FaqDTO.of(faqRepository.findAll());
+            return faqs;
         } catch (Exception e){
             logger.error("findAll : " + e.getMessage());
+            return null;
         }
-        return faqs;
     }
+
+    /*
+    private FaqDTO getFaq(int id, String title, String content, Date modifiedTime){
+        FaqDTO faq = new FaqDTO();
+        faq.setId(id);
+        faq.setTitle(title);
+        faq.setContent(content);
+        faq.setModifiedTime(modifiedTime);
+        return faq;
+    }
+     */
 }
