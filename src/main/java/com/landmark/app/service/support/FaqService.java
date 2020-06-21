@@ -21,6 +21,6 @@ public interface FaqService {
     boolean deleteFaq(int faqId, String role);
 
     /** faq 검색 */
-    List<Integer> getAllFaq();
+    List<FaqDTO> getAllFaq();
 
 }
