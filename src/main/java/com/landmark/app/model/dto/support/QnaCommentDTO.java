@@ -22,7 +22,7 @@ public class QnaCommentDTO {
 
     public static QnaCommentDTO of(QnaComment qnaComment) { return MapperUtils.convert(qnaComment, QnaCommentDTO.class); }
 
-    public static List<QnaComment> of(List<QnaComment> qnaComment) {
+    public static List<QnaCommentDTO> of(List<QnaComment> qnaComment) {
         return MapperUtils.convert(qnaComment, new TypeToken<List<QnaCommentDTO>>(){}.getType());
     }
 

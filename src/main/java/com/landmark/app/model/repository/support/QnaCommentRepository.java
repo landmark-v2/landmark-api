@@ -8,14 +8,17 @@ import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public interface QnaCommentRepository extends JpaRepository<QnaComment, Integer> {
-    @Override
-    Optional<QnaComment> findById(Integer integer);
 
-    @Override
-    void deleteById(Integer integer);
+
+
+    List<QnaComment> findAllByQnaId(int qnaId);
+    QnaComment findById(int id);
+
+    void deleteById(int id);
 
     @Modifying
     @Transactional

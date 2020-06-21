@@ -9,6 +9,7 @@ import com.landmark.app.service.support.QnaService;
 import com.landmark.app.utils.LoggerUtils;
 import com.landmark.app.utils.helper.AccountHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +32,41 @@ public class QnaController extends LoggerUtils {
     }
 
     /** QnA */
+    /** Qna 전체 조회 */
     @GetMapping
-    public ResponseEntity<?> registerQna(@Valid @RequestParam QnaDTO qnaDTO, HttpServletRequest request) {
+    public ResponseEntity<?> getAllQna(HttpServletRequest request){
+        try{
+            return new ResponseEntity<>(qnaService.getAllQnas(), HttpStatus.OK);
+        } catch (Exception e){
+            logger.error("getAllQnas : " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /** Qna 키워드 조회 */
+    @PostMapping
+    public ResponseEntity<?> getQnaByKeyword(@RequestBody String s, HttpServletRequest request) {
+        try {
+            return new ResponseEntity<>(qnaService.getQnaByKeyword(s), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("getAllQnas : " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /** Qna 게시글 불러오기 */
+    @GetMapping(value = "/qnaId")
+    public ResponseEntity<?> getQna(@PathVariable("qnaId") int qnaId, HttpServletRequest request){
+        try{
+            return new ResponseEntity<>(qnaService.getQna(qnaId), HttpStatus.OK);
+        } catch (Exception e){
+            logger.error("get Qna : " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<?> registerQna(@Valid @RequestBody QnaDTO qnaDTO, HttpServletRequest request) {
         try {
             int userId = accountHelper.getAccountId(request);
             qnaDTO.setUserId(userId);
@@ -44,7 +78,7 @@ public class QnaController extends LoggerUtils {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateQna(@RequestParam QnaDTO qnaDTO, HttpServletRequest request) {
+    public ResponseEntity<?> updateQna(@RequestBody QnaDTO qnaDTO, HttpServletRequest request) {
         try {
             int userId = accountHelper.getAccountId(request);
             return new ResponseEntity<>(qnaService.updateQna(qnaDTO, userId), HttpStatus.OK);
@@ -70,7 +104,17 @@ public class QnaController extends LoggerUtils {
 
 
     /** Qna 댓글 */
-    @GetMapping(value = "/{qnaId}")
+    @GetMapping(value = "/{qnaId}/comment")
+    public ResponseEntity<?> getQnas(@PathVariable("qnaId") int qnaId, HttpServletRequest request){
+        try{
+            return new ResponseEntity<>(qnaService.getAllQnaComments(qnaId), HttpStatus.OK);
+        } catch (Exception e){
+            logger.error("get All Qna Comments : " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/{qnaId}/comment")
     public ResponseEntity<?> registerQnaCommnet(@PathVariable("qnaId") int qnaId, @Valid @RequestBody QnaCommentDTO commentDTO, HttpServletRequest request) {
         try {
             int userId = accountHelper.getAccountId(request);
@@ -82,7 +126,7 @@ public class QnaController extends LoggerUtils {
         }
     }
 
-    @PutMapping(value = "/{qnaId}")
+    @PutMapping(value = "/{qnaId}/comment")
     public ResponseEntity<?> updateQnaComment(@RequestBody QnaCommentDTO commentDTO, HttpServletRequest request) {
         try {
             int userId = accountHelper.getAccountId(request);
@@ -93,7 +137,7 @@ public class QnaController extends LoggerUtils {
         }
     }
 
-    @DeleteMapping(value = "/{qnaId}")
+    @DeleteMapping(value = "/{qnaId}/comment")
     public ResponseEntity<?> deleteQnaComment(@PathVariable("qnaId") int qnaId, @RequestBody QnaCommentDTO commentDTO,HttpServletRequest request) {
         try {
             int id = commentDTO.getId();

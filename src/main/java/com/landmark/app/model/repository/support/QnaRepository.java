@@ -20,14 +20,16 @@ public interface QnaRepository extends JpaRepository<Qna, Integer> {
     void updateQnaByIdUserId(@Param("title") String title, @Param("content") String content, @Param("modifiedTime") Date modifiedTime, @Param("id") int id);
 
 
+    @Query("select * from QNA q where q.title like '%:%' ")
+    List<Qna> findByTitleKeyword(@Param("title") String key);
+
      */
 
-    @Override
-    void deleteById(Integer integer);
-
-    @Override
-    Optional<Qna> findById(Integer integer);
-
+    Qna findById(int id);
     List<Qna> findAllByUserId(int userId);
+    List<Qna> findAll();
 
+    List<Qna> findByTitleContaining(String title);
+
+    void deleteById(int id);
 }

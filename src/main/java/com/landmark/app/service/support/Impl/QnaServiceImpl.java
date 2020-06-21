@@ -11,6 +11,7 @@ import com.landmark.app.utils.LoggerUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +40,36 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
     }
 
     @Override
+    public List<QnaDTO> getQnaByKeyword(String s) {
+        try {
+            return QnaDTO.of(qnaRepository.findByTitleContaining(s));
+        } catch (Exception e){
+            logger.error("get QNA by keyword : " + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public List<QnaDTO> getAllQnas() {
+        try{
+            return QnaDTO.of(qnaRepository.findAll());
+        } catch (Exception e){
+            logger.error("QnA getAllQnas : " + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public QnaDTO getQna(int qnaId) {
+        try{
+            return QnaDTO.of(qnaRepository.findById(qnaId));
+        } catch (Exception e){
+            logger.error("QnA get Qna : " + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
     public QnaDTO registerQna(QnaDTO qnaDTO) {
         qnaDTO.setCreatedTime(new Date());
         return qnaSave(qnaDTO);
@@ -60,7 +91,7 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
     @Override
     public boolean deleteQna(int id, int userId, String role) {
         try{
-            QnaDTO qnaDTO = QnaDTO.of(qnaRepository.findById(id).orElse(null));
+            QnaDTO qnaDTO = QnaDTO.of(qnaRepository.findById(id));
             if(userId == qnaDTO.getUserId() || role.equalsIgnoreCase(ROLE_DEV)){
                 qnaRepository.deleteById(id);
             }
@@ -68,6 +99,16 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
         } catch (Exception e) {
             logger.error("Qna delete : " + e.getMessage());
             return false;
+        }
+    }
+
+    @Override
+    public List<QnaCommentDTO> getAllQnaComments(int qnaId) {
+        try{
+            return QnaCommentDTO.of(qnaCommentRepository.findAllByQnaId(qnaId));
+        } catch (Exception e){
+            logger.error("Get all Qna Comment : " + e.getMessage());
+            return null;
         }
     }
 
@@ -97,7 +138,7 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
     @Override
     public boolean deleteQnaComment(int id, int userId, int qnaId, String role) {
         try{
-            QnaCommentDTO qnaCommentDTO = QnaCommentDTO.of(qnaCommentRepository.findById(id).get());
+            QnaCommentDTO qnaCommentDTO = QnaCommentDTO.of(qnaCommentRepository.findById(id));
             if((qnaCommentDTO.getUserId() == userId && qnaCommentDTO.getQnaId() == qnaId ) || role.equalsIgnoreCase(ROLE_DEV)){
                 qnaCommentRepository.deleteById(id);
             }
