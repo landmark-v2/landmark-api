@@ -1,10 +1,8 @@
 package com.landmark.app.service.impl;
 
-import com.landmark.app.model.domain.AreaCodeCount;
 import com.landmark.app.model.domain.TourReview;
 import com.landmark.app.model.dto.TourInfoDTO;
 import com.landmark.app.model.dto.TourReviewDTO;
-import com.landmark.app.model.repository.AreaCodeCountRepository;
 import com.landmark.app.model.repository.TourReviewRepository;
 import com.landmark.app.service.TourInfoService;
 import com.landmark.app.service.TourReviewService;
@@ -25,14 +23,12 @@ import static com.landmark.app.utils.constants.Constants.*;
 public class TourReviewServiceImpl extends LoggerUtils implements TourReviewService {
 
     private TourReviewRepository tourReviewRepository;
-    private AreaCodeCountRepository areaCodeCountRepository;
     private TourInfoService tourInfoService;
     private UserService userService;
 
     @Autowired
-    public TourReviewServiceImpl(TourReviewRepository tourReviewRepository, AreaCodeCountRepository areaCodeCountRepository, TourInfoService tourInfoService, UserService userService) {
+    public TourReviewServiceImpl(TourReviewRepository tourReviewRepository, TourInfoService tourInfoService, UserService userService) {
         this.tourReviewRepository = tourReviewRepository;
-        this.areaCodeCountRepository = areaCodeCountRepository;
         this.tourInfoService = tourInfoService;
         this.userService = userService;
     }
@@ -127,13 +123,16 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
         JSONArray jsonArr = new JSONArray();
 
         try {
-            List<AreaCodeCount> counts = areaCodeCountRepository.countAllByUserIdGroupByAreaCode(userId);
+            for (Object obj : areaCodes) {
+                JSONObject area = (JSONObject) obj;
+                int areaCode = Integer.parseInt(area.get("code").toString());
+                String areaName = area.get("name").toString();
+                int level = tourReviewRepository.countAllByUserIdAndAreaCode(userId, areaCode);
 
-            for (AreaCodeCount count : counts) {
                 JSONObject countObj = new JSONObject();
-                countObj.put("areaCode", count.getAreaCode());
-                countObj.put("name", count.getName());
-                countObj.put("count", count.getLevel());
+                countObj.put("areaCode", areaCode);
+                countObj.put("name", areaName);
+                countObj.put("level", level);
                 jsonArr.add(countObj);
             }
         } catch (Exception e) {

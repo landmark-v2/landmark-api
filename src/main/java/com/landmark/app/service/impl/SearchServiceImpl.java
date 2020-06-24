@@ -7,7 +7,6 @@ import com.landmark.app.service.SearchService;
 import com.landmark.app.utils.LoggerUtils;
 import com.landmark.app.utils.helper.SearchTypeHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,7 +33,7 @@ public class SearchServiceImpl extends LoggerUtils implements SearchService {
                 return TourInfoDTO.of(tourInfoRepository.findAllByContentTypeIdOrderByCreatedTimeDesc(searchDTO.getContentTypeId()));
             } else if (searchType == SEARCH_TYPE_AREA) {
                 logger.info("search tourInfo : contentTypeId, areaCode");
-                return TourInfoDTO.of(tourInfoRepository.findAllByAreaCodeAndContentTypeIdOrderByCreatedTimeDesc(searchDTO.getAreaCode(), searchDTO.getContentTypeId()));
+                return TourInfoDTO.of(tourInfoRepository.findAllByAreaCodeOrderByCreatedTimeDesc(searchDTO.getAreaCode()));
             } else if (searchType == SEARCH_TYPE_AREA_SIGUNGU) {
                 logger.info("search tourInfo : contentTypeId, areaCode, sigunguCode");
                 return TourInfoDTO.of(tourInfoRepository.findAllByAreaCodeAndSigunguCodeAndContentTypeIdOrderByCreatedTimeDesc(searchDTO.getAreaCode(), searchDTO.getSigunguCode(), searchDTO.getContentTypeId()));
