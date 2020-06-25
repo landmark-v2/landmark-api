@@ -65,6 +65,7 @@ public class QnaController extends LoggerUtils {
         }
     }
 
+    // QnA 등록
     @PostMapping
     public ResponseEntity<?> registerQna(@Valid @RequestBody QnaDTO qnaDTO, HttpServletRequest request) {
         try {
@@ -77,6 +78,7 @@ public class QnaController extends LoggerUtils {
         }
     }
 
+    // QnA 수정
     @PutMapping
     public ResponseEntity<?> updateQna(@RequestBody QnaDTO qnaDTO, HttpServletRequest request) {
         try {
@@ -88,6 +90,7 @@ public class QnaController extends LoggerUtils {
         }
     }
 
+    // QnA 삭제
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteQna(@PathVariable("id") int id, HttpServletRequest request) {
         try {
@@ -104,6 +107,7 @@ public class QnaController extends LoggerUtils {
 
 
     /** Qna 댓글 */
+    // QnA 댓글 전체 조회
     @PostMapping(value = "/{qnaId}/comment/search")
     public ResponseEntity<?> getQnas(@PathVariable("qnaId") int qnaId, HttpServletRequest request){
         try{
@@ -114,6 +118,7 @@ public class QnaController extends LoggerUtils {
         }
     }
 
+    // Qna 댓글 등록
     @PostMapping(value = "/{qnaId}/comment")
     public ResponseEntity<?> registerQnaCommnet(@PathVariable("qnaId") int qnaId, @Valid @RequestBody QnaCommentDTO commentDTO, HttpServletRequest request) {
         try {
@@ -126,6 +131,7 @@ public class QnaController extends LoggerUtils {
         }
     }
 
+    // Qna 댓글 수정
     @PutMapping(value = "/{qnaId}/comment")
     public ResponseEntity<?> updateQnaComment(@RequestBody QnaCommentDTO commentDTO, HttpServletRequest request) {
         try {
@@ -137,6 +143,7 @@ public class QnaController extends LoggerUtils {
         }
     }
 
+    // Qna 댓글 삭제
     @DeleteMapping(value = "/{qnaId}/comment")
     public ResponseEntity<?> deleteQnaComment(@PathVariable("qnaId") int qnaId, @RequestBody QnaCommentDTO commentDTO,HttpServletRequest request) {
         try {
