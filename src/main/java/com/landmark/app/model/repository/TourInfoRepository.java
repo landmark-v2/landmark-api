@@ -21,7 +21,7 @@ public interface TourInfoRepository extends JpaRepository<TourInfo, Integer> {
     List<TourInfo> findAllByUserIdOrderByCreatedTime(int userId);
 
     /** SearchService **/
-    List<TourInfo> findAllByAreaCodeAndContentTypeIdOrderByCreatedTimeDesc(int areaCode, int contentTypeId);
+    List<TourInfo> findAllByAreaCodeOrderByCreatedTimeDesc(int areaCode);
     List<TourInfo> findAllByAreaCodeAndContentTypeIdAndTitleContainingOrderByCreatedTimeDesc(int areaCode, int contentTypeId, String title);
     List<TourInfo> findAllByAreaCodeAndSigunguCodeAndContentTypeIdOrderByCreatedTimeDesc(int areaCode, int sigunguCode, int contentTypeId);
     List<TourInfo> findAllByAreaCodeAndSigunguCodeAndContentTypeIdAndTitleContainingOrderByCreatedTimeDesc(int areaCode, int sigunguCode, int contentTypeId, String title);

@@ -1,7 +1,6 @@
 package com.landmark.app.model.repository;
 
 import com.landmark.app.model.domain.TourReview;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -42,5 +41,6 @@ public interface TourReviewRepository extends JpaRepository<TourReview, Integer>
     List<TourReview> findAllByOrderByCreatedTimeDesc();
     List<TourReview> findAllByCreatedTimeBetweenOrderByCreatedTimeDesc(Date startDate, Date endDate);
 
+    int countAllByUserIdAndAreaCode(int userId, int areaCode);
 
 }
