@@ -33,7 +33,7 @@ public class QnaController extends LoggerUtils {
 
     /** QnA */
     /** Qna 전체 조회 */
-    @GetMapping
+    @PostMapping(value = "/search")
     public ResponseEntity<?> getAllQna(HttpServletRequest request){
         try{
             return new ResponseEntity<>(qnaService.getAllQnas(), HttpStatus.OK);
@@ -44,7 +44,7 @@ public class QnaController extends LoggerUtils {
     }
 
     /** Qna 키워드 조회 */
-    @PostMapping
+    @PostMapping(value = "/search/key")
     public ResponseEntity<?> getQnaByKeyword(@RequestBody String s, HttpServletRequest request) {
         try {
             return new ResponseEntity<>(qnaService.getQnaByKeyword(s), HttpStatus.OK);
@@ -55,7 +55,7 @@ public class QnaController extends LoggerUtils {
     }
 
     /** Qna 게시글 불러오기 */
-    @GetMapping(value = "/qnaId")
+    @GetMapping(value = "/{qnaId}")
     public ResponseEntity<?> getQna(@PathVariable("qnaId") int qnaId, HttpServletRequest request){
         try{
             return new ResponseEntity<>(qnaService.getQna(qnaId), HttpStatus.OK);
@@ -65,7 +65,7 @@ public class QnaController extends LoggerUtils {
         }
     }
 
-    @GetMapping
+    @PostMapping
     public ResponseEntity<?> registerQna(@Valid @RequestBody QnaDTO qnaDTO, HttpServletRequest request) {
         try {
             int userId = accountHelper.getAccountId(request);
@@ -104,7 +104,7 @@ public class QnaController extends LoggerUtils {
 
 
     /** Qna 댓글 */
-    @GetMapping(value = "/{qnaId}/comment")
+    @PostMapping(value = "/{qnaId}/comment/search")
     public ResponseEntity<?> getQnas(@PathVariable("qnaId") int qnaId, HttpServletRequest request){
         try{
             return new ResponseEntity<>(qnaService.getAllQnaComments(qnaId), HttpStatus.OK);
@@ -114,7 +114,7 @@ public class QnaController extends LoggerUtils {
         }
     }
 
-    @GetMapping(value = "/{qnaId}/comment")
+    @PostMapping(value = "/{qnaId}/comment")
     public ResponseEntity<?> registerQnaCommnet(@PathVariable("qnaId") int qnaId, @Valid @RequestBody QnaCommentDTO commentDTO, HttpServletRequest request) {
         try {
             int userId = accountHelper.getAccountId(request);
