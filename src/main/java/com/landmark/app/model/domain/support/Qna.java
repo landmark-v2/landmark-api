@@ -1,5 +1,6 @@
 package com.landmark.app.model.domain.support;
 
+import com.landmark.app.model.domain.user.User;
 import com.landmark.app.model.dto.support.QnaDTO;
 import com.landmark.app.utils.MapperUtils;
 import lombok.Data;
@@ -36,6 +37,4 @@ public class Qna {
     public static List<Qna> of(List<QnaDTO> qnaDTOS) {
         return MapperUtils.convert(qnaDTOS, new TypeToken<List<Qna>>(){}.getType());
     }
-
-
 }
