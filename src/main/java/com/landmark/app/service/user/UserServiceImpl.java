@@ -140,25 +140,21 @@ public class UserServiceImpl extends LoggerUtils implements UserService {
     @Override
     public boolean checkUsername(String username) throws Exception {
         try {
-            userRepository.findByUsername(username).isPresent();
+            return userRepository.findByUsername(username).isPresent();
         } catch (Exception e) {
             logger.error("checkCertNum : " + e.getMessage());
             throw new Exception(e);
         }
-
-        return false;
     }
 
     @Override
     public boolean checkEmail(String email) throws Exception {
         try {
-            userRepository.findByEmail(email).isPresent();
+            return userRepository.findByEmail(email).isPresent();
         } catch (Exception e) {
             logger.error("checkEmail : " + e.getMessage());
             throw new Exception(e);
         }
-
-        return false;
     }
 
     @Override
