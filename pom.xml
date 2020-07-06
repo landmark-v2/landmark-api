@@ -137,7 +137,7 @@
     </profiles>
 
     <build>
-        <finalName>landmark-api-${deployment}</finalName>
+        <finalName>landmark-api</finalName>
         <resources>
             <resource>
                 <directory>src/main/deployment/${deployment}</directory>

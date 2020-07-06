@@ -107,7 +107,9 @@ public class UserServiceImpl extends LoggerUtils implements UserService {
         try {
             int certNum = StaticHelper.getCertNum();
             String title = "[랜드마크] 이메일 인증번호 입니다.";
-            String content = "인증번호 : " + certNum + " \n\n인증번호를 3분 이내에 입력해주세요 :) \n\n";
+            String content = "안녕하세요. 랜드마크 입니다 :)<br><br>"
+                    + "인증번호 : " + certNum + "<br><br>"
+                    + "인증번호를 3분 이내에 입력해주세요. <br><br>";
 
             if (redisService.save(email, certNum + "")) {
                 redisService.expire(email, 3, TimeUnit.MINUTES);
