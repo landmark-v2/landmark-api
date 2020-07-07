@@ -22,9 +22,12 @@ public class FaqServiceImpl extends LoggerUtils implements FaqService {
 
     public FaqDTO save(FaqDTO faqDTO){
         try{
-            faqDTO.setModifiedTime(new Date());
-            Faq faq = faqRepository.saveAndFlush(Faq.of(faqDTO));
-            return FaqDTO.of(faq);
+            Faq faq = new Faq();
+            faq.setTitle(faqDTO.getTitle());
+            faq.setContent(faqDTO.getContent());
+            faq.setCreatedTime(faqDTO.getCreatedTime());
+            faq.setModifiedTime(new Date());
+            return FaqDTO.of(faqRepository.saveAndFlush(faq));
         } catch (Exception e){
             logger.error("Faq save : " + e.getMessage());
             return null;

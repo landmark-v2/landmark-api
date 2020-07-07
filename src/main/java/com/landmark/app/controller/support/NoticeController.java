@@ -29,8 +29,8 @@ public class NoticeController extends LoggerUtils {
         this.accountHelper = accountHelper;
     }
 
-    @GetMapping
-    public ResponseEntity<?> registerNotice(@Valid @RequestParam NoticeDTO noticeDTO, HttpServletRequest request) {
+    @PostMapping
+    public ResponseEntity<?> registerNotice(@RequestParam NoticeDTO noticeDTO, HttpServletRequest request) {
         try {
             return new ResponseEntity<>(noticeService.registerNotice(noticeDTO), HttpStatus.OK);
         } catch (Exception e) {

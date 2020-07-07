@@ -20,9 +20,12 @@ public class NoticeServiceImpl extends LoggerUtils implements NoticeService {
 
     public NoticeDTO save(NoticeDTO noticeDTO){
         try{
-            noticeDTO.setModifiedTime(new Date());
-            Notice notice = noticeRepository.saveAndFlush(Notice.of(noticeDTO));
-            return NoticeDTO.of(notice);
+            Notice notice = new Notice();
+            notice.setTitle(noticeDTO.getTitle());
+            notice.setContent(noticeDTO.getContent());
+            notice.setCreatedTime(noticeDTO.getCreatedTime());
+            notice.setModifiedTime(new Date());
+            return NoticeDTO.of(noticeRepository.saveAndFlush(notice));
         } catch (Exception e){
             logger.error("Notice save : " + e.getMessage());
             return null;

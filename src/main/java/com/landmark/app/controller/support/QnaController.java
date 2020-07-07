@@ -67,14 +67,14 @@ public class QnaController extends LoggerUtils {
 
     // QnA 등록
     @PostMapping
-    public ResponseEntity<?> registerQna(@Valid @RequestBody QnaDTO qnaDTO, HttpServletRequest request) {
+    public ResponseEntity<?> registerQna(@RequestBody QnaDTO qnaDTO, HttpServletRequest request) {
         try {
             int userId = accountHelper.getAccountId(request);
             qnaDTO.setUserId(userId);
             return new ResponseEntity<>(qnaService.registerQna(qnaDTO), HttpStatus.OK);
         } catch (Exception e) {
             logger.error("registerQnA : " + e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(0, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -53,7 +53,7 @@ public class FaqController extends LoggerUtils {
 
     /** FAQ 등록 */
     @PostMapping
-    public ResponseEntity<?> registerFaq(@Valid @RequestBody FaqDTO faqDTO, HttpServletRequest request) {
+    public ResponseEntity<?> registerFaq(@RequestBody FaqDTO faqDTO, HttpServletRequest request) {
         try {
             return new ResponseEntity<>(faqService.registerFaq(faqDTO), HttpStatus.OK);
         } catch (Exception e) {
