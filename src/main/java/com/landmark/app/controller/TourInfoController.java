@@ -29,7 +29,7 @@ public class TourInfoController extends LoggerUtils {
     }
 
     @PostMapping
-    public ResponseEntity<?> registerTour(@Valid @RequestBody TourInfoDTO tourInfoDTO, HttpServletRequest request) {
+    public ResponseEntity<?> registerTour(@RequestBody TourInfoDTO tourInfoDTO, HttpServletRequest request) {
         try {
             int userId = accountHelper.getAccountId(request);
             tourInfoDTO.setUserId(userId);

@@ -7,6 +7,7 @@ import com.landmark.app.model.dto.TourReviewDTO;
 import com.landmark.app.model.repository.TourInfoRepository;
 import com.landmark.app.service.TourInfoService;
 import com.landmark.app.utils.LoggerUtils;
+import com.landmark.app.utils.helper.StaticHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -69,8 +70,20 @@ public class TourInfoServiceImpl extends LoggerUtils implements TourInfoService 
     @Override
     public TourInfoDTO save(TourInfoDTO tourInfoDTO){
         try{
-            tourInfoDTO.setModifiedTime(new Date());
-            TourInfo tourInfo = tourInfoRepository.saveAndFlush(TourInfo.of(tourInfoDTO));
+            TourInfo tourInfo = new TourInfo();
+            tourInfo.setAddr1(tourInfoDTO.getAddr1());
+            tourInfo.setAddr2(tourInfoDTO.getAddr2());
+            tourInfo.setAreaCode(tourInfoDTO.getAreaCode());
+            tourInfo.setCat1(tourInfoDTO.getCat1());
+            tourInfo.setCat2(tourInfoDTO.getCat2());
+            tourInfo.setCat3(tourInfoDTO.getCat3());
+            tourInfo.setContentId(tourInfoDTO.getContentId());
+            tourInfo.setContentTypeId(tourInfoDTO.getContentTypeId());
+            tourInfo.setCreatedTime(StaticHelper.stringToDate(tourInfoDTO.getCreatedTime(), "yyyy-MM-dd HH:mm"));
+            tourInfo.setModifiedTime(new Date());
+            tourInfo.setOverview(tourInfoDTO.getOverview());
+            tourInfo.setTel(tourInfoDTO.getTel());
+            tourInfo.setHomepage(tourInfoDTO.getHomepage());
             return TourInfoDTO.of(tourInfo);
         } catch (Exception e){
             logger.error("save : " + e.getMessage());

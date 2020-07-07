@@ -1,4 +1,4 @@
-package com.landmark.app.model.domain.support;
+package com.landmark.app.model.domain.comment;
 
 import com.landmark.app.model.dto.support.QnaCommentDTO;
 import com.landmark.app.utils.MapperUtils;

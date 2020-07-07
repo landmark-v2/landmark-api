@@ -1,18 +1,16 @@
 package com.landmark.app.service.support.Impl;
 
 import com.landmark.app.model.domain.support.Qna;
-import com.landmark.app.model.domain.support.QnaComment;
+import com.landmark.app.model.domain.comment.QnaComment;
 import com.landmark.app.model.dto.support.QnaCommentDTO;
 import com.landmark.app.model.dto.support.QnaDTO;
 import com.landmark.app.model.repository.support.QnaCommentRepository;
 import com.landmark.app.model.repository.support.QnaRepository;
 import com.landmark.app.service.support.QnaService;
 import com.landmark.app.utils.LoggerUtils;
-import com.landmark.app.utils.helper.StaticHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

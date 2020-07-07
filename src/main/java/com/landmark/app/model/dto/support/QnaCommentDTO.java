@@ -1,12 +1,11 @@
 package com.landmark.app.model.dto.support;
 
-import com.landmark.app.model.domain.support.QnaComment;
+import com.landmark.app.model.domain.comment.QnaComment;
 import com.landmark.app.utils.MapperUtils;
 import lombok.Data;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
 
-import javax.persistence.Column;
 import java.util.Date;
 import java.util.List;
 
