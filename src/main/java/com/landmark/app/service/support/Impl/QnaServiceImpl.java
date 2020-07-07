@@ -8,6 +8,7 @@ import com.landmark.app.model.repository.support.QnaCommentRepository;
 import com.landmark.app.model.repository.support.QnaRepository;
 import com.landmark.app.service.support.QnaService;
 import com.landmark.app.utils.LoggerUtils;
+import com.landmark.app.utils.helper.StaticHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -33,7 +34,7 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
             qna.setContent(qnaDTO.getContent());
             qna.setTitle(qnaDTO.getTitle());
             qna.setUserId(qnaDTO.getUserId());
-            qna.setCreatedTime(qnaDTO.getCreatedTime());
+            qna.setCreatedTime(StaticHelper.stringToDate(qnaDTO.getCreatedTime(), "yyyy-MM-dd HH:mm"));
             qna.setModifiedTime(new Date());
             return QnaDTO.of(qnaRepository.saveAndFlush(qna));
         } catch (Exception e){

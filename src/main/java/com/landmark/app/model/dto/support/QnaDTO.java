@@ -2,6 +2,7 @@ package com.landmark.app.model.dto.support;
 
 import com.landmark.app.model.domain.support.Qna;
 import com.landmark.app.utils.MapperUtils;
+import com.landmark.app.utils.helper.StaticHelper;
 import lombok.Data;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,14 @@ public class QnaDTO {
     private String content;
     private Date createdTime;
     private Date modifiedTime;
+
+    public String getCreatedTime() {
+        return StaticHelper.dateToString(createdTime, "yyyy-MM-dd HH:mm");
+    }
+
+    public String getModifiedTime() {
+        return StaticHelper.dateToString(modifiedTime, "yyyy-MM-dd HH:mm");
+    }
 
     public static QnaDTO of(Qna qna) { return MapperUtils.convert(qna, QnaDTO.class); }
 
