@@ -1,6 +1,5 @@
 package com.landmark.app.controller.support;
 
-import com.landmark.app.model.dto.commnet.QnaCommentDTO;
 import com.landmark.app.model.dto.support.QnaDTO;
 import com.landmark.app.model.dto.user.UserDTO;
 import com.landmark.app.service.support.QnaService;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 import static com.landmark.app.utils.constants.Constants.QNA_API;
 
@@ -102,57 +100,4 @@ public class QnaController extends LoggerUtils {
         }
     }
 
-
-    /** Qna 댓글 */
-    // QnA 댓글 전체 조회
-    @PostMapping(value = "/{qnaId}/comment/search")
-    public ResponseEntity<?> getQnas(@PathVariable("qnaId") int qnaId, HttpServletRequest request){
-        try{
-            return new ResponseEntity<>(qnaService.getAllQnaComments(qnaId), HttpStatus.OK);
-        } catch (Exception e){
-            logger.error("get All Qna Comments : " + e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    // Qna 댓글 등록
-    @PostMapping(value = "/{qnaId}/comment")
-    public ResponseEntity<?> registerQnaCommnet(@PathVariable("qnaId") int qnaId, @Valid @RequestBody QnaCommentDTO commentDTO, HttpServletRequest request) {
-        try {
-            int userId = accountHelper.getAccountId(request);
-            commentDTO.setUserId(userId);
-            return new ResponseEntity<>(qnaService.registerQnaComment(commentDTO, qnaId), HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error("registerQnAComment : " + e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    // Qna 댓글 수정
-    @PutMapping(value = "/{qnaId}/comment")
-    public ResponseEntity<?> updateQnaComment(@RequestBody QnaCommentDTO commentDTO, HttpServletRequest request) {
-        try {
-            int userId = accountHelper.getAccountId(request);
-            return new ResponseEntity<>(qnaService.updateQnaComment(commentDTO, userId), HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error("updateQnAComment : " + e.getMessage());
-            return new ResponseEntity<>(0, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    // Qna 댓글 삭제
-    @DeleteMapping(value = "/{qnaId}/comment")
-    public ResponseEntity<?> deleteQnaComment(@PathVariable("qnaId") int qnaId, @RequestBody QnaCommentDTO commentDTO,HttpServletRequest request) {
-        try {
-            int id = commentDTO.getId();
-            UserDTO user = accountHelper.getAccountInfo(request);
-            String role = user.getRole().getRolename();
-            int userId = accountHelper.getAccountId(request);
-
-            return new ResponseEntity<>(qnaService.deleteQnaComment(id, userId, qnaId, role), HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error("deleteQnAComment : " + e.getMessage());
-            return new ResponseEntity<>(0, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
 }
