@@ -1,9 +1,12 @@
 package com.landmark.app.model.domain.support;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.landmark.app.model.domain.user.Role;
 import com.landmark.app.model.domain.user.User;
 import com.landmark.app.model.dto.support.QnaDTO;
 import com.landmark.app.utils.MapperUtils;
 import lombok.Data;
+import lombok.ToString;
 import org.modelmapper.TypeToken;
 
 import javax.persistence.*;
@@ -31,6 +34,12 @@ public class Qna {
 
     @Column(name = "modified_time")
     private Date modifiedTime;
+
+    /*
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    private User user;
+     */
 
     public static Qna of(QnaDTO qnaDTO) { return MapperUtils.convert(qnaDTO, Qna.class);  }
 

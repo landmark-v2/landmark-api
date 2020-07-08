@@ -1,7 +1,8 @@
-package com.landmark.app.model.dto.support;
+package com.landmark.app.model.dto.commnet;
 
 import com.landmark.app.model.domain.comment.QnaComment;
 import com.landmark.app.utils.MapperUtils;
+import com.landmark.app.utils.helper.StaticHelper;
 import lombok.Data;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
@@ -26,4 +27,12 @@ public class QnaCommentDTO {
     }
 
     public static Page<QnaCommentDTO> of(Page<QnaComment> qnaComments) { return MapperUtils.convert(qnaComments, QnaCommentDTO.class); }
+
+    public String getCreatedTime() {
+        return StaticHelper.dateToString(createdTime, "yyyy-MM-dd HH:mm");
+    }
+
+    public String getModifiedTime() {
+        return StaticHelper.dateToString(modifiedTime, "yyyy-MM-dd HH:mm");
+    }
 }

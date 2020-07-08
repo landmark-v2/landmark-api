@@ -1,6 +1,6 @@
 package com.landmark.app.model.domain.comment;
 
-import com.landmark.app.model.dto.commnet.QnaCommentDTO;
+import com.landmark.app.model.dto.commnet.ReviewCommentDTO;
 import com.landmark.app.utils.MapperUtils;
 import lombok.Data;
 import org.modelmapper.TypeToken;
@@ -11,9 +11,8 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "QNA_COMMENT")
-public class QnaComment {
-
+@Table(name = "REVIEW_COMMENT")
+public class ReviewComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -21,8 +20,10 @@ public class QnaComment {
     @Column(name = "user_id")
     private int userId;
 
-    @Column(name = "qna_id")
-    private int qnaId;
+    @Column(name = "review_id")
+    private int reviewId;
+
+    private String comment;
 
     @Column(name = "created_time")
     private Date createdTime;
@@ -30,11 +31,9 @@ public class QnaComment {
     @Column(name = "modified_time")
     private Date modifiedTime;
 
-    private String comment;
+    public static ReviewComment of(ReviewCommentDTO dto) { return MapperUtils.convert(dto, ReviewComment.class); }
 
-    public static QnaComment of(QnaCommentDTO qnaCommentDTO) { return MapperUtils.convert(qnaCommentDTO, QnaComment.class); }
-
-    public static List<QnaComment> of(List<QnaCommentDTO> qnaCommentDTO){
-        return MapperUtils.convert(qnaCommentDTO, new TypeToken<List<QnaComment>>(){}.getType());
+    public static List<ReviewComment> of(List<ReviewCommentDTO> dtos) {
+        return MapperUtils.convert(dtos, new TypeToken<List<ReviewComment>>(){}.getType());
     }
 }

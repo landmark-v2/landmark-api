@@ -2,7 +2,7 @@ package com.landmark.app.service.support.Impl;
 
 import com.landmark.app.model.domain.support.Qna;
 import com.landmark.app.model.domain.comment.QnaComment;
-import com.landmark.app.model.dto.support.QnaCommentDTO;
+import com.landmark.app.model.dto.commnet.QnaCommentDTO;
 import com.landmark.app.model.dto.support.QnaDTO;
 import com.landmark.app.model.repository.support.QnaCommentRepository;
 import com.landmark.app.model.repository.support.QnaRepository;

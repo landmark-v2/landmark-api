@@ -1,15 +1,12 @@
 package com.landmark.app.controller.support;
 
-import com.landmark.app.model.domain.support.Qna;
-import com.landmark.app.model.dto.TourInfoDTO;
-import com.landmark.app.model.dto.support.QnaCommentDTO;
+import com.landmark.app.model.dto.commnet.QnaCommentDTO;
 import com.landmark.app.model.dto.support.QnaDTO;
 import com.landmark.app.model.dto.user.UserDTO;
 import com.landmark.app.service.support.QnaService;
 import com.landmark.app.utils.LoggerUtils;
 import com.landmark.app.utils.helper.AccountHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

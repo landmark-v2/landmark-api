@@ -1,6 +1,6 @@
 package com.landmark.app.service.support;
 
-import com.landmark.app.model.dto.support.QnaCommentDTO;
+import com.landmark.app.model.dto.commnet.QnaCommentDTO;
 import com.landmark.app.model.dto.support.QnaDTO;
 
 import java.util.List;

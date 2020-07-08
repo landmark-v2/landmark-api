@@ -1,6 +1,7 @@
 package com.landmark.app.model.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.landmark.app.model.domain.support.Qna;
 import com.landmark.app.model.dto.user.UserDTO;
 import com.landmark.app.utils.MapperUtils;
 import lombok.Data;
@@ -13,6 +14,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Data
