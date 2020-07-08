@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.Properties;
 
 @Component
-public class MailUtils {
+public class MailUtils extends LoggerUtils {
 
     @Value("${spring.mail.host}")
     private String host;
@@ -79,6 +79,7 @@ public class MailUtils {
             javaMailSender.send(message);
             return true;
         } catch (Exception e) {
+            logger.error("mail send error : " + e.getMessage());
             return false;
         }
     }
