@@ -3,6 +3,8 @@ package com.landmark.app.service.impl;
 import com.landmark.app.model.domain.TourReview;
 import com.landmark.app.model.dto.TourInfoDTO;
 import com.landmark.app.model.dto.TourReviewDTO;
+import com.landmark.app.model.repository.AreaCodeRepository;
+import com.landmark.app.model.repository.SigunguCodeRepository;
 import com.landmark.app.model.repository.TourReviewRepository;
 import com.landmark.app.service.TourInfoService;
 import com.landmark.app.service.TourReviewService;
@@ -13,6 +15,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
@@ -25,12 +28,17 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
     private TourReviewRepository tourReviewRepository;
     private TourInfoService tourInfoService;
     private UserService userService;
+    private AreaCodeRepository areaCodeRepository;
+    private SigunguCodeRepository sigunguCodeRepository;
 
     @Autowired
-    public TourReviewServiceImpl(TourReviewRepository tourReviewRepository, TourInfoService tourInfoService, UserService userService) {
+    public TourReviewServiceImpl(TourReviewRepository tourReviewRepository, TourInfoService tourInfoService, UserService userService,
+                                 AreaCodeRepository areaCodeRepository, SigunguCodeRepository sigunguCodeRepository) {
         this.tourReviewRepository = tourReviewRepository;
         this.tourInfoService = tourInfoService;
         this.userService = userService;
+        this.areaCodeRepository = areaCodeRepository;
+        this.sigunguCodeRepository = sigunguCodeRepository;
     }
 
     @Override
@@ -469,6 +477,30 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
         fileDTO.setReviewId(id);
         fileDTO.setPath(path);
         return fileDTO;
+    }
+
+    @Override
+    public JSONArray getCodeNames(int userId, int areaCode) {
+        JSONArray result = new JSONArray();
+
+        try {
+            List<TourReview> tourReviews = tourReviewRepository.findAllByUserIdAndAreaCode(userId, areaCode);
+
+            if (!ObjectUtils.isEmpty(tourReviews)) {
+                for (TourReview tourReview : tourReviews) {
+                    JSONObject resultJson = new JSONObject();
+                    resultJson.put("areaCode", tourReview.getAreaCode());
+                    resultJson.put("sigunguCode", tourReview.getSigunguCode());
+                    resultJson.put("areaName", areaCodeRepository.findByCode(tourReview.getAreaCode()).getName());
+                    resultJson.put("sigunguName", sigunguCodeRepository.findByAreaCodeAndCode(tourReview.getAreaCode(), tourReview.getSigunguCode()).getName());
+                    result.add(resultJson);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("getCodeNames : " + e.getMessage());
+        }
+
+        return result;
     }
 
 }

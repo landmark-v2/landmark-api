@@ -5,6 +5,7 @@ import com.landmark.app.model.dto.user.UserDTO;
 import com.landmark.app.service.TourReviewService;
 import com.landmark.app.utils.LoggerUtils;
 import com.landmark.app.utils.helper.AccountHelper;
+import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -129,6 +130,21 @@ public class TourReviewController extends LoggerUtils {
             return new ResponseEntity<>(tourReviewService.findById(id), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * area_code 로 areaName, sigunguName 조회
+     */
+    @GetMapping(value = "/names/{areaCode}")
+    public ResponseEntity<?> getCodeNames(@PathVariable int areaCode, HttpServletRequest request) {
+        try {
+            UserDTO user = accountHelper.getAccountInfo(request);
+            int userId = user.getId();
+            return new ResponseEntity<>(tourReviewService.getCodeNames(userId, areaCode), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("getCodeNames : " + e.getMessage());
+            return new ResponseEntity<>(new JSONArray(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

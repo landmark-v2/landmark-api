@@ -63,4 +63,9 @@ public interface TourReviewService {
      */
     TourReviewDTO.FileDTO saveFile(TourReviewDTO.FileDTO fileDTO);
 
+    /**
+     * userId, areaCode 로 후기 쓴 codeName 조회
+     */
+    JSONArray getCodeNames(int userId, int areaCode);
+
 }
