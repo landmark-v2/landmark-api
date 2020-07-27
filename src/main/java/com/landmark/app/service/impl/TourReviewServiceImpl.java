@@ -489,6 +489,7 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
             if (!ObjectUtils.isEmpty(tourReviews)) {
                 for (TourReview tourReview : tourReviews) {
                     JSONObject resultJson = new JSONObject();
+                    resultJson.put("id", tourReview.getId());
                     resultJson.put("areaCode", tourReview.getAreaCode());
                     resultJson.put("sigunguCode", tourReview.getSigunguCode());
                     resultJson.put("areaName", areaCodeRepository.findByCode(tourReview.getAreaCode()).getName());

@@ -43,7 +43,7 @@ public interface TourReviewRepository extends JpaRepository<TourReview, Integer>
 
     int countAllByUserIdAndAreaCode(int userId, int areaCode);
 
-    @Query("select r from TourReview r where r.userId=:userId and r.areaCode=:areaCode group by r.sigunguCode")
+    @Query("select r from TourReview r where r.userId=:userId and r.areaCode=:areaCode order by r.id desc ")
     List<TourReview> findAllByUserIdAndAreaCode(@Param("userId") int userId, @Param("areaCode") int areaCode);
 
 }
