@@ -36,6 +36,8 @@ public class UserDTO {
     @JsonIgnore
     private RoleDTO role;
 
+    private int roleType;
+
     @Data
     public static class UpdateUserDTO {
         private String password;

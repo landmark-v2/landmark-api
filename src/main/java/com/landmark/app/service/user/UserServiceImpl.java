@@ -74,7 +74,15 @@ public class UserServiceImpl extends LoggerUtils implements UserService {
 
     private UserDTO toUserDTO(UserDTO userDTO) {
         RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setRolename(ROLE_USER);
+
+        if (userDTO.getRoleType() == 1) {
+            roleDTO.setRolename(ROLE_ADMIN);
+        } else if (userDTO.getRoleType() == 2) {
+            roleDTO.setRolename(ROLE_DEV);
+        } else {
+            roleDTO.setRolename(ROLE_USER);
+        }
+
         userDTO.setRole(roleDTO);
         userDTO.setPassword(new BCryptPasswordEncoder().encode(userDTO.getPassword()));
         return userDTO;
