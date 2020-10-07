@@ -26,6 +26,7 @@ public interface QnaRepository extends JpaRepository<Qna, Integer> {
      */
 
     List<Qna> findAll();
+
     Qna findById(int id);
     List<Qna> findAllByUserId(int userId);
 

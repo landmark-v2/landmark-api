@@ -28,7 +28,7 @@ public class QnaController extends LoggerUtils {
 
     /** QnA */
     /** Qna 전체 조회 */
-    @PostMapping(value = "/search")
+    @GetMapping(value = "/search")
     public ResponseEntity<?> getAllQna(HttpServletRequest request){
         try{
             return new ResponseEntity<>(qnaService.getAllQnas(), HttpStatus.OK);

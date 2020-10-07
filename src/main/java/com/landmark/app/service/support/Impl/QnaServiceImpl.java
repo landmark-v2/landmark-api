@@ -4,6 +4,8 @@ import com.landmark.app.model.domain.support.Qna;
 import com.landmark.app.model.domain.comment.QnaComment;
 import com.landmark.app.model.dto.commnet.QnaCommentDTO;
 import com.landmark.app.model.dto.support.QnaDTO;
+import com.landmark.app.model.dto.user.UserDTO;
+import com.landmark.app.model.repository.UserRepository;
 import com.landmark.app.model.repository.support.QnaCommentRepository;
 import com.landmark.app.model.repository.support.QnaRepository;
 import com.landmark.app.service.support.QnaService;
@@ -22,10 +24,12 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
 
     private QnaRepository qnaRepository;
     private QnaCommentRepository qnaCommentRepository;
+    private UserRepository userRepository;
 
-    public QnaServiceImpl(QnaRepository qnaRepository, QnaCommentRepository qnaCommentRepository) {
+    public QnaServiceImpl(QnaRepository qnaRepository, QnaCommentRepository qnaCommentRepository, UserRepository userRepository) {
         this.qnaRepository = qnaRepository;
         this.qnaCommentRepository = qnaCommentRepository;
+        this.userRepository = userRepository;
     }
 
     public QnaDTO qnaSave(QnaDTO qnaDTO){
@@ -56,7 +60,14 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
     @Override
     public List<QnaDTO> getAllQnas() {
         try{
-            return QnaDTO.of(qnaRepository.findAll());
+//            return QnaDTO.of(qnaRepository.findAll());
+            List<QnaDTO> list = QnaDTO.of(qnaRepository.findAll());
+
+            for(QnaDTO qnaDTO : list){
+                UserDTO userDTO = UserDTO.of(userRepository.findById(qnaDTO.getUserId()).get());
+                qnaDTO.setUsername(userDTO.getUsername());
+            }
+            return list;
         } catch (Exception e){
             logger.error("QnA getAllQnas : " + e.getMessage());
             return null;

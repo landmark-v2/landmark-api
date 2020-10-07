@@ -2,6 +2,7 @@ package com.landmark.app.model.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.landmark.app.model.domain.user.User;
+import com.landmark.app.model.dto.support.QnaDTO;
 import com.landmark.app.utils.MapperUtils;
 import com.landmark.app.utils.constants.Constants;
 import lombok.Data;
