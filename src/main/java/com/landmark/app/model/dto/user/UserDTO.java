@@ -56,7 +56,7 @@ public class UserDTO {
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(() -> Constants.ROLE_USER);
+        return Collections.singleton(() -> getRole().getRolename());
     }
 
 }
