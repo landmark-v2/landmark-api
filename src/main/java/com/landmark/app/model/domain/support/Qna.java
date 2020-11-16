@@ -20,8 +20,9 @@ public class Qna {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "user_id")
-    private int userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private String title;
 
@@ -37,5 +38,10 @@ public class Qna {
 
     public static List<Qna> of(List<QnaDTO> qnaDTOS) {
         return MapperUtils.convert(qnaDTOS, new TypeToken<List<Qna>>(){}.getType());
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+        user.getQna().add(this);
     }
 }
