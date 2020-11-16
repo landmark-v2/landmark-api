@@ -6,6 +6,8 @@ import com.landmark.app.model.dto.support.QnaDTO;
 import com.landmark.app.utils.MapperUtils;
 import com.landmark.app.utils.constants.Constants;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -45,6 +47,13 @@ public class UserDTO {
         private String name;
         private String email;
         private int certNum;
+    }
+
+    @Getter @Setter
+    public static class UserInfoDTO {
+        private int id;
+        private int username;
+        private String name;
     }
 
     public static UserDTO of(User user) {
