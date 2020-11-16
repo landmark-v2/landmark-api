@@ -5,6 +5,7 @@ import com.landmark.app.model.domain.support.Qna;
 import com.landmark.app.model.dto.user.UserDTO;
 import com.landmark.app.utils.MapperUtils;
 import lombok.Data;
+import lombok.Getter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -43,6 +44,9 @@ public class User implements UserDetails, Serializable {
     @JsonIgnore
     private Role role;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Qna> qna = new ArrayList<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
@@ -77,4 +81,5 @@ public class User implements UserDetails, Serializable {
     public static User of(UserDTO userDTO) {
         return MapperUtils.convert(userDTO, User.class);
     }
+
 }
