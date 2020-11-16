@@ -14,6 +14,7 @@ import com.landmark.app.utils.LoggerUtils;
 import com.landmark.app.utils.helper.StaticHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -56,7 +57,29 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
 
             return QnaDTO.of(qnaRepository.save(qna));
         } catch (Exception e) {
-            logger.error("create Qna Error : " + e.getLocalizedMessage());
+            logger.error("create Qna Error : " + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public QnaDTO updateQna(QnaDTO.UpdateQnaDTO updateQnaDTO) {
+        try {
+            Qna qna = qnaRepository.findById(updateQnaDTO.getId());
+
+            if(!StringUtils.isEmpty(updateQnaDTO.getTitle())) {
+                qna.setTitle(updateQnaDTO.getTitle());
+            }
+
+            if(!StringUtils.isEmpty(updateQnaDTO.getContent())) {
+                qna.setContent(updateQnaDTO.getContent());
+            }
+
+            qna.setModifiedTime(new Date());
+
+            return QnaDTO.of(qnaRepository.save(qna));
+        } catch (Exception e) {
+            logger.error("update QnA Error : " + e.getMessage());
             return null;
         }
     }

@@ -1,8 +1,10 @@
 package com.landmark.app.controller.support;
 
+import com.landmark.app.model.domain.support.Qna;
 import com.landmark.app.model.dto.support.QnaDTO;
 import com.landmark.app.model.dto.user.UserDTO;
 import com.landmark.app.model.repository.UserRepository;
+import com.landmark.app.model.repository.support.QnaRepository;
 import com.landmark.app.service.support.QnaService;
 import com.landmark.app.utils.LoggerUtils;
 import com.landmark.app.utils.helper.AccountHelper;
@@ -21,12 +23,14 @@ public class QnaController extends LoggerUtils {
     private QnaService qnaService;
     private AccountHelper accountHelper;
     private UserRepository userRepository;
+    private QnaRepository qnaRepository;
 
     @Autowired
-    public QnaController(QnaService qnaService, AccountHelper accountHelper, UserRepository userRepository) {
+    public QnaController(QnaService qnaService, AccountHelper accountHelper, UserRepository userRepository, QnaRepository qnaRepository) {
         this.qnaService = qnaService;
         this.accountHelper = accountHelper;
         this.userRepository = userRepository;
+        this.qnaRepository = qnaRepository;
     }
 
     /** QnA */
@@ -36,7 +40,7 @@ public class QnaController extends LoggerUtils {
         try{
             return new ResponseEntity<>(qnaService.findAllQnas(), HttpStatus.OK);
         } catch (Exception e){
-            logger.error("getAllQnas : " + e.getMessage());
+            logger.error("Qna(getAllQnas) Controller Error : " + e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -49,9 +53,19 @@ public class QnaController extends LoggerUtils {
             qnaDTO.setUser(user);
             return new ResponseEntity<>(qnaService.createQna(qnaDTO), HttpStatus.OK);
         } catch (Exception e) {
-            logger.error("createQna Controller Error : " +e.getMessage());
+            logger.error("Qna(createQna) Controller Error : " +e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
+    /** Qna 수정 */
+    @PutMapping
+    public ResponseEntity<?> updateQna(@RequestBody QnaDTO.UpdateQnaDTO updateQnaDTO, HttpServletRequest request) {
+        try {
+            return new ResponseEntity<>(qnaService.updateQna(updateQnaDTO),HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Qna(updateQna) Controller Error");
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

@@ -18,7 +18,18 @@ public interface QnaService {
     /** QnA 가져오기 */
     List<QnaDTO> findAllQnas();
 
+    /** QnA 등록 */
     QnaDTO createQna(QnaDTO qnaDTO);
+
+    /** QnA 수정 */
+    QnaDTO updateQna(QnaDTO.UpdateQnaDTO updateQnaDTO);
+
+
+
+
+
+
+
 
     /** QnA Comment 가져오기 */
     List<QnaCommentDTO> getAllQnaComments(int qnaId);
