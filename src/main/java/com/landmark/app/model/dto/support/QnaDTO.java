@@ -3,6 +3,7 @@ package com.landmark.app.model.dto.support;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.landmark.app.model.domain.support.Qna;
 import com.landmark.app.model.dto.user.UserDTO;
+import com.landmark.app.model.repository.UserRepository;
 import com.landmark.app.utils.MapperUtils;
 import com.landmark.app.utils.helper.StaticHelper;
 import lombok.Data;
@@ -18,13 +19,13 @@ import java.util.List;
 public class QnaDTO {
 
     private int id;
-    private int userId;
+
+    private UserDTO user;
+
     private String title;
     private String content;
     private Date createdTime;
     private Date modifiedTime;
-
-    private String username;
 
     public String getCreatedTime() {
         return StaticHelper.dateToString(createdTime, "yyyy-MM-dd HH:mm");
