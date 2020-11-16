@@ -6,25 +6,19 @@ import com.landmark.app.model.dto.support.QnaDTO;
 import java.util.List;
 
 public interface QnaService {
-    /** QnA 키워드 검색 */
-    List<QnaDTO> getQnaByKeyword(String s);
+    /**
+     * 구현해야 할 거
+     *
+     * QnA 키워드 검색
+     *      전체 글 가져오기
+     *      특정 글 가져오기
+     *      등록/수정/삭제
+     */
 
-    /** QnA 전체 목록 가져오기 */
-    List<QnaDTO> getAllQnas();
+    /** QnA 가져오기 */
+    List<QnaDTO> findAllQnas();
 
-    /** QnA 글 가져오기*/
-    QnaDTO getQna(int qnaId);
-
-    /** QNA 등록 */
-    QnaDTO registerQna(QnaDTO qnaDTO);
-
-    /** QNA 수정 */
-    QnaDTO updateQna(QnaDTO qnaDTO, int userId);
-
-    /** QNA 삭제 */
-    boolean deleteQna(int id, int userId, String role);
-
-
+    QnaDTO createQna(QnaDTO qnaDTO);
 
     /** QnA Comment 가져오기 */
     List<QnaCommentDTO> getAllQnaComments(int qnaId);

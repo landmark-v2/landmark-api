@@ -2,6 +2,7 @@ package com.landmark.app.service.support.Impl;
 
 import com.landmark.app.model.domain.support.Qna;
 import com.landmark.app.model.domain.comment.QnaComment;
+import com.landmark.app.model.domain.user.User;
 import com.landmark.app.model.dto.commnet.QnaCommentDTO;
 import com.landmark.app.model.dto.support.QnaDTO;
 import com.landmark.app.model.dto.user.UserDTO;
@@ -32,90 +33,37 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
         this.userRepository = userRepository;
     }
 
-    public QnaDTO qnaSave(QnaDTO qnaDTO){
-        try{
-            Qna qna = new Qna();
-            qna.setContent(qnaDTO.getContent());
-            qna.setTitle(qnaDTO.getTitle());
-            qna.setUserId(qnaDTO.getUserId());
-            qna.setCreatedTime(StaticHelper.stringToDate(qnaDTO.getCreatedTime(), "yyyy-MM-dd HH:mm"));
-            qna.setModifiedTime(new Date());
-            return QnaDTO.of(qnaRepository.saveAndFlush(qna));
-        } catch (Exception e){
-            logger.error("QNA save : " + e.getMessage());
-            return null;
-        }
-    }
-
     @Override
-    public List<QnaDTO> getQnaByKeyword(String s) {
+    public List<QnaDTO> findAllQnas() {
         try {
-            return QnaDTO.of(qnaRepository.findByTitleContaining(s));
-        } catch (Exception e){
-            logger.error("get QNA by keyword : " + e.getMessage());
+            List<Qna> qnas = qnaRepository.findAll();
+            return QnaDTO.of(qnas);
+        } catch(Exception e) {
+            logger.error("find all Qna Error : " + e.getMessage());
             return null;
         }
     }
 
     @Override
-    public List<QnaDTO> getAllQnas() {
-        try{
-//            return QnaDTO.of(qnaRepository.findAll());
-            List<QnaDTO> list = QnaDTO.of(qnaRepository.findAll());
+    public QnaDTO createQna(QnaDTO qnaDTO) {
+        try {
+            Qna qna = new Qna();
+            qna.setUser(User.of(qnaDTO.getUser()));
+            qna.setTitle(qnaDTO.getTitle());
+            qna.setContent(qnaDTO.getContent());
+            qna.setCreatedTime(new Date());
+            qna.setModifiedTime(new Date());
 
-            for(QnaDTO qnaDTO : list){
-                UserDTO userDTO = UserDTO.of(userRepository.findById(qnaDTO.getUserId()).get());
-                qnaDTO.setUsername(userDTO.getUsername());
-            }
-            return list;
-        } catch (Exception e){
-            logger.error("QnA getAllQnas : " + e.getMessage());
-            return null;
-        }
-    }
-
-    @Override
-    public QnaDTO getQna(int qnaId) {
-        try{
-            return QnaDTO.of(qnaRepository.findById(qnaId));
-        } catch (Exception e){
-            logger.error("QnA get Qna : " + e.getMessage());
-            return null;
-        }
-    }
-
-    @Override
-    public QnaDTO registerQna(QnaDTO qnaDTO) {
-        qnaDTO.setCreatedTime(new Date());
-        return qnaSave(qnaDTO);
-    }
-
-    @Override
-    public QnaDTO updateQna(QnaDTO qnaDTO, int userId) {
-        try{
-            if(qnaDTO.getUserId() == userId){
-                qnaDTO.setModifiedTime(new Date());
-                return qnaSave(qnaDTO);
-            }
-        } catch (Exception e){
-            logger.error("Qna update : " + e.getMessage());
-        }
-        return null;
-    }
-
-    @Override
-    public boolean deleteQna(int id, int userId, String role) {
-        try{
-            QnaDTO qnaDTO = QnaDTO.of(qnaRepository.findById(id));
-            if(userId == qnaDTO.getUserId() || role.equalsIgnoreCase(ROLE_DEV)){
-                qnaRepository.deleteById(id);
-            }
-            return true;
+            return QnaDTO.of(qnaRepository.save(qna));
         } catch (Exception e) {
-            logger.error("Qna delete : " + e.getMessage());
-            return false;
+            logger.error("create Qna Error : " + e.getLocalizedMessage());
+            return null;
         }
     }
+
+    /**
+     * QnA 댓글
+     */
 
     @Override
     public List<QnaCommentDTO> getAllQnaComments(int qnaId) {
@@ -127,10 +75,6 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
         }
     }
 
-
-    /**
-     * QnA 댓글
-     */
 
     public QnaCommentDTO commentSave(QnaCommentDTO qnaCommentDTO){
         try{
