@@ -7,6 +7,8 @@ import com.landmark.app.model.repository.UserRepository;
 import com.landmark.app.utils.MapperUtils;
 import com.landmark.app.utils.helper.StaticHelper;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
 
@@ -43,5 +45,12 @@ public class QnaDTO {
 
     public static Page<QnaDTO> of(Page<Qna> qna) {
         return MapperUtils.convert(qna, QnaDTO.class);
+    }
+
+    @Getter @Setter
+    public static class UpdateQnaDTO {
+        private int id;
+        private String title;
+        private String content;
     }
 }
