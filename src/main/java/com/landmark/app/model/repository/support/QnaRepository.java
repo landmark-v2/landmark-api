@@ -13,12 +13,14 @@ import java.util.Optional;
 
 public interface QnaRepository extends JpaRepository<Qna, Integer> {
 
+    Qna findById(int id);
+
     List<Qna> findAll();
 
-    Qna findById(int id);
-    List<Qna> findAllByUserId(int userId);
-
+    // Qna Search
     List<Qna> findByTitleContaining(String title);
+    List<Qna> findByContentContaining(String content);
+    List<Qna> findAllByUserId(int userId);
 
     void deleteById(int id);
 }

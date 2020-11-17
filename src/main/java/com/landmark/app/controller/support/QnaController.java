@@ -64,7 +64,7 @@ public class QnaController extends LoggerUtils {
         try {
             return new ResponseEntity<>(qnaService.updateQna(updateQnaDTO),HttpStatus.OK);
         } catch (Exception e) {
-            logger.error("Qna(updateQna) Controller Error");
+            logger.error("Qna(updateQna) Controller Error : " +e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -79,7 +79,18 @@ public class QnaController extends LoggerUtils {
 
             return new ResponseEntity<>(qnaService.deleteQna(userId, role, qnaId), HttpStatus.OK);
         } catch (Exception e) {
-            logger.error("Qna(deleteQna) Controller Error");
+            logger.error("Qna(deleteQna) Controller Error : " +e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // search
+    @GetMapping(value = "/keyword")
+    public ResponseEntity<?> searchQna(@RequestBody QnaDTO.SearchQna searchQna, HttpServletRequest request) {
+        try {
+            return new ResponseEntity<>(qnaService.searchQna(searchQna), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Qna(keyword_search) Controller Error : " +e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

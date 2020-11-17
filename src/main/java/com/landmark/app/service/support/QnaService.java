@@ -28,6 +28,9 @@ public interface QnaService {
     boolean deleteQna(int userId, String role, int qnaId);
 
 
+    // search
+    /** 검색 */
+    List<QnaDTO> searchQna(QnaDTO.SearchQna searchQna);
 
 
 

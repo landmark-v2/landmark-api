@@ -53,4 +53,10 @@ public class QnaDTO {
         private String title;
         private String content;
     }
+
+    @Getter @Setter
+    public static class SearchQna {
+        private String type;
+        private String search;
+    }
 }

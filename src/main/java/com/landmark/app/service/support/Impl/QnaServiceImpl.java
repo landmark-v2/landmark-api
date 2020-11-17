@@ -87,14 +87,42 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
 
     @Override
     public boolean deleteQna(int userId, String role, int qnaId) {
-        QnaDTO qnaDTO = QnaDTO.of(qnaRepository.findById(qnaId));
-
-        if(qnaDTO.getUser().getId() == userId || role.equalsIgnoreCase(ROLE_ADMIN)) {
-            qnaRepository.deleteById(qnaId);
-            return true;
+        try {
+            QnaDTO qnaDTO = QnaDTO.of(qnaRepository.findById(qnaId));
+            if (qnaDTO.getUser().getId() == userId || role.equalsIgnoreCase(ROLE_ADMIN)) {
+                qnaRepository.deleteById(qnaId);
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            logger.error("delete QnA Error : " + e.getMessage());
+            return false;
         }
+    }
 
-        return false;
+
+    /**
+     * Search
+     */
+
+    @Override
+    public List<QnaDTO> searchQna(QnaDTO.SearchQna searchQna) {
+        try {
+            String type = searchQna.getType();
+            String search = searchQna.getSearch();
+
+            if("name".equals(type)) {
+                int userId = userRepository.findByUsername(search).get().getId();
+                return QnaDTO.of(qnaRepository.findAllByUserId(userId));
+            } else if ("title".equals(type)) {
+                return QnaDTO.of(qnaRepository.findByTitleContaining(search));
+            }
+
+            return null;
+        } catch (Exception e) {
+            logger.error("QnA search By UserId : " + e.getMessage());
+            return null;
+        }
     }
 
 
