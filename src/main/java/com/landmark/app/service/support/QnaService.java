@@ -24,8 +24,8 @@ public interface QnaService {
     /** QnA 수정 */
     QnaDTO updateQna(QnaDTO.UpdateQnaDTO updateQnaDTO);
 
-
-
+    /** QnA 삭제 */
+    boolean deleteQna(int userId, String role, int qnaId);
 
 
 

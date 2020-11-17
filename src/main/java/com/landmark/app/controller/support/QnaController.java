@@ -68,4 +68,19 @@ public class QnaController extends LoggerUtils {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    /** Qna 삭제 */
+    @DeleteMapping(value = "/{qnaId}")
+    public ResponseEntity<?> deleteQna(@PathVariable("qnaId") int qnaId, HttpServletRequest request) {
+        try {
+            UserDTO user = accountHelper.getAccountInfo(request);
+            String role = user.getRole().getRolename();
+            int userId = accountHelper.getAccountId(request);
+
+            return new ResponseEntity<>(qnaService.deleteQna(userId, role, qnaId), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Qna(deleteQna) Controller Error");
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

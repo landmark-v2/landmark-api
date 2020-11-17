@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 import java.util.Date;
 import java.util.List;
 
+import static com.landmark.app.utils.constants.Constants.ROLE_ADMIN;
 import static com.landmark.app.utils.constants.Constants.ROLE_DEV;
 
 @Service
@@ -83,6 +84,19 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
             return null;
         }
     }
+
+    @Override
+    public boolean deleteQna(int userId, String role, int qnaId) {
+        QnaDTO qnaDTO = QnaDTO.of(qnaRepository.findById(qnaId));
+
+        if(qnaDTO.getUser().getId() == userId || role.equalsIgnoreCase(ROLE_ADMIN)) {
+            qnaRepository.deleteById(qnaId);
+            return true;
+        }
+
+        return false;
+    }
+
 
     /**
      * QnA 댓글
