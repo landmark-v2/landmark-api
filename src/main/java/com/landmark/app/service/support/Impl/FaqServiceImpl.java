@@ -6,7 +6,9 @@ import com.landmark.app.model.repository.support.FaqRepository;
 import com.landmark.app.service.support.FaqService;
 import com.landmark.app.utils.LoggerUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,37 +22,40 @@ public class FaqServiceImpl extends LoggerUtils implements FaqService {
 
     public FaqServiceImpl(FaqRepository faqRepository) { this.faqRepository = faqRepository; }
 
-    public FaqDTO save(FaqDTO faqDTO){
-        try{
-            Faq faq = new Faq();
-            faq.setTitle(faqDTO.getTitle());
-            faq.setContent(faqDTO.getContent());
-            faq.setCreatedTime(faqDTO.getCreatedTime());
-            faq.setModifiedTime(new Date());
-            return FaqDTO.of(faqRepository.saveAndFlush(faq));
-        } catch (Exception e){
-            logger.error("Faq save : " + e.getMessage());
-            return null;
-        }
-    }
-
 
     @Override
-    public FaqDTO registerFaq(FaqDTO faqDTO) {
-        faqDTO.setCreatedTime(new Date());
-        return save(faqDTO);
+    public FaqDTO registerFaq(FaqDTO faqDTO, String role) {
+        Faq faq = new Faq();
+        faq.setTitle(faqDTO.getTitle());
+        faq.setContent(faqDTO.getContent());
+        faq.setCreatedTime(new Date());
+        faq.setModifiedTime(new Date());
+        return FaqDTO.of(faqRepository.saveAndFlush(faq));
     }
 
     @Override
-    public FaqDTO updateFaq(FaqDTO faqDTO, String role) {
+    public FaqDTO updateFaq(FaqDTO.UpdateFaqDTO faqDTO, String role) {
         try{
+            Faq faq = faqRepository.findById(faqDTO.getId());
+
             if(role.equalsIgnoreCase(ROLE_DEV)) {
-                return save(faqDTO);
+
+                if(!StringUtils.isEmpty(faqDTO.getTitle())) {
+                    faq.setTitle(faqDTO.getTitle());
+                }
+
+                if(!StringUtils.isEmpty(faqDTO.getContent())) {
+                    faq.setContent(faqDTO.getContent());
+                }
             }
+
+            faq.setModifiedTime(new Date());
+
+            return FaqDTO.of(faqRepository.save(faq));
         } catch (Exception e){
             logger.error("Faq update : " + e.getMessage());
+            return null;
         }
-        return null;
     }
 
     @Override

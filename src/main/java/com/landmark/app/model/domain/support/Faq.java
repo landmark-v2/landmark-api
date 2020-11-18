@@ -6,6 +6,7 @@ import lombok.Data;
 import org.modelmapper.TypeToken;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 

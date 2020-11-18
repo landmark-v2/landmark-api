@@ -55,7 +55,8 @@ public class FaqController extends LoggerUtils {
     @PostMapping
     public ResponseEntity<?> registerFaq(@RequestBody FaqDTO faqDTO, HttpServletRequest request) {
         try {
-            return new ResponseEntity<>(faqService.registerFaq(faqDTO), HttpStatus.OK);
+            String role = accountHelper.getRole(request);
+            return new ResponseEntity<>(faqService.registerFaq(faqDTO, role), HttpStatus.OK);
         } catch (Exception e) {
             logger.error("registerFAQ : " + e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -64,10 +65,9 @@ public class FaqController extends LoggerUtils {
 
     /** FAQ 수정 */
     @PutMapping
-    public ResponseEntity<?> updateFaq(@RequestBody FaqDTO faqDTO, HttpServletRequest request) {
+    public ResponseEntity<?> updateFaq(@RequestBody FaqDTO.UpdateFaqDTO faqDTO, HttpServletRequest request) {
         try {
-            UserDTO user = accountHelper.getAccountInfo(request);
-            String role = user.getRole().getRolename();
+            String role = accountHelper.getRole(request);
             return new ResponseEntity<>(faqService.updateFaq(faqDTO, role), HttpStatus.OK);
         } catch (Exception e) {
             logger.error("updateFAQ : " + e.getMessage());
@@ -79,9 +79,7 @@ public class FaqController extends LoggerUtils {
     @DeleteMapping(value = "/{faqId}")
     public ResponseEntity<?> deleteFaq(@PathVariable("faqId") int faqId, HttpServletRequest request) {
         try {
-            UserDTO user = accountHelper.getAccountInfo(request);
-            String role = user.getRole().getRolename();
-
+            String role = accountHelper.getRole(request);
             return new ResponseEntity<>(faqService.deleteFaq(faqId, role), HttpStatus.OK);
         } catch (Exception e) {
             logger.error("deleteFAQ : " + e.getMessage());
