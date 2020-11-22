@@ -5,6 +5,7 @@ import com.landmark.app.model.dto.support.NoticeDTO;
 import com.landmark.app.model.repository.support.NoticeRepository;
 import com.landmark.app.service.support.NoticeService;
 import com.landmark.app.utils.LoggerUtils;
+import com.landmark.app.utils.helper.StaticHelper;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -23,7 +24,7 @@ public class NoticeServiceImpl extends LoggerUtils implements NoticeService {
             Notice notice = new Notice();
             notice.setTitle(noticeDTO.getTitle());
             notice.setContent(noticeDTO.getContent());
-            notice.setCreatedTime(noticeDTO.getCreatedTime());
+            notice.setCreatedTime(StaticHelper.stringToDate(noticeDTO.getCreatedTime(), "yyyy-MM-dd HH:mm"));
             notice.setModifiedTime(new Date());
             return NoticeDTO.of(noticeRepository.saveAndFlush(notice));
         } catch (Exception e){
