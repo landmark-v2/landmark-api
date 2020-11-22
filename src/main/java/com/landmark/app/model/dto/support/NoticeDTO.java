@@ -2,6 +2,7 @@ package com.landmark.app.model.dto.support;
 
 import com.landmark.app.model.domain.support.Notice;
 import com.landmark.app.utils.MapperUtils;
+import com.landmark.app.utils.helper.StaticHelper;
 import lombok.Data;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,14 @@ public class NoticeDTO {
     private String content;
     private Date createdTime;
     private Date modifiedTime;
+
+    public String getCreatedTime() {
+        return StaticHelper.dateToString(createdTime, "yyyy-MM-dd HH:mm");
+    }
+
+    public String getModifiedTime() {
+        return StaticHelper.dateToString(modifiedTime, "yyyy-MM-dd HH:mm");
+    }
 
     public static NoticeDTO of(Notice notice) { return MapperUtils.convert(notice, NoticeDTO.class); }
 
