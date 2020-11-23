@@ -35,16 +35,16 @@ public interface QnaService {
 
 
     /** QnA Comment 가져오기 */
-    List<QnaCommentDTO> getAllQnaComments(int qnaId);
+    List<QnaCommentDTO> findAllQnaComments(int qnaId);
 
     /** QNA 댓글 등록 */
     QnaCommentDTO registerQnaComment(QnaCommentDTO qnaCommentDTO, int qnaId);
 
     /** QNA 댓글 삭제 */
-    boolean deleteQnaComment(int id, int userId, int qnaId, String role);
+    boolean deleteQnaComment(int id, int userId, String role);
 
     /** QNA 댓글 수정 */
-    QnaCommentDTO updateQnaComment(QnaCommentDTO qnaCommentDTO, int userId);
+    QnaCommentDTO updateQnaComment(QnaCommentDTO qnaCommentDTO, int userId, int id);
 
     /** 회원탈퇴 시 QnA, 댓글 있으면 삭제 */
     boolean deleteByUserId(int userId);

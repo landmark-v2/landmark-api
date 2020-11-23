@@ -12,10 +12,12 @@ import com.landmark.app.model.repository.support.QnaRepository;
 import com.landmark.app.service.support.QnaService;
 import com.landmark.app.utils.LoggerUtils;
 import com.landmark.app.utils.helper.StaticHelper;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import javax.persistence.Column;
 import java.util.Date;
 import java.util.List;
 
@@ -131,59 +133,70 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
      */
 
     @Override
-    public List<QnaCommentDTO> getAllQnaComments(int qnaId) {
-        try{
+    public List<QnaCommentDTO> findAllQnaComments(int qnaId) {
+        try {
             return QnaCommentDTO.of(qnaCommentRepository.findAllByQnaId(qnaId));
-        } catch (Exception e){
-            logger.error("Get all Qna Comment : " + e.getMessage());
-            return null;
-        }
-    }
-
-
-    public QnaCommentDTO commentSave(QnaCommentDTO qnaCommentDTO){
-        try{
-            qnaCommentDTO.setModifiedTime(new Date());
-            QnaComment qnaComment = qnaCommentRepository.saveAndFlush(QnaComment.of(qnaCommentDTO));
-            return QnaCommentDTO.of(qnaComment);
-        } catch (Exception e){
-            logger.error("Qna Comment save : " + e.getMessage());
+        } catch (Exception e) {
+            logger.error("find All QnA Comment : " + e.getMessage());
             return null;
         }
     }
 
     @Override
-    public QnaCommentDTO registerQnaComment(QnaCommentDTO qnaCommentDTO, int qnaId) {
-        qnaCommentDTO.setCreatedTime(new Date());
-        qnaCommentDTO.setQnaId(qnaId);
-        return commentSave(qnaCommentDTO);
+    public QnaCommentDTO registerQnaComment(QnaCommentDTO qnaCommentDTO, int qnaId){
+        try {
+            QnaComment comment = new QnaComment();
+            comment.setUserId(qnaCommentDTO.getUserId());
+            comment.setQnaId(qnaId);
+            comment.setComment(qnaCommentDTO.getComment());
+            comment.setCreatedTime(new Date());
+            comment.setModifiedTime(new Date());
+            return QnaCommentDTO.of(qnaCommentRepository.save(comment));
+        } catch (Exception e) {
+            logger.error("register Qna Comment : " + e.getMessage());
+            return null;
+        }
     }
 
     @Override
-    public boolean deleteQnaComment(int id, int userId, int qnaId, String role) {
-        try{
-            QnaCommentDTO qnaCommentDTO = QnaCommentDTO.of(qnaCommentRepository.findById(id));
-            if((qnaCommentDTO.getUserId() == userId && qnaCommentDTO.getQnaId() == qnaId ) || role.equalsIgnoreCase(ROLE_DEV)){
+    public boolean deleteQnaComment(int id, int userId, String role) {
+        try {
+            if(ROLE_DEV.equals(role)) {
                 qnaCommentRepository.deleteById(id);
+                return true;
             }
-            return true;
-        } catch (Exception e){
-            logger.error("Qna Comment delete : " + e.getMessage());
+
+            QnaCommentDTO commentDTO = QnaCommentDTO.of(qnaCommentRepository.findById(id));
+            if(commentDTO.getUserId() == userId) {
+                qnaCommentRepository.deleteById(id);
+                return true;
+            }
+
+            return false;
+        } catch (Exception e) {
+            logger.error("delete Qna Comment : " + e.getMessage());
             return false;
         }
     }
 
     @Override
-    public QnaCommentDTO updateQnaComment(QnaCommentDTO qnaCommentDTO, int userId) {
-        try{
-            if(userId == qnaCommentDTO.getUserId()){
-                qnaCommentDTO.setModifiedTime(new Date());
-                return commentSave(qnaCommentDTO);
+    public QnaCommentDTO updateQnaComment(QnaCommentDTO qnaCommentDTO, int userId, int id) {
+        try {
+            QnaComment comment = qnaCommentRepository.findById(id);
+
+            if(comment.getUserId() == userId) {
+                if(!StringUtils.isEmpty(qnaCommentDTO.getComment())) {
+                    comment.setComment(qnaCommentDTO.getComment());
+                }
+
+                comment.setModifiedTime(new Date());
+                return QnaCommentDTO.of(qnaCommentRepository.save(comment));
             }
-        } catch (Exception e){
-            logger.error("Qna Comment update : " + e.getMessage());
+            return null;
+        } catch (Exception e) {
+            logger.error("update Qna Comment : " + e.getMessage());
+            return null;
         }
-        return null;
     }
 
     @Override
