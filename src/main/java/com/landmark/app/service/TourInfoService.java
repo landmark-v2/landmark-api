@@ -1,6 +1,7 @@
 package com.landmark.app.service;
 
 import com.landmark.app.model.dto.TourInfoDTO;
+import com.landmark.app.model.dto.commnet.InfoCommentDTO;
 
 import java.util.List;
 
@@ -35,4 +36,16 @@ public interface TourInfoService {
      */
     boolean deleteTours(int id, int user_id, String role);
 
+
+    /** 댓글 가져오기 */
+    List<InfoCommentDTO> findAllInfoComments(int infoId);
+
+    /** 댓글 등록 */
+    InfoCommentDTO registerInfoComment(InfoCommentDTO commentDTO);
+
+    /** 댓글 수정 */
+    InfoCommentDTO updateInfoComment(InfoCommentDTO commentDTO, int userId);
+
+    /** 댓글 삭제 */
+    boolean deleteInfoCommet(int id, int user_id, String role);
 }
