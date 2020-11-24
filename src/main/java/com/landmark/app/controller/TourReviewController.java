@@ -1,6 +1,8 @@
 package com.landmark.app.controller;
 
 import com.landmark.app.model.dto.TourReviewDTO;
+import com.landmark.app.model.dto.commnet.InfoCommentDTO;
+import com.landmark.app.model.dto.commnet.ReviewCommentDTO;
 import com.landmark.app.model.dto.user.UserDTO;
 import com.landmark.app.service.TourReviewService;
 import com.landmark.app.utils.LoggerUtils;
@@ -148,4 +150,53 @@ public class TourReviewController extends LoggerUtils {
         }
     }
 
+    /**
+     * 댓글
+     */
+
+    @PostMapping(value = "/comment/{reviewId}")
+    public ResponseEntity<?> registerInfoComment(@PathVariable("reviewId") int reviewId, @RequestBody ReviewCommentDTO commentDTO, HttpServletRequest request) {
+        try {
+            int userId = accountHelper.getAccountId(request);
+            commentDTO.setUserId(userId);
+            commentDTO.setReviewId(reviewId);
+            return new ResponseEntity<>(tourReviewService.registerReviewComment(commentDTO), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("TourInfoController(registerInfoComment) : " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/comment/{reviewId}")
+    public ResponseEntity<?> findAllInfoComments(@PathVariable("reviewId") int reviewId, HttpServletRequest request) {
+        try {
+            return new ResponseEntity<>(tourReviewService.findAllComments(reviewId), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("TourInfoController(findAllInfoComments) : " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping(value = "/comment")
+    public ResponseEntity<?> updateInfoComment(@RequestBody ReviewCommentDTO commentDTO, HttpServletRequest request) {
+        try {
+            int userId = accountHelper.getAccountId(request);
+            return new ResponseEntity<>(tourReviewService.updateReviewComment(commentDTO, userId), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("TourInfoController(updateInfoComment) : " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping(value = "/comment/{id}")
+    public ResponseEntity<?> deleteInfoComment(@PathVariable("id") int id, HttpServletRequest request) {
+        try {
+            int userId = accountHelper.getAccountId(request);
+            String role = accountHelper.getRole(request);
+            return new ResponseEntity<>(tourReviewService.deleteReviewComment(id, userId, role), HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("TourInfoController(deleteInfoComment) : " + e.getMessage());
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

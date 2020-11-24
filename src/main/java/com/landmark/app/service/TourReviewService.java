@@ -1,6 +1,9 @@
 package com.landmark.app.service;
 
+import com.landmark.app.model.domain.TourReview;
+import com.landmark.app.model.domain.comment.ReviewComment;
 import com.landmark.app.model.dto.TourReviewDTO;
+import com.landmark.app.model.dto.commnet.ReviewCommentDTO;
 import org.json.simple.JSONArray;
 
 import java.util.List;
@@ -67,5 +70,26 @@ public interface TourReviewService {
      * userId, areaCode 로 후기 쓴 codeName 조회
      */
     JSONArray getCodeNames(int userId, int areaCode);
+
+
+    /**
+     * 댓글 가져오기
+     */
+    List<ReviewCommentDTO> findAllComments(int reviewId);
+
+    /**
+     * 댓글 등록
+     */
+    ReviewCommentDTO registerReviewComment(ReviewCommentDTO commentDTO);
+
+    /**
+     * 댓글 수정
+     */
+    ReviewCommentDTO updateReviewComment(ReviewCommentDTO commentDTO, int userId);
+
+    /**
+     * 댓글 삭제
+     */
+    boolean deleteReviewComment(int id, int userId, String role);
 
 }

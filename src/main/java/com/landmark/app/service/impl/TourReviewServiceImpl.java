@@ -1,11 +1,14 @@
 package com.landmark.app.service.impl;
 
 import com.landmark.app.model.domain.TourReview;
+import com.landmark.app.model.domain.comment.ReviewComment;
 import com.landmark.app.model.dto.TourInfoDTO;
 import com.landmark.app.model.dto.TourReviewDTO;
+import com.landmark.app.model.dto.commnet.ReviewCommentDTO;
 import com.landmark.app.model.repository.AreaCodeRepository;
 import com.landmark.app.model.repository.SigunguCodeRepository;
 import com.landmark.app.model.repository.TourReviewRepository;
+import com.landmark.app.model.repository.comment.ReviewCommentRepository;
 import com.landmark.app.service.TourInfoService;
 import com.landmark.app.service.TourReviewService;
 import com.landmark.app.service.user.UserService;
@@ -14,6 +17,7 @@ import com.landmark.app.utils.helper.StaticHelper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -30,15 +34,17 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
     private UserService userService;
     private AreaCodeRepository areaCodeRepository;
     private SigunguCodeRepository sigunguCodeRepository;
+    private ReviewCommentRepository commentRepository;
 
     @Autowired
     public TourReviewServiceImpl(TourReviewRepository tourReviewRepository, TourInfoService tourInfoService, UserService userService,
-                                 AreaCodeRepository areaCodeRepository, SigunguCodeRepository sigunguCodeRepository) {
+                                 AreaCodeRepository areaCodeRepository, SigunguCodeRepository sigunguCodeRepository, ReviewCommentRepository commentRepository) {
         this.tourReviewRepository = tourReviewRepository;
         this.tourInfoService = tourInfoService;
         this.userService = userService;
         this.areaCodeRepository = areaCodeRepository;
         this.sigunguCodeRepository = sigunguCodeRepository;
+        this.commentRepository = commentRepository;
     }
 
     @Override
@@ -502,6 +508,70 @@ public class TourReviewServiceImpl extends LoggerUtils implements TourReviewServ
         }
 
         return result;
+    }
+
+    @Override
+    public List<ReviewCommentDTO> findAllComments(int reviewId) {
+        try {
+            return ReviewCommentDTO.of(commentRepository.findAllByreviewId(reviewId));
+        } catch (Exception e) {
+            logger.error("findAllComments : " + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public ReviewCommentDTO registerReviewComment(ReviewCommentDTO commentDTO) {
+        try {
+            ReviewComment comment = new ReviewComment();
+            comment.setUserId(commentDTO.getUserId());
+            comment.setReviewId(commentDTO.getReviewId());
+            comment.setComment(commentDTO.getComment());
+            comment.setCreatedTime(new Date());
+            comment.setModifiedTime(new Date());
+            return ReviewCommentDTO.of(commentRepository.save(comment));
+        } catch (Exception e) {
+            logger.error("registerReviewComment : " + e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public ReviewCommentDTO updateReviewComment(ReviewCommentDTO commentDTO, int userId) {
+        try {
+            if(commentDTO.getUserId() == userId) {
+                ReviewComment comment = commentRepository.findById(commentDTO.getId());
+
+                if(!StringUtils.isEmpty(commentDTO.getComment())) {
+                    comment.setComment(commentDTO.getComment());
+                }
+
+                comment.setModifiedTime(new Date());
+                return ReviewCommentDTO.of(commentRepository.save(comment));
+            }
+        } catch (Exception e) {
+            logger.error("updateReviewComment : " + e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public boolean deleteReviewComment(int id, int userId, String role) {
+        try {
+            if(ROLE_DEV.equals(role)) {
+                commentRepository.deleteById(id);
+                return true;
+            }
+
+            ReviewComment comment = commentRepository.findById(id);
+            if(comment.getUserId() == userId) {
+                commentRepository.deleteById(id);
+                return true;
+            }
+        } catch (Exception e) {
+            logger.error("deleteReviewComment : " + e.getMessage());
+        }
+        return false;
     }
 
 }
