@@ -14,7 +14,7 @@ import java.util.List;
 public class ReviewCommentDTO {
     private int id;
     private int userId;
-    private int qnaId;
+    private int reviewId;
     private Date createdTime;
     private Date modifiedTime;
     private String comment;
