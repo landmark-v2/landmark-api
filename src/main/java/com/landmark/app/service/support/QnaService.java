@@ -44,7 +44,7 @@ public interface QnaService {
     boolean deleteQnaComment(int id, int userId, String role);
 
     /** QNA 댓글 수정 */
-    QnaCommentDTO updateQnaComment(QnaCommentDTO qnaCommentDTO, int userId, int id);
+    QnaCommentDTO updateQnaComment(QnaCommentDTO qnaCommentDTO, int userId);
 
     /** 회원탈퇴 시 QnA, 댓글 있으면 삭제 */
     boolean deleteByUserId(int userId);

@@ -180,11 +180,11 @@ public class QnaServiceImpl extends LoggerUtils implements QnaService {
     }
 
     @Override
-    public QnaCommentDTO updateQnaComment(QnaCommentDTO qnaCommentDTO, int userId, int id) {
+    public QnaCommentDTO updateQnaComment(QnaCommentDTO qnaCommentDTO, int userId) {
         try {
-            QnaComment comment = qnaCommentRepository.findById(id);
+            if(qnaCommentDTO.getUserId() == userId) {
+                QnaComment comment = qnaCommentRepository.findById(qnaCommentDTO.getId());
 
-            if(comment.getUserId() == userId) {
                 if(!StringUtils.isEmpty(qnaCommentDTO.getComment())) {
                     comment.setComment(qnaCommentDTO.getComment());
                 }
